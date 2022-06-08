@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
 
         // Dette er vores theme.
         theme: ThemeData(
-          canvasColor: Color.fromRGBO(255, 254, 229, 1),
+          canvasColor: Color.fromRGBO(229, 229, 229, 1),
           fontFamily: 'Raleway',
           textTheme: ThemeData.light().textTheme.copyWith(
               bodyText1: TextStyle(
@@ -34,9 +34,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
               .copyWith(secondary: Colors.amber),
         ),
-        // home: CategoriesScreen(), not needed when we have main route below:
         routes: {
-          '/': (ctx) => TabScreen(),
+          '/': (ctx) => TabScreen(), // tab screen is the main screen.
           FavoritesScreen.routeName: (ctx) => FavoritesScreen(),
         });
   }
