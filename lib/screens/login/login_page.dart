@@ -54,11 +54,11 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   //Icon her sæt vores eget ind:
                   // ImageIcon(
-                  //   AssetImage(
-                  //       "C:/Users/gusta/Documents/statistik/StudentSwap/assets/studentSwapLogo.png"),
-                  //   color: Colors.white,
-                  //   size: 190,
-                  // ),
+                  //  AssetImage(
+                  //      '/Users/andreasfurst/Documents/GitHub/StudentSwap/assets/studentSwapLogo.png'),
+                  //  color: Colors.white,
+                  //  size: 190,
+                  //),
 
                   Text("Welcome to StudentSwap",
                       style: TextStyle(
