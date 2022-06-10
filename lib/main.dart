@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/auth/main_page.dart';
-import 'pages/login_page.dart';
+import './services/checkLogin.dart';
+import 'package:login_page/screens/TabsScreen.dart';
+import 'package:login_page/services/checkLogin.dart';
+import './screens/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  runApp(const MyApp());
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
