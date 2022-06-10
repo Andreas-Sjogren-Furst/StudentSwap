@@ -1,47 +1,24 @@
 import 'package:flutter/material.dart';
-import './screens/FavoritesScreen.dart';
-import './screens/TabsScreen.dart';
-import 'screens/FailScreen.dart';
+import 'package:login_page/auth/main_page.dart';
+import 'pages/login_page.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'DeliMeals',
-
-      // Dette er vores theme.
-      theme: ThemeData(
-        canvasColor: Color.fromRGBO(229, 229, 229, 1),
-        fontFamily: 'Raleway',
-        textTheme: ThemeData.light().textTheme.copyWith(
-            bodyText1: TextStyle(
-              color: Color.fromRGBO(20, 51, 51, 1),
-            ),
-            bodyText2: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-            headline6: TextStyle(
-              fontSize: 24,
-              fontFamily: 'RobotoCondensed',
-            ),
-            headline1: TextStyle(
-              fontSize: 20,
-              fontFamily: 'RobotoCondensed',
-              fontWeight: FontWeight.bold,
-            )),
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
-            .copyWith(secondary: Colors.amber),
-      ),
-      routes: {
-        '/': (ctx) => TabScreen(), // tab screen is the main screen.
-        FavoritesScreen.routeName: (ctx) => FavoritesScreen(),
-      },
-      onUnknownRoute: (settings) {
-        return MaterialPageRoute(builder: (ctx) => FailScreen());
-      },
+      debugShowCheckedModeBanner: false,
+      home: MainPage(),
     );
   }
 }
