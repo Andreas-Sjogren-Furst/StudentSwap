@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import '../auth/auth_page.dart';
+import '../screens/TabsScreen.dart';
+import './auth_page.dart';
 
-import '../screens/home/home_page.dart';
+import "../services/checkLogin.dart"; // '../screens/home/home_page.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class MainPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return TabScreen(); // tjekker om korrekt login er givet. Hvis ikke, så viser den login side.
           } else {
             return AuthPage();
           }

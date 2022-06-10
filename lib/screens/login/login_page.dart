@@ -53,12 +53,12 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   //Icon her sæt vores eget ind:
-                  ImageIcon(
-                    AssetImage(
-                        "/Users/oscarmandrupsen/Desktop/flutter_apps/login_page/assets/studentSwapLogo.png"),
-                    color: Colors.white,
-                    size: 190,
-                  ),
+                  // ImageIcon(
+                  //   AssetImage(
+                  //       "C:/Users/gusta/Documents/statistik/StudentSwap/assets/studentSwapLogo.png"),
+                  //   color: Colors.white,
+                  //   size: 190,
+                  // ),
 
                   Text("Welcome to StudentSwap",
                       style: TextStyle(
