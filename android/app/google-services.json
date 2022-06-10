@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "797525794992",
+    "project_id": "studentswap-fbf76",
+    "storage_bucket": "studentswap-fbf76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797525794992:android:9772e6de89c6802bfcdb75",
+        "android_client_info": {
+          "package_name": "com.example.studentswap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "797525794992-3n0g2vjb74m0t8fngf067nr0urracuge.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKlYnHAE3ULmqsN6HokZDqb9vVc853X5Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "797525794992-3n0g2vjb74m0t8fngf067nr0urracuge.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "797525794992-5of4q4n4efchv291jo8n1ia6avm1ebk1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.loginPage"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
