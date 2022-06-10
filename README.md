@@ -1,14 +1,16 @@
-# StudentSwap 1.0
-Project Name: Student Swap
+# studentswap
 
-Students:
-Mathias Jelshøj (s214936)
-Gustav Clausen (s214940)
-Oscar Mandrupsen (s216163)
-Rasmus Søndergaard (s214925)
-Morten Helsø (s214927)
-Andreas Sjögren Fürst (s201189)
+A new Flutter project.
 
-Project date: 07/06/22
-Programming langauge: Dart
-SDK: Flutter
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
