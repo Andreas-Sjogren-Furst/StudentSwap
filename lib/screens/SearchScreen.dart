@@ -1,19 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/models/Apartment.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
 
+  @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
   // Sample data
   final apartmentList = [Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
                         Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),
                         Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
                         Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),];
 
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -22,14 +30,14 @@ class SearchScreen extends StatelessWidget {
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     // Sample Data
                     Text(
                       "Welcome back!",
                       style: TextStyle(color: Colors.grey, fontSize: 14.0, fontFamily: "Poppins", fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      "Jefferson",
+                      "Jefferson", // TODO: Get username from Firebase"${user?.displayName}"
                       style: TextStyle(color: Colors.black, fontSize: 24.0, fontFamily: "Poppins", fontWeight: FontWeight.bold ),
                     ),
                   ],
@@ -77,7 +85,7 @@ class SearchScreen extends StatelessWidget {
                       ),
                       child: IconButton(
                         onPressed: () {},
-                        icon: Icon(Icons.settings),
+                        icon: Icon(Icons.filter_list_alt),
                         color: Colors.blueGrey,
                       ),
                     ))
