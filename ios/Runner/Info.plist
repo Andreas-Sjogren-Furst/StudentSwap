@@ -45,5 +45,12 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Studentswap needs access to let you pick an image</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Studentswap needs access to let you take a picture</string>
+	<!-- <key>NSMicrophoneUsageDescription </key>
+	<string>Studentswap needs access to let you use the microphone</string> -->
+
 </dict>
 </plist>

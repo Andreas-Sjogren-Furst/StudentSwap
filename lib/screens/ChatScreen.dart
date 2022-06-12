@@ -85,9 +85,12 @@ class ChatScreen extends StatelessWidget {
       // return Text("lolcat returned");
 
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => (print("lolcat")),
-      ),
+          child: Icon(Icons.add),
+          onPressed: () => (FirebaseFirestore.instance
+                  .collection("chats/PPlVfldzdA0srBOjlgY2/messages")
+                  .add({
+                "text": "Hello World",
+              }))),
     );
   }
 }

@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/widgets/UserImagePicker.dart';
 
 class RegisterPage extends StatefulWidget {
   final VoidCallback showLoginPage;
@@ -13,10 +18,18 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final key_UserImagePicker = new GlobalKey<UserImagePickerState>();
+
   // text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  UserCredential? authResult; // To get the user UID . TODO: null check safety.
+  File? get get_key_UserImagePicker_pickedImage =>
+      key_UserImagePicker.currentState?.pickedImage;
+
+  // final _userImagePicker = new UserImagePicker();
 
   @override
   void dispose() {
@@ -27,11 +40,41 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future signUp() async {
-    if (passwordConfirmed()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    if (get_key_UserImagePicker_pickedImage == null) {
+      print('No image picked');
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No image picked'),
+        ),
+      );
+      return;
+    }
+    if (passwordConfirmed() && get_key_UserImagePicker_pickedImage != null) {
+      authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+
+      // Tilføj bruger til user collection i Firestore.
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child("user_images")
+          .child(authResult!.user!.uid)
+          .child("profile_image.jpg");
+
+      await ref
+          .putFile(get_key_UserImagePicker_pickedImage!)
+          .whenComplete(() => null);
+
+      final String profilePictureUrl = await ref.getDownloadURL();
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(authResult!.user!.uid)
+          .set({
+        "username": _emailController.text.trim(),
+        "profile_picture_url": profilePictureUrl,
+      }); // her skal vi tilføje flere variabler.
     }
   }
 
@@ -92,6 +135,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                   ),
                   SizedBox(height: 25),
+
+                  UserImagePicker(key: key_UserImagePicker),
+                  // forw
 
                   //email textfield
                   Padding(
