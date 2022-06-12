@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/models/ApartmentCard.dart';
+import 'package:login_page/models/Apartment.dart';
 
 class SearchScreen extends StatelessWidget {
 
@@ -26,11 +26,11 @@ class SearchScreen extends StatelessWidget {
                     // Sample Data
                     Text(
                       "Welcome back!",
-                      style: TextStyle(color: Colors.grey, fontSize: 14.0, fontFamily: "Poppins", fontWeight: FontWeight.w200),
+                      style: TextStyle(color: Colors.grey, fontSize: 14.0, fontFamily: "Poppins", fontWeight: FontWeight.w500),
                     ),
                     Text(
                       "Jefferson",
-                      style: TextStyle(color: Colors.black, fontSize: 24.0, fontWeight: FontWeight.bold, fontFamily: "Poppins"),
+                      style: TextStyle(color: Colors.black, fontSize: 24.0, fontFamily: "Poppins", fontWeight: FontWeight.bold ),
                     ),
                   ],
                 ),
@@ -40,20 +40,30 @@ class SearchScreen extends StatelessWidget {
                 )
               ],
             ),
-            const SizedBox(height: 30.0,),
+            const SizedBox(height: 15.0,),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Expanded(
+                Expanded(
                   flex: 3,
                   // TODO: Style TextField
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Search',
-                      prefixIcon: Icon(Icons.search),
+                  child: SizedBox(
+                    height: 45.0,
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFEEEEEE),
+                        labelText: 'Search',
+                        prefixIcon: const Icon(Icons.search),
+                      ),
                     ),
-
                   ),
                 ),
                 Expanded(
@@ -62,7 +72,7 @@ class SearchScreen extends StatelessWidget {
                       margin: EdgeInsets.fromLTRB(36.0, 0, 0, 0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(12.0 )),
-                        color: Colors.grey[300],
+                        color: Colors.grey[200],
                         // color: Color.fromRGBO(242, 242, 243, 1.0),
                       ),
                       child: IconButton(
@@ -73,12 +83,12 @@ class SearchScreen extends StatelessWidget {
                     ))
               ],
             ),
-            SizedBox(height: 40.0),
+            const SizedBox(height: 15.0),
             const Text(
               "Accommodation",
               style: TextStyle(fontFamily: "Poppins", fontSize: 14.0, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10.0),
+            const SizedBox(height: 10.0),
             Expanded(
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,

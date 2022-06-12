@@ -96,11 +96,18 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               saved = !saved; // TODO: Save favorited items
                             });
                           }, // TODO: Add favorite function
-                          label: Text("Save"),
-                          icon: Icon(saved ? Icons.favorite_sharp : Icons.favorite_border_sharp),
+                          label: const Text(
+                            "Save",
+                            style: TextStyle(fontSize: 14, fontFamily: "Poppins", fontWeight: FontWeight.w600),
+                          ),
+                          icon: Icon(
+                            saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
+                            size: 24.0,
+                          ),
                           style: TextButton.styleFrom(
                             primary: saved ? Colors.red : Colors.grey,
-                            padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0) )
+                            padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0),
+                          )
                         ),
                         CircleAvatar(
                           backgroundImage: AssetImage("assets/sample/${widget.profileImage}.jpg"), // TODO: Get profile picture from Firebase
