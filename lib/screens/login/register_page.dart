@@ -72,6 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
           .collection("users")
           .doc(authResult!.user!.uid)
           .set({
+        "favorites": List<String>,
         "username": _emailController.text.trim(),
         "profile_picture_url": profilePictureUrl,
       }); // her skal vi tilføje flere variabler.
