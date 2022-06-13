@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import "../services/firebase_methods.dart";
 
 class ProfileScreen extends StatefulWidget {
+  static const routeName = "/Profile-Screen";
   const ProfileScreen({Key? key}) : super(key: key);
 
   @override
@@ -15,6 +17,8 @@ class __ProfileScreenState extends State<ProfileScreen> {
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final Stream<QuerySnapshot> _usersStream =
       FirebaseFirestore.instance.collection('users').snapshots();
+
+  // final docRef = FirebaseFirestore.instance.collection("users").doc(userId);
 
   @override
   Widget build(BuildContext context) {
@@ -32,24 +36,21 @@ class __ProfileScreenState extends State<ProfileScreen> {
         ),
         MaterialButton(
           onPressed: () {
-            FirebaseFirestore.instance
-                .collection('users')
-                .get()
-                .then((QuerySnapshot querySnapshot) {
-              querySnapshot.docs.forEach((doc) {
-                print(doc["username"]);
-              });
+            Future<Map<String, dynamic>?> testmap =
+                FirebaseMethods.getUserData();
+            testmap.then((value) {
+              print(value);
             });
           },
           child: Text("Get all users"),
         ),
-        Text(FirebaseFirestore.instance
-            .collection("users")
-            .doc(userId)
-            .get()
-            .then((DocumentSnapshot doc) {
-          return doc["username"];
-        }).toString()),
+        MaterialButton(
+          onPressed: () async {
+            var test = await FirebaseMethods.getSpecificUserData("username");
+            print(test);
+          },
+          child: (Text("Get current user")),
+        ),
 
         // StreamBuilder<QuerySnapshot>(
         //   stream: _usersStream,
