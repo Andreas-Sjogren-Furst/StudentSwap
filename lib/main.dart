@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/FavoritesScreen.dart';
+import 'package:login_page/screens/ProfileScreen.dart';
 import './services/checkLogin.dart';
 import 'package:login_page/screens/TabsScreen.dart';
 import 'package:login_page/services/checkLogin.dart';
@@ -22,8 +24,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MainPage(),
-    );
+        debugShowCheckedModeBanner: false,
+        home: MainPage(),
+        routes: {
+          '/': (ctx) => TabScreen(),
+          ProfileScreen.routeName: (ctx) => ProfileScreen(),
+          FavoritesScreen.routeName: (ctx) => FavoritesScreen(),
+        });
   }
 }
