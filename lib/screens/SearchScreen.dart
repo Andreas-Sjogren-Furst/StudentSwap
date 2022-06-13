@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:login_page/models/Apartment.dart';
 
 class SearchScreen extends StatefulWidget {
+  const SearchScreen({Key? key}) : super(key: key);
+
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
@@ -11,6 +13,10 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   // Sample data
   final apartmentList = [Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
+                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),
+                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
+                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),
+                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
                         Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),
                         Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
                         Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),];
@@ -30,7 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+                  children: const [
                     // Sample Data
                     Text(
                       "Welcome back!",
@@ -77,15 +83,15 @@ class _SearchScreenState extends State<SearchScreen> {
                 Expanded(
                     flex: 1,
                     child: Container(
-                      margin: EdgeInsets.fromLTRB(36.0, 0, 0, 0),
+                      margin: const EdgeInsets.fromLTRB(36.0, 0, 0, 0),
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0 )),
+                        borderRadius: const BorderRadius.all(Radius.circular(12.0 )),
                         color: Colors.grey[200],
                         // color: Color.fromRGBO(242, 242, 243, 1.0),
                       ),
                       child: IconButton(
                         onPressed: () {},
-                        icon: Icon(Icons.filter_list_alt),
+                        icon: const Icon(Icons.filter_list_alt),
                         color: Colors.blueGrey,
                       ),
                     ))
@@ -101,7 +107,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 child: ListView.builder(
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
-                  physics: ClampingScrollPhysics(),
+                  physics: const ClampingScrollPhysics(),
                   itemCount: apartmentList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return apartmentList[index].getCard();

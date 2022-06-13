@@ -52,13 +52,12 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //Icon her sæt vores eget ind:
-                  // ImageIcon(
-                  //  AssetImage(
-                  //      '/Users/andreasfurst/Documents/GitHub/StudentSwap/assets/studentSwapLogo.png'),
-                  //  color: Colors.white,
-                  //  size: 190,
-                  //),
+                  // Icon her sæt vores eget ind:
+                   ImageIcon(
+                    AssetImage("assets/studentSwapLogo.png"),
+                    color: Colors.white,
+                    size: 190,
+                  ),
 
                   Text("Welcome to StudentSwap",
                       style: TextStyle(
