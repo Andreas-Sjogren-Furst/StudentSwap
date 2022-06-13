@@ -58,7 +58,7 @@ class ChatScreen extends StatelessWidget {
           // ),
           MaterialButton(
             onPressed: () async {
-              var userDocument = await FirebaseMethods.getUserdDocument(userId);
+              var userDocument = await FirebaseMethods.getUserDocument(userId);
               print(userDocument["username"]);
             },
             child: (Text("Get current user ")),
