@@ -32,6 +32,7 @@ class _TabScreenState extends State<TabScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_pages[_selectedPageIndex]["title"] as String),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: _pages[_selectedPageIndex]["page"] as Widget, // Index from state.
       bottomNavigationBar: BottomNavigationBar(

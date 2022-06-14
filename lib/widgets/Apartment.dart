@@ -91,10 +91,7 @@ class ApartmentCard extends StatefulWidget {
 
 class _ApartmentCardState extends State<ApartmentCard> {
 
-  
   @override
-
-  
   
   bool saved = false;
 
@@ -114,8 +111,6 @@ class _ApartmentCardState extends State<ApartmentCard> {
           'userID': widget.userID,
           'savedFavorite': widget.savedFavorite,
           'goingTo': widget.goingTo
-
-
           });
         },
         

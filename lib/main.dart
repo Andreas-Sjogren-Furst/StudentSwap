@@ -29,7 +29,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
+      theme: ThemeData(
+          primaryColor: const Color.fromARGB(255, 53, 104, 153),
+          fontFamily: "Poppins"
+      ),
       // routes: {
       //   '/apartment-screen':(context) => ApartmentScreen()
       // },
@@ -46,6 +49,7 @@ class MyApp extends StatelessWidget {
         ProfileScreen.routeName: (context) => ProfileScreen(),
         SearchScreen.routeName: (context) => SearchScreen(),
         FailScreen.routeName: (context) => FailScreen(),
+        ApartmentScreen.routeName: (context) => ApartmentScreen(),
       },
     );
   }
