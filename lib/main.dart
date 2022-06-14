@@ -11,11 +11,8 @@ import "./screens/SearchScreen.dart";
 import "./screens/FavoritesScreen.dart";
 import "./screens/ChatScreen.dart";
 import "./screens/FailScreen.dart";
-import "./screens/login/register_page2.dart";
-import "./screens/login/login_page.dart";
 
 import 'firebase_options.dart';
-import 'screens/login/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,10 +46,6 @@ class MyApp extends StatelessWidget {
         ProfileScreen.routeName: (context) => ProfileScreen(),
         SearchScreen.routeName: (context) => SearchScreen(),
         FailScreen.routeName: (context) => FailScreen(),
-        RegisterPage.routeName: (context) => RegisterPage(),
-        RegisterPage2.routeName: (context) => RegisterPage2(),
-        LoginPage.routeName: (context) => LoginPage(),
-        TabScreen.routeName: (context) => TabScreen(),
       },
     );
   }
