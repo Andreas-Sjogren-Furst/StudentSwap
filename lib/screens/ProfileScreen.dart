@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import './profile_apartment.dart';
+import './ProfileApartment.dart';
 import './Profile_personal_info.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -57,7 +57,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const profile_apartment()),
+                      builder: (context) => const ProfileApartment()),
                 );
               },
               child: Row(
