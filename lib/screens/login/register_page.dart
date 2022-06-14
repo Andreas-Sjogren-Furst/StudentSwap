@@ -4,28 +4,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/login/login_page.dart';
+import 'package:login_page/screens/login/register_page2.dart';
 import 'package:login_page/widgets/UserImagePicker.dart';
 
 class RegisterPage extends StatefulWidget {
-  final VoidCallback showLoginPage;
-  const RegisterPage({
-    Key? key,
-    required this.showLoginPage,
-  }) : super(key: key);
+  static const routeName = "/register-page";
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<RegisterPage> createState() => RegisterPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class RegisterPageState extends State<RegisterPage> {
   // text controllers
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  UserCredential? authResult; // To get the user UID . TODO: null check safety.
-
-  // final _userImagePicker = new UserImagePicker();
+  static UserCredential?
+      authResult; // To get the user UID . TODO: null check safety.
 
   @override
   void dispose() {
@@ -35,27 +32,32 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
+  Future goToLoginPage() async {
+    Navigator.pop(context);
+  }
+
   Future nextPage() async {
-    if (passwordConfirmed() != null) {
-      authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+    try {
+      if (passwordConfirmed() != null) {
+        authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: _emailController.text.trim(),
+          password: _passwordController.text.trim(),
+        );
+        Navigator.pushNamed(context, RegisterPage2.routeName);
+
+        await FirebaseFirestore.instance
+            .collection("users")
+            .doc(authResult!.user!.uid)
+            .set({
+          "username": _emailController.text.trim(),
+        }); // her skal vi tilføje flere variabler.
+      }
+    } catch (e) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please Enter Valid Email and Password'),
+        ),
       );
-
-      // Tilføj bruger til user collection i Firestore.
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child("user_images")
-          .child(authResult!.user!.uid)
-          .child("profile_image.jpg");
-
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(authResult!.user!.uid)
-          .set({
-        "favorites": List<String>,
-        "username": _emailController.text.trim(),
-      }); // her skal vi tilføje flere variabler.
     }
   }
 
@@ -228,7 +230,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: widget.showLoginPage,
+                        onTap: goToLoginPage, // TODO - navigtaion to login page
                         child: Text(
                           "Login now",
                           style: TextStyle(
