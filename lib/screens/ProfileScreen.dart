@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './profile_apartment.dart';
+import './Profile_personal_info.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -46,119 +47,89 @@ class __ProfileScreenState extends State<ProfileScreen> {
                 SizedBox(
                   height: 25,
                 ),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                ),
+                Divider(color: Colors.grey),
               ],
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const profile_apartment()),
-                  );
-                },
-                child: const Text(
-                  'Apartment images',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                    fontFamily: 'Poppins',
+          FlatButton(
+              padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const profile_apartment()),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    'Apartment images',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
+                    ),
                   ),
-                ),
-              ),
-              const Icon(
-                Icons.keyboard_arrow_right_outlined,
-                color: Colors.black,
-                size: 24,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
+                  Icon(
+                    Icons.keyboard_arrow_right_outlined,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ],
+              )),
           const Divider(
             color: Colors.grey,
-            thickness: 1,
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const profile_apartment()),
-                  );
-                },
-                child: const Text(
-                  'Personal information',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                    fontFamily: 'Poppins',
+          FlatButton(
+              padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const profile_info()),
+                );
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  Text(
+                    'Personal information',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontFamily: 'Poppins',
+                    ),
                   ),
-                ),
-              ),
-              const Icon(
-                Icons.keyboard_arrow_right_outlined,
-                color: Colors.black,
-                size: 24,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Divider(
-            color: Colors.grey,
-            thickness: 1,
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FlatButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-                child: const Text(
+                  Icon(
+                    Icons.keyboard_arrow_right_outlined,
+                    color: Colors.black,
+                    size: 24,
+                  ),
+                ],
+              )),
+          const Divider(color: Colors.grey),
+          FlatButton(
+            padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
                   'Log out',
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'Poppins',
                   ),
                 ),
-              ),
-              const Icon(
-                Icons.logout,
-                color: Colors.black,
-                size: 20,
-              ),
-            ],
+                Icon(
+                  Icons.logout,
+                  color: Colors.black,
+                  size: 20,
+                ),
+              ],
+            ),
           ),
-          SizedBox(
-            height: 15,
-          ),
-          Divider(
-            thickness: 1,
-            color: Colors.grey,
-          )
+          const Divider(color: Colors.grey)
         ],
       ),
     );
