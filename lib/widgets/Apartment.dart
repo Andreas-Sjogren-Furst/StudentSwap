@@ -1,5 +1,9 @@
 import 'dart:ui';
 
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -18,6 +22,28 @@ class Apartment {
     return ApartmentCard(apartmentImage: apartmentImage, city: city, address: address, profileImage: profileImage);
   }
 
+}
+
+
+Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
+
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  if(saved) {
+    return users
+    .doc(uid)
+    .update({
+      'favorites': FieldValue.arrayUnion([apartmentCard.address])
+      });
+  } else {
+    return users
+    .doc(uid)
+    .update({
+      'favorites': FieldValue.arrayRemove([apartmentCard.address])
+      });
+  }
+  
 }
 
 class ApartmentCard extends StatefulWidget {
@@ -95,6 +121,9 @@ class _ApartmentCardState extends State<ApartmentCard> {
                             setState(() {
                               saved = !saved; // TODO: Save favorited items
                             });
+
+                            updateUser(widget, saved);
+
                           }, // TODO: Add favorite function
                           label: const Text(
                             "Save",

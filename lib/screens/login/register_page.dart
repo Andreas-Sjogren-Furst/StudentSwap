@@ -53,6 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
           .collection("users")
           .doc(authResult!.user!.uid)
           .set({
+        "favorites": List<String>,
         "username": _emailController.text.trim(),
       }); // her skal vi tilføje flere variabler.
     }
