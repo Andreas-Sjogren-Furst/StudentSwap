@@ -14,14 +14,14 @@ class RegisterPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => RegisterPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> {
   // text controllers
-  static final emailController = TextEditingController();
-  static final passwordController = TextEditingController();
-  static final confirmPasswordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   UserCredential? authResult; // To get the user UID . TODO: null check safety.
 
@@ -29,14 +29,19 @@ class RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   Future nextPage() async {
     if (passwordConfirmed() != null) {
+      authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
       // Tilføj bruger til user collection i Firestore.
       final ref = FirebaseStorage.instance
           .ref()
@@ -48,14 +53,14 @@ class RegisterPageState extends State<RegisterPage> {
           .collection("users")
           .doc(authResult!.user!.uid)
           .set({
-        "username": emailController.text.trim(),
+        "username": _emailController.text.trim(),
       }); // her skal vi tilføje flere variabler.
     }
   }
 
   bool passwordConfirmed() {
-    if (passwordController.text.trim() ==
-        confirmPasswordController.text.trim()) {
+    if (_passwordController.text.trim() ==
+        _confirmPasswordController.text.trim()) {
       return true;
     } else {
       return false;
@@ -118,7 +123,7 @@ class RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                          emailController, //What the user put in the textfield
+                          _emailController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -142,7 +147,7 @@ class RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                          passwordController, //What the user put in the textfield
+                          _passwordController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -166,7 +171,7 @@ class RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                          confirmPasswordController, //What the user put in the textfield
+                          _confirmPasswordController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
