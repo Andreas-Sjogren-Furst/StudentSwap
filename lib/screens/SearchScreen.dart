@@ -24,6 +24,10 @@ getData(String uid) async {
 class _SearchScreenState extends State<SearchScreen> {
   // Sample data
 
+  String searchKey = "";
+  Stream streamQuery =
+      FirebaseFirestore.instance.collection("users").snapshots();
+
   final apartmentList = [
     Apartment(
         city: "Amsterdam",
@@ -118,6 +122,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     goingTo: ["test1", "test2"],
                     userID: userMap['userID'] ?? "not available"));
               });
+              // opdataere apartmentlist med searchkey.
+              apartmentsLists = apartmentsLists
+                  .where((s) =>
+                      s.city.toLowerCase().contains(searchKey.toLowerCase()))
+                  .toList();
 
               // print("Apartsmentslist: ${apartmentsLists}");
 
@@ -170,6 +179,11 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: SizedBox(
                             height: 45.0,
                             child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  searchKey = value;
+                                });
+                              },
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
@@ -180,7 +194,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                                 filled: true,
                                 fillColor: const Color(0xFFEEEEEE),
-                                labelText: 'Search',
+                                labelText: 'Search for a city',
                                 prefixIcon: const Icon(Icons.search),
                               ),
                             ),
