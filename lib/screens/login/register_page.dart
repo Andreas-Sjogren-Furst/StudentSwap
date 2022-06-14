@@ -10,6 +10,7 @@ import 'package:login_page/widgets/UserImagePicker.dart';
 
 class RegisterPage extends StatefulWidget {
   static const routeName = "/register-page";
+  // hasloo
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();

@@ -10,6 +10,7 @@ import 'package:login_page/widgets/UserImagePicker.dart';
 
 class RegisterPage2 extends StatefulWidget {
   static final routeName = "/register-page2";
+  // asdasdlas
 
   @override
   State<RegisterPage2> createState() => _RegisterPageState2();
