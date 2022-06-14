@@ -168,7 +168,7 @@ class TopPhoto extends StatelessWidget {
                         "Main photo",
                         style: TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w600,
                             fontSize: 18.0),
                       ),
                       Text("This is the first photo other users see",
@@ -206,16 +206,6 @@ class ImageDialog extends StatelessWidget {
         image: ai,
         fit: BoxFit.contain,
       ),
-      /*child: Container(
-        //width: MediaQuery.of(context).size.width,
-        //height: 200,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: ai,
-            fit: BoxFit.contain,
-          ),
-        ),
-      ),*/
     );
   }
 }
