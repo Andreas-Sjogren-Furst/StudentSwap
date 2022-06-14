@@ -1,6 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:login_page/models/Apartment.dart';
+import 'package:login_page/widgets/Apartment.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
@@ -22,6 +23,16 @@ class _SearchScreenState extends State<SearchScreen> {
                         Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),];
 
   final user = FirebaseAuth.instance.currentUser;
+  final db = FirebaseFirestore.instance;
+
+  late String _profileUrl;
+
+  void initState() async {
+    super.initState();
+
+    db.collection("users").doc(user?.uid);
+
+  }
 
   @override
   Widget build(BuildContext context) {
