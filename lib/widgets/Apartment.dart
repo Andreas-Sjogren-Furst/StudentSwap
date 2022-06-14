@@ -32,7 +32,7 @@ class Apartment {
 }
 
 
-class ApartmentCard extends StatefulWidget {
+/*class ApartmentCard extends StatefulWidget {
   
   const ApartmentCard({
     GlobalKey? key,
@@ -57,7 +57,7 @@ Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
       });
   }
   
-}
+}*/
 
 class ApartmentCard extends StatefulWidget {
   const ApartmentCard({

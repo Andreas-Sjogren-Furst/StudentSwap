@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
-import 'package:login_page/models/Apartment.dart';
+import 'package:login_page/widgets/Apartment.dart';
 import 'dart:convert';
 
 class ApartmentScreen extends StatefulWidget {
