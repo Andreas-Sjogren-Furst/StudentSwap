@@ -61,11 +61,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
             children: [
               FlatButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const profile_apartment()),
-                  );
+                  Navigator.pushNamed(context, profile_apartment.routeName);
                 },
                 child: const Text(
                   'Apartment images',
