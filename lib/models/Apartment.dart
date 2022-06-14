@@ -30,7 +30,7 @@ Future<void> updateUser(ApartmentCard apartmentCard) {
   return users
     .doc(uid)
     .update({
-      'favorites': FieldValue.arrayUnion(["heart"])
+      'favorites': FieldValue.arrayUnion([apartmentCard.address])
       });
 }
 
