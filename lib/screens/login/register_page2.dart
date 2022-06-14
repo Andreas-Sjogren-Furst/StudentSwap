@@ -4,14 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/TabsScreen.dart';
+import 'package:login_page/screens/login/login_page.dart';
 import 'package:login_page/widgets/UserImagePicker.dart';
 
 class RegisterPage2 extends StatefulWidget {
-  final VoidCallback showRegisterPage;
-  const RegisterPage2({
-    Key? key,
-    required this.showRegisterPage,
-  }) : super(key: key);
+  static final routeName = "/register-page2";
 
   @override
   State<RegisterPage2> createState() => _RegisterPageState2();
@@ -50,6 +48,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
       );
       return;
     }
+    Navigator.pushNamed(context, TabScreen.routeName);
 
     // Tilføj bruger til user collection i Firestore.
     final ref = FirebaseStorage.instance
@@ -235,7 +234,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: widget.showRegisterPage,
+                        onTap: signUp,
                         child: Text(
                           "Login now",
                           style: TextStyle(

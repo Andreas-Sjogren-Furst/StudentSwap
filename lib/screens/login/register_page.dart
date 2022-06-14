@@ -4,14 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/login/login_page.dart';
+import 'package:login_page/screens/login/register_page2.dart';
 import 'package:login_page/widgets/UserImagePicker.dart';
 
 class RegisterPage extends StatefulWidget {
-  final VoidCallback showLoginPage;
-  const RegisterPage({
-    Key? key,
-    required this.showLoginPage,
-  }) : super(key: key);
+  static const routeName = "/register-page";
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -41,6 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      Navigator.pushNamed(context, RegisterPage2.routeName);
 
       // Tilføj bruger til user collection i Firestore.
       final ref = FirebaseStorage.instance
@@ -228,7 +227,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: widget.showLoginPage,
+                        onTap: nextPage, // TODO - navigtaion to login page
                         child: Text(
                           "Login now",
                           style: TextStyle(
