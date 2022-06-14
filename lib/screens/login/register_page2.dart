@@ -1,34 +1,78 @@
-import 'dart:math';
-import 'dart:ui';
+import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/widgets/UserImagePicker.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage2 extends StatefulWidget {
   final VoidCallback showRegisterPage;
-  const LoginPage({Key? key, required this.showRegisterPage}) : super(key: key);
+  const RegisterPage2({
+    Key? key,
+    required this.showRegisterPage,
+  }) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage2> createState() => _RegisterPageState2();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  // text controllers
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+class _RegisterPageState2 extends State<RegisterPage2> {
+  final key_UserImagePicker = new GlobalKey<UserImagePickerState>();
 
-  Future signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
-  }
+  // text controllers
+  final _semesterController = TextEditingController();
+  final _myAddressController = TextEditingController();
+  final _destinationController = TextEditingController();
+
+  UserCredential? authResult; // To get the user UID . TODO: null check safety.
+  File? get get_key_UserImagePicker_pickedImage =>
+      key_UserImagePicker.currentState?.pickedImage;
+
+  var destinations = [];
+  // final _userImagePicker = new UserImagePicker();
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _semesterController.dispose();
+    _myAddressController.dispose();
+    _destinationController.dispose();
     super.dispose();
+  }
+
+  Future signUp() async {
+    if (get_key_UserImagePicker_pickedImage == null) {
+      print('No image picked');
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No image picked'),
+        ),
+      );
+      return;
+    }
+
+    // Tilføj bruger til user collection i Firestore.
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child("user_images")
+        .child(authResult!.user!.uid)
+        .child("profile_image.jpg");
+
+    await ref
+        .putFile(get_key_UserImagePicker_pickedImage!)
+        .whenComplete(() => null);
+
+    final String profilePictureUrl = await ref.getDownloadURL();
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(authResult!.user!.uid)
+        .set({
+      "semester": _semesterController.text.trim(),
+      "profile_picture_url": profilePictureUrl,
+      "my_address": _myAddressController.text.trim(),
+      "destination": _destinationController.text.trim(),
+    }); // her skal vi tilføje flere variabler.
   }
 
   @override
@@ -52,25 +96,25 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Icon her sæt vores eget ind:
-                  ImageIcon(
-                    AssetImage("assets/studentSwapLogo.png"),
-                    color: Colors.white,
-                    size: 190,
-                  ),
+                  //Icon her sæt vores eget ind:
+                  // ImageIcon(
+                  //   AssetImage(
+                  //       "C:/Users/gusta/Documents/statistik/StudentSwap/assets/studentSwapLogo.png"),
+                  //   color: Colors.white,
+                  //   size: 190,
+                  // ),
 
-                  Text("Welcome to StudentSwap",
+                  Text("Join the StudentSwap family",
                       style: TextStyle(
                         fontFamily: 'Poppins',
-                        fontSize: 25,
+                        fontSize: 20,
                         color: Colors.white,
                       )),
 
                   //Welcome
-                  SizedBox(height: 25),
-                  SizedBox(height: 10),
+                  SizedBox(height: 15),
                   Text(
-                    "Login in here!",
+                    "Register below with your details!",
                     style: TextStyle(
                       fontFamily: 'Poppins',
                       fontWeight: FontWeight.bold,
@@ -78,14 +122,18 @@ class _LoginPageState extends State<LoginPage> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 45),
+                  SizedBox(height: 25),
 
-                  //email textfield
+                  UserImagePicker(key: key_UserImagePicker),
+
+                  SizedBox(height: 25),
+
+                  //Semester textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                          _emailController, //What the use put in the textfield
+                          _semesterController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -95,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderSide: BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        hintText: 'Email',
+                        hintText: 'Semester',
                         fillColor: Colors.grey[200],
                         filled: true,
                       ),
@@ -103,13 +151,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 10),
 
-                  //password textfield
+                  //My Address textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
-                      obscureText: true,
                       controller:
-                          _passwordController, //What the use put in the textfield
+                          _myAddressController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -119,7 +166,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderSide: BorderSide(color: Colors.deepPurple),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        hintText: 'Password',
+                        hintText: 'My Address',
                         fillColor: Colors.grey[200],
                         filled: true,
                       ),
@@ -127,11 +174,34 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 10),
 
-                  //sign in button
+                  //Their country textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: TextField(
+                      controller:
+                          _destinationController, //What the user put in the textfield
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        hintText: 'Destination',
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+
+                  //sign up button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: GestureDetector(
-                      onTap: signIn,
+                      onTap: signUp,
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -140,7 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: Center(
                           child: Text(
-                            'Sign In',
+                            'Sign Up',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -151,14 +221,14 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30),
+                  SizedBox(height: 20),
 
                   // not a member? register now
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Not a Member? ",
+                        "I am a member! ",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -167,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                       GestureDetector(
                         onTap: widget.showRegisterPage,
                         child: Text(
-                          "Register now",
+                          "Login now",
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
