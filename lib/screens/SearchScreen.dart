@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:login_page/widgets/Apartment.dart'; 
-
+import 'package:login_page/widgets/Apartment.dart';
 
 class SearchScreen extends StatefulWidget {
+  static const routeName = "/search-screen";
+
   const SearchScreen({Key? key}) : super(key: key);
 
   @override

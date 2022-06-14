@@ -5,6 +5,8 @@ import "ChatScreen.dart";
 import "ProfileScreen.dart";
 
 class TabScreen extends StatefulWidget {
+  static const routeName = "/tabs-screen";
+
   @override
   _TabScreenState createState() => _TabScreenState();
 }
