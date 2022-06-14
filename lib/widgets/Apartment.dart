@@ -1,8 +1,13 @@
 import 'dart:ui';
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:login_page/screens/ApartmentScreen.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class Apartment {
 
@@ -10,6 +15,7 @@ class Apartment {
   late String address;
   late String apartmentImage;
   late String profileImage;
+
   late bool savedFavorite;
   late String userID;
   late List<String> goingTo;
@@ -20,21 +26,52 @@ class Apartment {
 
   ApartmentCard getCard() {
     return ApartmentCard(apartmentImage: apartmentImage, city: city, address: address, profileImage: profileImage, savedFavorite: savedFavorite, userID: userID, goingTo: goingTo);
+
   }
 
 }
+
 
 class ApartmentCard extends StatefulWidget {
   
   const ApartmentCard({
     GlobalKey? key,
+
+
+Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
+
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  if(saved) {
+    return users
+    .doc(uid)
+    .update({
+      'favorites': FieldValue.arrayUnion([apartmentCard.address])
+      });
+  } else {
+    return users
+    .doc(uid)
+    .update({
+      'favorites': FieldValue.arrayRemove([apartmentCard.address])
+      });
+  }
+  
+}
+
+class ApartmentCard extends StatefulWidget {
+  const ApartmentCard({
+    Key? key,
+
     required this.apartmentImage,
     required this.city,
     required this.address,
     required this.profileImage,
+
     required this.userID,
     required this.savedFavorite,
     required this.goingTo,
+
 
   }) : super(key: key);
 
@@ -42,10 +79,10 @@ class ApartmentCard extends StatefulWidget {
   final String city;
   final String address;
   final String profileImage;
+
   final String userID;
   final bool savedFavorite;
   final List<String> goingTo;
-
 
 
   @override
@@ -53,6 +90,7 @@ class ApartmentCard extends StatefulWidget {
 }
 
 class _ApartmentCardState extends State<ApartmentCard> {
+
   
   @override
 
