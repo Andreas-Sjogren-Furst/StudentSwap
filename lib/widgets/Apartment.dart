@@ -1,7 +1,9 @@
 import 'dart:ui';
 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -21,6 +23,7 @@ class Apartment {
   }
 
 }
+
 
 Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
 
@@ -118,7 +121,9 @@ class _ApartmentCardState extends State<ApartmentCard> {
                             setState(() {
                               saved = !saved; // TODO: Save favorited items
                             });
+
                             updateUser(widget, saved);
+
                           }, // TODO: Add favorite function
                           label: const Text(
                             "Save",
