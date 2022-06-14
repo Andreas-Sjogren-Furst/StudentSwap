@@ -22,16 +22,25 @@ class Apartment {
 
 }
 
-Future<void> updateUser(ApartmentCard apartmentCard) {
+Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
 
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
-  return users
+  if(saved) {
+    return users
     .doc(uid)
     .update({
       'favorites': FieldValue.arrayUnion([apartmentCard.address])
       });
+  } else {
+    return users
+    .doc(uid)
+    .update({
+      'favorites': FieldValue.arrayRemove([apartmentCard.address])
+      });
+  }
+  
 }
 
 class ApartmentCard extends StatefulWidget {
@@ -106,10 +115,10 @@ class _ApartmentCardState extends State<ApartmentCard> {
                       children: [
                         TextButton.icon(
                           onPressed: () {
-                            updateUser(widget);
                             setState(() {
                               saved = !saved; // TODO: Save favorited items
                             });
+                            updateUser(widget, saved);
                           }, // TODO: Add favorite function
                           label: const Text(
                             "Save",
