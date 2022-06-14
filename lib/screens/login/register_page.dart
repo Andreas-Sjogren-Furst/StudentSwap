@@ -14,29 +14,47 @@ class RegisterPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<RegisterPage> createState() => RegisterPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class RegisterPageState extends State<RegisterPage> {
+class _RegisterPageState extends State<RegisterPage> {
+  final key_UserImagePicker = new GlobalKey<UserImagePickerState>();
+
   // text controllers
-  static final emailController = TextEditingController();
-  static final passwordController = TextEditingController();
-  static final confirmPasswordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   UserCredential? authResult; // To get the user UID . TODO: null check safety.
+  File? get get_key_UserImagePicker_pickedImage =>
+      key_UserImagePicker.currentState?.pickedImage;
 
   // final _userImagePicker = new UserImagePicker();
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    confirmPasswordController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future nextPage() async {
-    if (passwordConfirmed() != null) {
+  Future signUp() async {
+    if (get_key_UserImagePicker_pickedImage == null) {
+      print('No image picked');
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('No image picked'),
+        ),
+      );
+      return;
+    }
+    if (passwordConfirmed() && get_key_UserImagePicker_pickedImage != null) {
+      authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
       // Tilføj bruger til user collection i Firestore.
       final ref = FirebaseStorage.instance
           .ref()
@@ -44,18 +62,25 @@ class RegisterPageState extends State<RegisterPage> {
           .child(authResult!.user!.uid)
           .child("profile_image.jpg");
 
+      await ref
+          .putFile(get_key_UserImagePicker_pickedImage!)
+          .whenComplete(() => null);
+
+      final String profilePictureUrl = await ref.getDownloadURL();
+
       await FirebaseFirestore.instance
           .collection("users")
           .doc(authResult!.user!.uid)
           .set({
-        "username": emailController.text.trim(),
+        "username": _emailController.text.trim(),
+        "profile_picture_url": profilePictureUrl,
       }); // her skal vi tilføje flere variabler.
     }
   }
 
   bool passwordConfirmed() {
-    if (passwordController.text.trim() ==
-        confirmPasswordController.text.trim()) {
+    if (_passwordController.text.trim() ==
+        _confirmPasswordController.text.trim()) {
       return true;
     } else {
       return false;
@@ -111,14 +136,15 @@ class RegisterPageState extends State<RegisterPage> {
                   ),
                   SizedBox(height: 25),
 
-                  SizedBox(height: 25),
+                  UserImagePicker(key: key_UserImagePicker),
+                  // forw
 
                   //email textfield
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                          emailController, //What the user put in the textfield
+                          _emailController, //What the use put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -142,7 +168,7 @@ class RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                          passwordController, //What the user put in the textfield
+                          _passwordController, //What the use put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -166,7 +192,7 @@ class RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                          confirmPasswordController, //What the user put in the textfield
+                          _confirmPasswordController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -184,11 +210,11 @@ class RegisterPageState extends State<RegisterPage> {
                   ),
                   SizedBox(height: 10),
 
-                  //Nextnbutton button
+                  //sign up button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: GestureDetector(
-                      onTap: nextPage,
+                      onTap: signUp,
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -197,7 +223,7 @@ class RegisterPageState extends State<RegisterPage> {
                         ),
                         child: Center(
                           child: Text(
-                            'Next',
+                            'Sign Up',
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -215,7 +241,7 @@ class RegisterPageState extends State<RegisterPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "I am a member! ",
+                        "I am a member!",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -224,7 +250,7 @@ class RegisterPageState extends State<RegisterPage> {
                       GestureDetector(
                         onTap: widget.showLoginPage,
                         child: Text(
-                          "Login now",
+                          "Login now! ",
                           style: TextStyle(
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
