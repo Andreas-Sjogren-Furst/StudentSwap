@@ -53,7 +53,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Icon her sæt vores eget ind:
-                   ImageIcon(
+                  ImageIcon(
                     AssetImage("assets/studentSwapLogo.png"),
                     color: Colors.white,
                     size: 190,
