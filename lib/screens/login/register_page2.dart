@@ -8,6 +8,8 @@ import 'package:login_page/screens/TabsScreen.dart';
 import 'package:login_page/screens/login/login_page.dart';
 import 'package:login_page/widgets/UserImagePicker.dart';
 
+import 'register_page.dart';
+
 class RegisterPage2 extends StatefulWidget {
   static final routeName = "/register-page2";
   // asdasdlas
@@ -24,7 +26,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
   final _myAddressController = TextEditingController();
   final _destinationController = TextEditingController();
 
-  UserCredential? authResult; // To get the user UID . TODO: null check safety.
+  // To get the user UID . TODO: null check safety.
   File? get get_key_UserImagePicker_pickedImage =>
       key_UserImagePicker.currentState?.pickedImage;
 
@@ -39,6 +41,10 @@ class _RegisterPageState2 extends State<RegisterPage2> {
     super.dispose();
   }
 
+  // Future goToLoginPage1() async {
+  //   Navigator.pop(context);
+  // }
+
   Future signUp() async {
     if (get_key_UserImagePicker_pickedImage == null) {
       print('No image picked');
@@ -49,30 +55,38 @@ class _RegisterPageState2 extends State<RegisterPage2> {
       );
       return;
     }
-    Navigator.pushNamed(context, TabScreen.routeName);
+    try {
+      Navigator.pushNamed(context, TabScreen.routeName);
 
-    // Tilføj bruger til user collection i Firestore.
-    final ref = FirebaseStorage.instance
-        .ref()
-        .child("user_images")
-        .child(authResult!.user!.uid)
-        .child("profile_image.jpg");
+      // Tilføj bruger til user collection i Firestore.
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child("user_images")
+          .child(RegisterPageState.authResult!.user!.uid)
+          .child("profile_image.jpg");
 
-    await ref
-        .putFile(get_key_UserImagePicker_pickedImage!)
-        .whenComplete(() => null);
+      await ref
+          .putFile(get_key_UserImagePicker_pickedImage!)
+          .whenComplete(() => null);
 
-    final String profilePictureUrl = await ref.getDownloadURL();
+      final String profilePictureUrl = await ref.getDownloadURL();
 
-    await FirebaseFirestore.instance
-        .collection("users")
-        .doc(authResult!.user!.uid)
-        .set({
-      "semester": _semesterController.text.trim(),
-      "profile_picture_url": profilePictureUrl,
-      "my_address": _myAddressController.text.trim(),
-      "destination": _destinationController.text.trim(),
-    }); // her skal vi tilføje flere variabler.
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(RegisterPageState.authResult!.user!.uid)
+          .set({
+        "semester": _semesterController.text.trim(),
+        "profile_picture_url": profilePictureUrl,
+        "myAddress": _myAddressController.text.trim(),
+        "destination": _destinationController.text.trim(),
+      }); // her skal vi tilføje flere variabler.
+    } catch (e) {
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please Enter Valid Semester, Address and Destination'),
+        ),
+      );
+    }
   }
 
   @override
@@ -222,30 +236,6 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                     ),
                   ),
                   SizedBox(height: 20),
-
-                  // not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "I am a member! ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: signUp,
-                        child: Text(
-                          "Login now",
-                          style: TextStyle(
-                            color: Colors.blue,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
                 ],
               ),
             ),
