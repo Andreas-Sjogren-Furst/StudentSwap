@@ -64,7 +64,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const profile_apartment()),
+                        builder: (context) => const ProfileApartment()),
                   );
                 },
                 child: const Text(
@@ -101,7 +101,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const profile_apartment()),
+                        builder: (context) => const ProfileApartment()),
                   );
                 },
                 child: const Text(
