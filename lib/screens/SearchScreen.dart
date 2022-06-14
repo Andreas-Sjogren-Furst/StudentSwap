@@ -12,14 +12,14 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   // Sample data
-  final apartmentList = [Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
-                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),
-                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
-                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),
-                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
-                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),
-                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1"),
-                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2"),];
+  final apartmentList = [Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1", savedFavorite: false, goingTo: ['København', 'Stockholm', 'Nuuk'], userID: 'Gustav' ),
+                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2", savedFavorite: false, goingTo: ['Stockholm', 'Rio', 'New York'], userID: 'Sven'),
+                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1", savedFavorite: false, goingTo: ['Stockholm', 'Madrid', 'Aalborg'], userID: 'Carl'),
+                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2", savedFavorite: false, goingTo: ['Karlslunde', 'Rio', 'New York'], userID: 'Johan'),
+                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1", savedFavorite: false, goingTo: ['Krakow', 'Rom', 'New York'], userID: 'Rasmus'),
+                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2", savedFavorite: false, goingTo: ['Stockholm', 'København', 'New York'], userID: 'Oscar'),
+                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1", savedFavorite: false, goingTo: ['Stockholm', 'Rio', 'New York'], userID: 'Andreas'),
+                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2", savedFavorite: false, goingTo: ['Stockholm', 'Rio', 'New York'], userID: 'Mathias'),];
 
   final user = FirebaseAuth.instance.currentUser;
 

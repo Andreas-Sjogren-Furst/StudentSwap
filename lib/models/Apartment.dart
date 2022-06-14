@@ -10,30 +10,42 @@ class Apartment {
   late String address;
   late String apartmentImage;
   late String profileImage;
+  late bool savedFavorite;
+  late String userID;
+  late List<String> goingTo;
 
   bool saved = false;
 
-  Apartment({required this.city, required this.address, required this.apartmentImage, required this.profileImage});
+  Apartment({required this.city, required this.address, required this.apartmentImage, required this.profileImage, required this.savedFavorite, required this.goingTo, required this.userID});
 
   ApartmentCard getCard() {
-    return ApartmentCard(apartmentImage: apartmentImage, city: city, address: address, profileImage: profileImage);
+    return ApartmentCard(apartmentImage: apartmentImage, city: city, address: address, profileImage: profileImage, savedFavorite: savedFavorite, userID: userID, goingTo: goingTo);
   }
 
 }
 
 class ApartmentCard extends StatefulWidget {
+  
   const ApartmentCard({
     GlobalKey? key,
     required this.apartmentImage,
     required this.city,
     required this.address,
     required this.profileImage,
+    required this.userID,
+    required this.savedFavorite,
+    required this.goingTo,
+
   }) : super(key: key);
 
   final String apartmentImage;
   final String city;
   final String address;
   final String profileImage;
+  final String userID;
+  final bool savedFavorite;
+  final List<String> goingTo;
+
 
 
   @override
@@ -56,11 +68,17 @@ class _ApartmentCardState extends State<ApartmentCard> {
       ),
       onTap: () {
         
-          Navigator.pushNamed(context, ApartmentScreen.routeName,  arguments: <String, String> {
+          Navigator.pushNamed(context, ApartmentScreen.routeName,  arguments: <String, dynamic> {
           'apartmentImage': widget.apartmentImage,
           'city': widget.city, 
           'address': widget.address,
-          'profileImage': widget.profileImage});
+          'profileImage': widget.profileImage,
+          'userID': widget.userID,
+          'savedFavorite': widget.savedFavorite,
+          'goingTo': widget.goingTo
+
+
+          });
         },
         
       child: Card(
