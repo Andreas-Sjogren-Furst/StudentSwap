@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:login_page/screens/ApartmentScreen.dart';
 
 class Apartment {
 
@@ -22,7 +23,7 @@ class Apartment {
 
 class ApartmentCard extends StatefulWidget {
   const ApartmentCard({
-    Key? key,
+    GlobalKey? key,
     required this.apartmentImage,
     required this.city,
     required this.address,
@@ -40,86 +41,104 @@ class ApartmentCard extends StatefulWidget {
 }
 
 class _ApartmentCardState extends State<ApartmentCard> {
+  
   @override
 
+  
+  
   bool saved = false;
 
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.0),
+    
+    return InkWell(
+      customBorder: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12)
       ),
-      child: IntrinsicHeight(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 1,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
-                child: Image(image: AssetImage("assets/sample/${widget.apartmentImage}.jpg"), fit: BoxFit.fitHeight),
-              ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.city,
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Poppins",
-                        color: Colors.black,
-                      ),
-                    ),
-                    Text(
-                      widget.address,
-                      style: const TextStyle(
-                        fontSize: 12.0,
-                        fontWeight: FontWeight.normal,
-                        fontFamily: "Poppins",
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        TextButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              saved = !saved; // TODO: Save favorited items
-                            });
-                          }, // TODO: Add favorite function
-                          label: const Text(
-                            "Save",
-                            style: TextStyle(fontSize: 14, fontFamily: "Poppins", fontWeight: FontWeight.w600),
-                          ),
-                          icon: Icon(
-                            saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
-                            size: 24.0,
-                          ),
-                          style: TextButton.styleFrom(
-                            primary: saved ? Colors.red : Colors.grey,
-                            padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0),
-                          )
-                        ),
-                        CircleAvatar(
-                          backgroundImage: AssetImage("assets/sample/${widget.profileImage}.jpg"), // TODO: Get profile picture from Firebase
-                          radius: 17.0,
-                        )
-                      ],
-                    )
-                  ],
+      onTap: () {
+        
+          Navigator.pushNamed(context, ApartmentScreen.routeName,  arguments: <String, String> {
+          'apartmentImage': widget.apartmentImage,
+          'city': widget.city, 
+          'address': widget.address,
+          'profileImage': widget.profileImage});
+        },
+        
+      child: Card(
+        elevation: 2.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                flex: 1,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(12.0), bottomLeft: Radius.circular(12.0)),
+                  child: Image(image: AssetImage("assets/sample/${widget.apartmentImage}.jpg"), fit: BoxFit.fitHeight),
                 ),
               ),
-            )
-          ],
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.city,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: "Poppins",
+                          color: Colors.black,
+                        ),
+                      ),
+                      Text(
+                        widget.address,
+                        style: const TextStyle(
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.normal,
+                          fontFamily: "Poppins",
+                          color: Colors.grey,
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          TextButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                saved = !saved; // TODO: Save favorited items
+                              });
+                            }, // TODO: Add favorite function
+                            label: const Text(
+                              "Save",
+                              style: TextStyle(fontSize: 14, fontFamily: "Poppins", fontWeight: FontWeight.w600),
+                            ),
+                            icon: Icon(
+                              saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
+                              size: 24.0,
+                            ),
+                            style: TextButton.styleFrom(
+                              primary: saved ? Colors.red : Colors.grey,
+                              padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0),
+                            )
+                          ),
+                          CircleAvatar(
+                            backgroundImage: AssetImage("assets/sample/${widget.profileImage}.jpg"), // TODO: Get profile picture from Firebase
+                            radius: 17.0,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

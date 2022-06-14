@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/ApartmentScreen.dart';
 import './services/checkLogin.dart';
 import 'package:login_page/screens/TabsScreen.dart';
 import 'package:login_page/services/checkLogin.dart';
@@ -22,6 +23,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      
+      routes: {
+        '/apartment-screen':(context) => ApartmentScreen()
+      },
       debugShowCheckedModeBanner: false,
       home: MainPage(),
     );

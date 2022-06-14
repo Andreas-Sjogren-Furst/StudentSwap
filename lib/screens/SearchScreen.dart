@@ -105,6 +105,7 @@ class _SearchScreenState extends State<SearchScreen> {
             const SizedBox(height: 10.0),
             Expanded(
                 child: ListView.builder(
+                  
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   physics: const ClampingScrollPhysics(),
