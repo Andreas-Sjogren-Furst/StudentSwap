@@ -5,6 +5,8 @@ import "ChatScreen.dart";
 import "ProfileScreen.dart";
 
 class TabScreen extends StatefulWidget {
+  static const routeName = "/tabs-screen";
+
   @override
   _TabScreenState createState() => _TabScreenState();
 }
@@ -30,6 +32,7 @@ class _TabScreenState extends State<TabScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(_pages[_selectedPageIndex]["title"] as String),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
       body: _pages[_selectedPageIndex]["page"] as Widget, // Index from state.
       bottomNavigationBar: BottomNavigationBar(

@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 
 class FailScreen extends StatelessWidget {
+  static const routeName = "/fail-screen";
+
 //  const MyWidget({Key? key}) : super(key: key);
 
   @override

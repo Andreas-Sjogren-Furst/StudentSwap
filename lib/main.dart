@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/screens/FavoritesScreen.dart';
-import 'package:login_page/screens/ProfileScreen.dart';
+import 'package:login_page/screens/ApartmentScreen.dart';
 import './services/checkLogin.dart';
 import 'package:login_page/screens/TabsScreen.dart';
 import 'package:login_page/services/checkLogin.dart';
 import './screens/login/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import "./screens/ProfileApartment.dart";
+import "./screens/ProfileScreen.dart";
+import "./screens/SearchScreen.dart";
+import "./screens/FavoritesScreen.dart";
+import "./screens/ChatScreen.dart";
+import "./screens/FailScreen.dart";
 
 import 'firebase_options.dart';
 
@@ -24,13 +29,28 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+          primaryColor: const Color.fromARGB(255, 53, 104, 153),
+          fontFamily: "Poppins"
+      ),
+      // routes: {
+      //   '/apartment-screen':(context) => ApartmentScreen()
+      // },
       debugShowCheckedModeBanner: false,
-      home: MainPage(),
-      //routes: {
-      //  '/': (ctx) => TabScreen(),
-      //ProfileScreen.routeName: (ctx) => ProfileScreen(),
-      //FavoritesScreen.routeName: (ctx) => FavoritesScreen(),
-      //}
+      // home: checkLogin(),
+      initialRoute: '/',
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        '/': (context) => const checkLogin(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        ProfileApartment.routeName: (context) => const ProfileApartment(),
+        ChatScreen.routeName: (context) => ChatScreen(),
+        FavoritesScreen.routeName: (context) => FavoritesScreen(),
+        ProfileScreen.routeName: (context) => ProfileScreen(),
+        SearchScreen.routeName: (context) => SearchScreen(),
+        FailScreen.routeName: (context) => FailScreen(),
+        ApartmentScreen.routeName: (context) => ApartmentScreen(),
+      },
     );
   }
 }
