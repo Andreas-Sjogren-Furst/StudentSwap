@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
         SearchScreen.routeName: (context) => SearchScreen(),
         FailScreen.routeName: (context) => FailScreen(),
         RegisterPage.routeName: (context) => RegisterPage(),
-
         RegisterPage2.routeName: (context) => RegisterPage2(),
         LoginPage.routeName: (context) => LoginPage(),
       },
