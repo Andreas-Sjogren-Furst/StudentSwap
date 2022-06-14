@@ -13,6 +13,9 @@ class _profile_apartmentState extends State<profile_apartment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Apartment Photos"),
+      ),
       body: Container(
         color: Colors.white,
         child: SafeArea(
@@ -27,33 +30,16 @@ class _profile_apartmentState extends State<profile_apartment> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                            icon: const Icon(Icons.keyboard_arrow_left_outlined),
-                            iconSize: 32,
-                            color: Colors.black,
-                            onPressed: () {Navigator.pop(context);},
-                        ),
-                        const Expanded(
-                            flex: 5,
-                            child: Padding(
-                              padding: EdgeInsets.only(right: 32.0),
-                              child: Text("Apartment images", textAlign: TextAlign.center,),
-                            )
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
                   Stack(
                     children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: Image(image: AssetImage("assets/sample/apartment1.jpg")),
+                      InkWell(
+                        onTap: () async {
+                          await showDialog(context: context, builder: (_) => const ImageDialog(ai: AssetImage("assets/sample/apartment1.jpg")));
+                        },
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: const Image(image: AssetImage("assets/sample/apartment1.jpg")),
+                        ),
                       ),
                       Positioned(
                         bottom: 0,
@@ -84,24 +70,64 @@ class _profile_apartmentState extends State<profile_apartment> {
                       )
                     ],
                   ),
-                  const SizedBox(height: 16.0),
-                  const Padding(
+                  const SizedBox(height: 8.0),
+                  Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: Text("Additional photos"),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text("Additional photos"),
+                            TextButton(
+                                onPressed: () {},
+                                style: TextButton.styleFrom(
+                                  primary: Colors.grey,
+                                  textStyle: const TextStyle(
+                                    fontSize: 16,
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Edit",
+                                )
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 8.0,),
+                        GridView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            physics: const ClampingScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, crossAxisSpacing: 3.0, mainAxisSpacing: 3.0, childAspectRatio: 1.0),
+                            padding: EdgeInsets.zero,
+                            itemCount: 24,
+                            itemBuilder: (BuildContext context, int index) {
+                              return index%2==0 ? InkWell(
+                                onTap: () async {
+                                  await showDialog(context: context, builder: (_) => const ImageDialog(ai: AssetImage("assets/sample/apartment1.jpg")));
+                                },
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width/3,
+                                    child: const Image(image: AssetImage("assets/sample/apartment1.jpg"), fit: BoxFit.cover)
+                                ),
+                              ) : InkWell(
+                                onTap: () async {
+                                  await showDialog(context: context, builder: (_) => const ImageDialog(ai: AssetImage("assets/sample/apartment2.jpg")));
+                                },
+                                child: Container(
+                                    width: MediaQuery.of(context).size.width/3,
+                                    child: const Image(image: AssetImage("assets/sample/apartment2.jpg"), fit: BoxFit.cover)
+                                ),
+                              );
+                            }
+                        )
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 16.0,),
-                  GridView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      physics: const ClampingScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, crossAxisSpacing: 1.0, mainAxisSpacing: 1.0, childAspectRatio: 2.0),
-                      padding: EdgeInsets.zero,
-                      itemCount: 12,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Image(image: AssetImage("assets/sample/apartment2.jpg"));
 
-                      }
-                  )
                 ],
               ),
             ),
@@ -111,3 +137,29 @@ class _profile_apartmentState extends State<profile_apartment> {
     );
   }
 }
+
+// Dialog to show photos when clicked
+class ImageDialog extends StatelessWidget {
+  const ImageDialog({Key? key, required this.ai}) : super(key: key);
+
+  final AssetImage ai;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      alignment: Alignment.center,
+      child: Image(image: ai, fit: BoxFit.contain,),
+      /*child: Container(
+        //width: MediaQuery.of(context).size.width,
+        //height: 200,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: ai,
+            fit: BoxFit.contain,
+          ),
+        ),
+      ),*/
+    );
+  }
+}
+
