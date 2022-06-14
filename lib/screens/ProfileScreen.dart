@@ -22,116 +22,118 @@ class __ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Column(
-              children: const [
-                CircleAvatar(
-                    radius: 65,
-                    backgroundImage: AssetImage('assets/sample/profile2.jpg')),
-                SizedBox(
-                  height: 15,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 15,
+        ),
+        Center(
+          child: Column(
+            children: const [
+              CircleAvatar(
+                  radius: 65,
+                  backgroundImage: AssetImage('assets/sample/profile2.jpg')),
+              Text(
+                'Hailey Jefferson',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  'Hailey Jefferson',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                Divider(color: Colors.grey),
-              ],
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15),
+        Column(
+          children: [
+            Divider(color: Colors.grey),
+            SizedBox(
+              height: 15,
             ),
-          ),
-          FlatButton(
-              padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ProfileApartment()),
-                );
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'Apartment images',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Poppins',
+            FlatButton(
+                padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfileApartment()),
+                  );
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'Apartment images',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                      ),
                     ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_right_outlined,
-                    color: Colors.black,
-                    size: 24,
-                  ),
-                ],
-              )),
-          const Divider(
-            color: Colors.grey,
-          ),
-          FlatButton(
-              padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const profile_info()),
-                );
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    'Personal information',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Poppins',
+                    Icon(
+                      Icons.keyboard_arrow_right_outlined,
+                      color: Colors.black,
+                      size: 24,
                     ),
-                  ),
-                  Icon(
-                    Icons.keyboard_arrow_right_outlined,
-                    color: Colors.black,
-                    size: 24,
-                  ),
-                ],
-              )),
-          const Divider(color: Colors.grey),
-          FlatButton(
+                  ],
+                )),
+          ],
+        ),
+        const Divider(
+          color: Colors.grey,
+        ),
+        FlatButton(
             padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
             onPressed: () {
-              FirebaseAuth.instance.signOut();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const profile_info()),
+              );
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: const [
                 Text(
-                  'Log out',
+                  'Personal information',
                   style: TextStyle(
                     fontSize: 18,
                     fontFamily: 'Poppins',
                   ),
                 ),
                 Icon(
-                  Icons.logout,
+                  Icons.keyboard_arrow_right_outlined,
                   color: Colors.black,
-                  size: 20,
+                  size: 24,
                 ),
               ],
-            ),
+            )),
+        const Divider(color: Colors.grey),
+        FlatButton(
+          padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: const [
+              Text(
+                'Log out',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              Icon(
+                Icons.logout,
+                color: Colors.black,
+                size: 20,
+              ),
+            ],
           ),
-          const Divider(color: Colors.grey)
-        ],
-      ),
+        ),
+        const Divider(color: Colors.grey)
+      ],
     );
   }
 }
