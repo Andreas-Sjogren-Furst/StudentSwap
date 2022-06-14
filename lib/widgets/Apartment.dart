@@ -85,6 +85,7 @@ Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
       'favorites': FieldValue.arrayRemove([apartmentCard.address])
       });
   }
+}
   
 
 class ApartmentCard extends StatefulWidget {
