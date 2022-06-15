@@ -31,6 +31,7 @@ class _TabScreenState extends State<TabScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: Text(_pages[_selectedPageIndex]["title"] as String),
         backgroundColor: Theme.of(context).primaryColor,
       ),
@@ -38,10 +39,10 @@ class _TabScreenState extends State<TabScreen> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
         backgroundColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Theme.of(context).primaryColor,
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
+        unselectedItemColor: Colors.grey,//Theme.of(context).primaryColor,
+        selectedItemColor: Theme.of(context).primaryColor,
         currentIndex: _selectedPageIndex,
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
           BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorites"),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chat"),
