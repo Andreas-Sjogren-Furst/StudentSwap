@@ -16,7 +16,6 @@ class ApartmentScreen extends StatefulWidget {
 }
 
 class _ApartmentScreenState extends State<ApartmentScreen> {
-
   String oneOrMore(List<String> destinationer) {
     return destinationer.length > 1 ? 'Destinations' : 'Destination';
   }
@@ -36,12 +35,12 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
 
     //String listeAfDestinationer = goingTo.map((g) => g.toString()).toString();
 
-  String listeAfDestinationer(List<String> value) {
-    String output='';
-    value.forEach((x)=>x.toString());
-    output = value.join(', ');
-    return output;
-}
+    String listeAfDestinationer(List<String> value) {
+      String output = '';
+      value.forEach((x) => x.toString());
+      output = value.join(', ');
+      return output;
+    }
 
     // apartmentImage's kan hentes fra firebase?
     // hvis ja kan man lave et array med alle apartment billederne.
@@ -63,7 +62,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
       ),
       body: Container(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
@@ -105,7 +104,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
             ],
           ),
           SizedBox(
-            height: 25,
+            height: 10,
           ),
           // ignore: prefer_const_constructors
           Text(
@@ -113,6 +112,18 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
             style: TextStyle(
                 color: Colors.black, fontSize: 30.0, fontFamily: "Poppins"),
           ),
+  
+          Container(
+            width: 300,
+            height: 50,
+           child: Text("aaaaaaaaaadlæk apfnvouhnrpcuhgpoi wuåotignqpexirmghpehqpsiuh,dcfoxisaheiruzg,vmpixueqrhmgxpis,uhepogicfhmaepmxohrbpiuhergpcohmxaprieughmzp,aehrxvpiuqehr,iuqhe,"
+
+           )
+
+          ),
+          
+
+
           Divider(
             indent: 30,
             endIndent: 30,
@@ -171,9 +182,11 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image(
-                      image: AssetImage(lejlighedsPics[index]),
-                      fit: BoxFit.contain,
+                    child: InkWell(
+                      child: Image(
+                        image: AssetImage(lejlighedsPics[index]),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
