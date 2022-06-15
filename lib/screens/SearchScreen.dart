@@ -17,9 +17,10 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  String searchKey = "";
-  List<String> GoingToKey = [];
-  String Semesterkey = "";
+  String searchKey = ""; // En by i search.
+  List<String> GoingToKey = []; // ønsker af byer man vil til.
+  String Semesterkey = ""; // Hvilket semester, any, spring, autumn,
+
   Stream streamQuery =
       FirebaseFirestore.instance.collection("users").snapshots();
 
