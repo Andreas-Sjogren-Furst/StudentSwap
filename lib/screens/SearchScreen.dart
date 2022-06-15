@@ -19,9 +19,10 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  String searchKey = "";
-  List<String> GoingToKey = [];
-  String Semesterkey = "";
+  String searchKey = ""; // En by i search.
+  List<String> GoingToKey = []; // ønsker af byer man vil til.
+  String Semesterkey = ""; // Hvilket semester, any, spring, autumn,
+
   Stream streamQuery =
       FirebaseFirestore.instance.collection("users").snapshots();
 
@@ -38,25 +39,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   List<Apartment> apartmentsLists = [];
   // Sample data
-
-  final apartmentList = [
-    Apartment(
-        city: "Amsterdam",
-        address: "Julianaplein 6, 1097 DN",
-        apartmentImage: "apartment1",
-        profileImage: "profile1",
-        savedFavorite: false,
-        goingTo: ['København', 'Stockholm', 'Nuuk'],
-        userID: 'Gustav'),
-    Apartment(
-        city: "Amsterdam",
-        address: "Osdorpplein 372A, 1068 EV",
-        apartmentImage: "apartment2",
-        profileImage: "profile2",
-        savedFavorite: false,
-        goingTo: ['Stockholm', 'Rio', 'New York'],
-        userID: 'Sven'),
-  ];
+  List<String> apartmentTypeWishes = [];
 
   final user = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
@@ -68,19 +51,21 @@ class _SearchScreenState extends State<SearchScreen> {
     db.collection("users").doc(user?.uid);
   }
 
-  Future<Apartment?> _getUserNames() async {
-    dynamic userOne = await getData('VZfEnodgGN1bedOJtPWZ');
-    dynamic userTwo = await getData('s0HetWSfOkuJi1mLCROZ');
-    print(userOne['city']);
-    return Apartment(
-        city: await userOne['city'],
-        address: await userOne['address'],
-        apartmentImage: await userOne['apartmentImage'],
-        profileImage: await userOne['profileImage'],
-        savedFavorite: await userOne['savedFavorite'],
-        goingTo: await userOne['goingTo'],
-        userID: await userOne['userID']);
-  }
+  // Future<Apartment?> _getUserNames() async {
+  //   dynamic userOne = await getData('VZfEnodgGN1bedOJtPWZ');
+  //   dynamic userTwo = await getData('s0HetWSfOkuJi1mLCROZ');
+  //   print(userOne['city']);
+  //   return Apartment(
+  //       city: await userOne['city'],
+  //       address: await userOne['address'],
+  //       apartmentImage: await userOne['apartmentImage'],
+  //       profileImage: await userOne['profileImage'],
+  //       savedFavorite: await userOne['savedFavorite'],
+  //       goingTo: await userOne['goingTo'],
+  //       userID: await userOne['userID'],
+  //       semester: await userOne['semester'],
+  //       appartmentType: await userOne['appartmentType']);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -107,19 +92,32 @@ class _SearchScreenState extends State<SearchScreen> {
                     apartmentImage: userMap['apartmentImage'] ?? "no available",
                     profileImage: userMap['profileImage'] ?? "not available",
                     savedFavorite: userMap['savedFavorite'] ?? false,
-                    goingTo: ["test1", "test2"],
-                    userID: userMap['userID'] ?? "not available"));
+                    goingTo: userMap["goingTo"] ?? ["test1", "test2"],
+                    userID: userMap['userID'] ?? "not available",
+                    semester: userMap['semester'] ?? "not available",
+                    appartmentType:
+                        userMap['appartmentType'] ?? "not available"));
               }
-              // opdaterer apartmentlist med searchKey.
+              // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.
               apartmentsLists = apartmentsLists
                   .where((apartment) => apartment.city
                       .toLowerCase()
                       .contains(searchKey.toLowerCase()))
                   .where((apartment) =>
                       GoingToKey.isEmpty ||
-                      GoingToKey.map((key) => key.toLowerCase())
+                      GoingToKey.map(
+                              (goingToKeyString) => goingToKeyString.toLowerCase())
                           .toList()
                           .contains(apartment.city.toLowerCase()))
+                  .where((apartment) => apartment.semester
+                      .toLowerCase()
+                      .contains(Semesterkey.toLowerCase()))
+                  .where((apartment) =>
+                      apartmentTypeWishes.isEmpty ||
+                      apartmentTypeWishes
+                          .map((apartmentType) => apartmentType.toLowerCase())
+                          .toList()
+                          .contains(apartment.appartmentType.toLowerCase()))
                   .toList();
 
               // print("Apartsmentslist: ${apartmentsLists}");
