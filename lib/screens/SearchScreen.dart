@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/services/FirebaseMethods.dart';
 
-
 import 'package:login_page/widgets/Apartment.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -17,17 +16,26 @@ class SearchScreen extends StatefulWidget {
   State<SearchScreen> createState() => _SearchScreenState();
 }
 
-
-getData(String uid) async {
-  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-  return await FirestoreUserReference.doc(uid).get();
-}
 class _SearchScreenState extends State<SearchScreen> {
-  // Sample data
-
   String searchKey = "";
+  List<String> GoingToKey = [];
+  String Semesterkey = "";
   Stream streamQuery =
       FirebaseFirestore.instance.collection("users").snapshots();
+
+  getData(String uid) async {
+    final FirestoreUserReference =
+        FirebaseFirestore.instance.collection("users");
+    return await FirestoreUserReference.doc(uid).get();
+  }
+
+  String setGoingToKey(String semester) {
+    Semesterkey = semester;
+    return semester;
+  }
+
+  List<Apartment> apartmentsLists = [];
+  // Sample data
 
   final apartmentList = [
     Apartment(
@@ -82,37 +90,14 @@ class _SearchScreenState extends State<SearchScreen> {
               if (!snapshot.hasData) {
                 return const Text('Loading...');
               }
-              List<Apartment> apartmentsLists = [];
 
-              // for (var doc in snapshot.data.docs) {
-              //   var userDocument = doc.data();
-              //   apartmentsLists.add(Apartment(
-              //       city: userDocument['city'],
-              //       address: userDocument['address'],
-              //       apartmentImage: userDocument['apartmentImage'],
-              //       profileImage: userDocument['profileImage'],
-              //       savedFavorite: userDocument['savedFavorite'],
-              //       goingTo: userDocument['goingTo'],
-              //       userID: userDocument['userID']));
-              // }
-
-              // snapshot.data!.docs.forEach((doc) {
-              //   apartmentsLists.add(Apartment(
-              //       city: doc.data().['city'] ?? "not available",
-              //       address: doc['address'] ?? "not available",
-              //       apartmentImage: doc['apartmentImage'] ?? "no available",
-              //       profileImage: doc['profileImage'] ?? "not available",
-              //       savedFavorite: doc['savedFavorite'] ?? false,
-              //       goingTo: doc['goingTo'] ?? ["not available"],
-              //       userID: doc['userID'] ?? "not available"));
-              // });
-
-              snapshot.data!.docs.forEach((doc) {
+              for (var doc in snapshot.data!.docs) {
                 Object? testmap = doc.data();
                 LinkedHashMap<dynamic, dynamic> testlinked =
                     testmap as LinkedHashMap<dynamic, dynamic>;
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
+                print("apartment list add");
 
                 apartmentsLists.add(Apartment(
                     city: userMap['city'] ?? "not available",
@@ -122,11 +107,17 @@ class _SearchScreenState extends State<SearchScreen> {
                     savedFavorite: userMap['savedFavorite'] ?? false,
                     goingTo: ["test1", "test2"],
                     userID: userMap['userID'] ?? "not available"));
-              });
-              // opdataere apartmentlist med searchkey.
+              }
+              // opdaterer apartmentlist med searchKey.
               apartmentsLists = apartmentsLists
-                  .where((s) =>
-                      s.city.toLowerCase().contains(searchKey.toLowerCase()))
+                  .where((apartment) => apartment.city
+                      .toLowerCase()
+                      .contains(searchKey.toLowerCase()))
+                  .where((apartment) =>
+                      GoingToKey.isEmpty ||
+                      GoingToKey.map((key) => key.toLowerCase())
+                          .toList()
+                          .contains(apartment.city.toLowerCase()))
                   .toList();
 
               // print("Apartsmentslist: ${apartmentsLists}");
