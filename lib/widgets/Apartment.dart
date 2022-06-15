@@ -12,52 +12,56 @@ class Apartment {
   late String address;
   late String apartmentImage;
   late String profileImage;
-
+  late String semester;
   late bool savedFavorite;
   late String userID;
-  late List<String> goingTo;
+  late List<dynamic> goingTo;
+  late String appartmentType;
 
   bool saved = false;
 
-  Apartment(
-      {required this.city,
-      required this.address,
-      required this.apartmentImage,
-      required this.profileImage,
-      required this.savedFavorite,
-      required this.goingTo,
-      required this.userID});
+  Apartment({
+    required this.city,
+    required this.address,
+    required this.apartmentImage,
+    required this.profileImage,
+    required this.savedFavorite,
+    required this.goingTo,
+    required this.userID,
+    required this.semester,
+    required this.appartmentType,
+  });
 
   ApartmentCard getCard() {
     return ApartmentCard(
-        apartmentImage: apartmentImage,
-        city: city,
-        address: address,
-        profileImage: profileImage,
-        savedFavorite: savedFavorite,
-        userID: userID,
-        goingTo: goingTo);
+      apartmentImage: apartmentImage,
+      city: city,
+      address: address,
+      profileImage: profileImage,
+      savedFavorite: savedFavorite,
+      userID: userID,
+      goingTo: goingTo,
+      semester: semester,
+      appartmentType: appartmentType,
+    );
   }
 }
 
 // Future<bool> checkFavorite(Apartment apartmentCard) async {
 //   final uid = FirebaseAuth.instance.currentUser!.uid;
 
-
-
 //   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-//   var userDocument = await FirestoreUserReference.doc(uid).get(); 
+//   var userDocument = await FirestoreUserReference.doc(uid).get();
 
 //   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-//     return true; 
+//     return true;
 //   } else {
-//     return false; 
+//     return false;
 //   }
 // }
 
 //   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
 //   var userDocument = await FirestoreUserReference.doc(uid).get();
-
 
 //   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
 //     return true;
@@ -72,10 +76,9 @@ Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   // final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-  // var userDocument = await FirestoreUserReference.doc(uid).get(); 
-
   // var userDocument = await FirestoreUserReference.doc(uid).get();
 
+  // var userDocument = await FirestoreUserReference.doc(uid).get();
 
   // if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
   //   return users
@@ -92,14 +95,10 @@ Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
   //     });
   // }
 
-  if(saved){
-    return users
-    .doc(uid)
-    .update({
+  if (saved) {
+    return users.doc(uid).update({
       'favorites': FieldValue.arrayUnion([apartmentCard.address])
-      });
-
-
+    });
   } else {
     return users.doc(uid).update({
       'favorites': FieldValue.arrayRemove([apartmentCard.address])
@@ -108,25 +107,28 @@ Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
 }
 
 class ApartmentCard extends StatefulWidget {
-  const ApartmentCard({
-    Key? key,
-    required this.apartmentImage,
-    required this.city,
-    required this.address,
-    required this.profileImage,
-    required this.userID,
-    required this.savedFavorite,
-    required this.goingTo,
-  }) : super(key: key);
+  const ApartmentCard(
+      {Key? key,
+      required this.apartmentImage,
+      required this.city,
+      required this.address,
+      required this.profileImage,
+      required this.userID,
+      required this.savedFavorite,
+      required this.goingTo,
+      required this.semester,
+      required this.appartmentType})
+      : super(key: key);
 
   final String apartmentImage;
   final String city;
   final String address;
   final String profileImage;
-
+  final String semester;
   final String userID;
   final bool savedFavorite;
-  final List<String> goingTo;
+  final List<dynamic> goingTo;
+  final String appartmentType;
 
   @override
   State<ApartmentCard> createState() => _ApartmentCardState();
@@ -149,7 +151,8 @@ class _ApartmentCardState extends State<ApartmentCard> {
               'profileImage': widget.profileImage,
               'userID': widget.userID,
               'savedFavorite': widget.savedFavorite,
-              'goingTo': widget.goingTo
+              'goingTo': widget.goingTo,
+              "semester": widget.semester,
             });
       },
       child: Card(

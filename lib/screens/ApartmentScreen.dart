@@ -16,7 +16,7 @@ class ApartmentScreen extends StatefulWidget {
 }
 
 class _ApartmentScreenState extends State<ApartmentScreen> {
-  String oneOrMore(List<String> destinationer) {
+  String oneOrMore(List<dynamic> destinationer) {
     return destinationer.length > 1 ? 'Destinations' : 'Destination';
   }
 
@@ -31,11 +31,11 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
     String profileImage = args['profileImage'] ?? 'not available';
     String userID = args['userID'] ?? 'not available';
     bool savedFavorite = args['savedFavorite'] != null;
-    List<String> goingTo = args['goingTo'];
+    List<dynamic> goingTo = args['goingTo'];
 
     //String listeAfDestinationer = goingTo.map((g) => g.toString()).toString();
 
-    String listeAfDestinationer(List<String> value) {
+    String listeAfDestinationer(List<dynamic> value) {
       String output = '';
       value.forEach((x) => x.toString());
       output = value.join(', ');
@@ -112,17 +112,12 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
             style: TextStyle(
                 color: Colors.black, fontSize: 30.0, fontFamily: "Poppins"),
           ),
-  
+
           Container(
-            width: 300,
-            height: 50,
-           child: Text("aaaaaaaaaadlæk apfnvouhnrpcuhgpoi wuåotignqpexirmghpehqpsiuh,dcfoxisaheiruzg,vmpixueqrhmgxpis,uhepogicfhmaepmxohrbpiuhergpcohmxaprieughmzp,aehrxvpiuqehr,iuqhe,"
-
-           )
-
-          ),
-          
-
+              width: 300,
+              height: 50,
+              child: Text(
+                  "aaaaaaaaaadlæk apfnvouhnrpcuhgpoi wuåotignqpexirmghpehqpsiuh,dcfoxisaheiruzg,vmpixueqrhmgxpis,uhepogicfhmaepmxohrbpiuhergpcohmxaprieughmzp,aehrxvpiuqehr,iuqhe,")),
 
           Divider(
             indent: 30,
