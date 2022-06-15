@@ -21,10 +21,8 @@ class __ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
@@ -156,7 +154,6 @@ class __ProfileScreenState extends State<ProfileScreen> {
             color: Colors.grey,
           )
         ],
-      ),
-    );
+      );
   }
 }
