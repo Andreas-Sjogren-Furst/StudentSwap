@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/services/FirebaseMethods.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 import 'package:login_page/widgets/Apartment.dart';
 
@@ -203,7 +205,14 @@ class _SearchScreenState extends State<SearchScreen> {
                                 // color: Color.fromRGBO(242, 242, 243, 1.0),
                               ),
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return FilterSheet();
+                                      }
+                                  );
+                                },
                                 icon: const Icon(Icons.filter_list_alt),
                                 color: Colors.blueGrey,
                               ),
@@ -233,5 +242,101 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
               );
             }));
+  }
+}
+
+class FilterSheet extends StatefulWidget {
+  const FilterSheet({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<FilterSheet> createState() => _FilterSheetState();
+}
+
+class _FilterSheetState extends State<FilterSheet> {
+
+  List<String> _cityChips = [];
+  var _searchController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTextStyle(
+      style: const TextStyle(fontFamily: "Poppins", color: Colors.black),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: _searchController,
+              onChanged: (value) {
+                //setState(() {
+                  // searchKey = value;
+                //});
+              },
+              onSubmitted: (value) {
+                setState(() {
+                  _cityChips.add(value);
+                  _searchController.clear();
+                });
+              },
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(
+                    width: 0,
+                    style: BorderStyle.none,
+                  ),
+                ),
+                filled: true,
+                fillColor: const Color(0xFFEEEEEE),
+                labelText: 'Search for a city',
+                prefixIcon: const Icon(Icons.search),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            SizedBox(
+              height: 32.0,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: _cityChips.length,
+                itemBuilder: (context, index) =>(
+                   Chip(
+                     label: Text(_cityChips[index]),
+                     deleteIcon: const Icon(Icons.clear, size: 16.0,),
+                     backgroundColor: Theme.of(context).primaryColorLight,
+                     deleteIconColor: Theme.of(context).primaryColor,
+                     onDeleted: () {
+                       setState(() {
+                           _cityChips.removeAt(index);
+                       });
+                     },
+                   )
+                ),
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(width: 3.0);
+                },
+              ),
+            ),
+            const Divider(height: 24.0,),
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: Text("Semester", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
+            ),
+            SizedBox(
+              height: 32.0,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: const [
+                  ChoiceChip(label: Text("Any"), selected: true),
+                  ChoiceChip(label: Text("Fall"), selected: false),
+                  ChoiceChip(label: Text("Autumn"), selected: false),
+                ],
+              ),
+            )
+        ]),
+      ),
+    );
   }
 }
