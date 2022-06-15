@@ -16,6 +16,10 @@ class ApartmentScreen extends StatefulWidget {
 }
 
 class _ApartmentScreenState extends State<ApartmentScreen> {
+  String oneOrMore(List<String> destinationer) {
+    return destinationer.length > 1 ? 'Destinations' : 'Destination';
+  }
+
   @override
   Widget build(BuildContext context) {
     final args =
@@ -28,8 +32,15 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
     String userID = args['userID'] ?? 'not available';
     bool savedFavorite = args['savedFavorite'] != null;
     List<String> goingTo = args['goingTo'];
-    
 
+    //String listeAfDestinationer = goingTo.map((g) => g.toString()).toString();
+
+    String listeAfDestinationer(List<String> value) {
+      String output = '';
+      value.forEach((x) => x.toString());
+      output = value.join(', ');
+      return output;
+    }
 
     // apartmentImage's kan hentes fra firebase?
     // hvis ja kan man lave et array med alle apartment billederne.
@@ -51,7 +62,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
       ),
       body: Container(
           child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
@@ -93,14 +104,26 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
             ],
           ),
           SizedBox(
-            height: 25,
+            height: 10,
           ),
           // ignore: prefer_const_constructors
           Text(
             "$userID", // tilføj et brugernavn/rigtigt navn/userID?
             style: TextStyle(
-                color: Colors.grey, fontSize: 30.0, fontFamily: "Poppins"),
+                color: Colors.black, fontSize: 30.0, fontFamily: "Poppins"),
           ),
+  
+          Container(
+            width: 300,
+            height: 50,
+           child: Text("aaaaaaaaaadlæk apfnvouhnrpcuhgpoi wuåotignqpexirmghpehqpsiuh,dcfoxisaheiruzg,vmpixueqrhmgxpis,uhepogicfhmaepmxohrbpiuhergpcohmxaprieughmzp,aehrxvpiuqehr,iuqhe,"
+
+           )
+
+          ),
+          
+
+
           Divider(
             indent: 30,
             endIndent: 30,
@@ -110,21 +133,39 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
 
           Padding(
             padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
-            child: Row(
-              children: [
-                Column(
+            child: Container(
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      "From",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontFamily: 'Poppins',
-                      ),
+                    Column(
+                      children: [
+                        Text(
+                          "From",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        Text(city)
+                      ],
                     ),
-                    Text(goingTo[1])
+                    Column(
+                      children: [
+                        Text(
+                          oneOrMore(goingTo),
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                        Text(listeAfDestinationer(goingTo))
+                      ],
+                    )
                   ],
-                )
-              ],
+                ),
+              ),
             ),
           ),
           Expanded(
@@ -141,9 +182,11 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image(
-                      image: AssetImage(lejlighedsPics[index]),
-                      fit: BoxFit.contain,
+                    child: InkWell(
+                      child: Image(
+                        image: AssetImage(lejlighedsPics[index]),
+                        fit: BoxFit.contain,
+                      ),
                     ),
                   ),
                 ),
