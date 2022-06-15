@@ -43,8 +43,21 @@ class Apartment {
 // Future<bool> checkFavorite(Apartment apartmentCard) async {
 //   final uid = FirebaseAuth.instance.currentUser!.uid;
 
+
+
+//   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
+//   var userDocument = await FirestoreUserReference.doc(uid).get(); 
+
+//   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
+//     return true; 
+//   } else {
+//     return false; 
+//   }
+// }
+
 //   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
 //   var userDocument = await FirestoreUserReference.doc(uid).get();
+
 
 //   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
 //     return true;
@@ -59,7 +72,10 @@ Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   // final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
+  // var userDocument = await FirestoreUserReference.doc(uid).get(); 
+
   // var userDocument = await FirestoreUserReference.doc(uid).get();
+
 
   // if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
   //   return users
@@ -76,10 +92,14 @@ Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
   //     });
   // }
 
-  if (saved) {
-    return users.doc(uid).update({
+  if(saved){
+    return users
+    .doc(uid)
+    .update({
       'favorites': FieldValue.arrayUnion([apartmentCard.address])
-    });
+      });
+
+
   } else {
     return users.doc(uid).update({
       'favorites': FieldValue.arrayRemove([apartmentCard.address])
