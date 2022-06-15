@@ -1,6 +1,11 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/services/FirebaseMethods.dart';
+
+
 import 'package:login_page/widgets/Apartment.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -13,17 +18,35 @@ class SearchScreen extends StatefulWidget {
 }
 
 
+getData(String uid) async {
+  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
+  return await FirestoreUserReference.doc(uid).get();
+}
 class _SearchScreenState extends State<SearchScreen> {
   // Sample data
 
-  final apartmentList = [Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1", savedFavorite: false, goingTo: ['København', 'Stockholm', 'Nuuk'], userID: 'Gustav' ),
-                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2", savedFavorite: false, goingTo: ['Stockholm', 'Rio', 'New York'], userID: 'Sven'),
-                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1", savedFavorite: false, goingTo: ['Stockholm', 'Madrid', 'Aalborg'], userID: 'Carl'),
-                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2", savedFavorite: false, goingTo: ['Karlslunde', 'Rio', 'New York'], userID: 'Johan'),
-                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1", savedFavorite: false, goingTo: ['Krakow', 'Rom', 'New York'], userID: 'Rasmus'),
-                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2", savedFavorite: false, goingTo: ['Stockholm', 'København', 'New York'], userID: 'Oscar'),
-                        Apartment(city: "Amsterdam", address: "Julianaplein 6, 1097 DN", apartmentImage: "apartment1", profileImage: "profile1", savedFavorite: false, goingTo: ['Stockholm', 'Rio', 'New York'], userID: 'Andreas'),
-                        Apartment(city: "Amsterdam", address: "Osdorpplein 372A, 1068 EV", apartmentImage: "apartment2", profileImage: "profile2", savedFavorite: false, goingTo: ['Stockholm', 'Rio', 'New York'], userID: 'Mathias'),];
+  String searchKey = "";
+  Stream streamQuery =
+      FirebaseFirestore.instance.collection("users").snapshots();
+
+  final apartmentList = [
+    Apartment(
+        city: "Amsterdam",
+        address: "Julianaplein 6, 1097 DN",
+        apartmentImage: "apartment1",
+        profileImage: "profile1",
+        savedFavorite: false,
+        goingTo: ['København', 'Stockholm', 'Nuuk'],
+        userID: 'Gustav'),
+    Apartment(
+        city: "Amsterdam",
+        address: "Osdorpplein 372A, 1068 EV",
+        apartmentImage: "apartment2",
+        profileImage: "profile2",
+        savedFavorite: false,
+        goingTo: ['Stockholm', 'Rio', 'New York'],
+        userID: 'Sven'),
+  ];
 
   final user = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
@@ -32,119 +55,192 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void initState() {
     super.initState();
-
     db.collection("users").doc(user?.uid);
+  }
+
+  Future<Apartment?> _getUserNames() async {
+    dynamic userOne = await getData('VZfEnodgGN1bedOJtPWZ');
+    dynamic userTwo = await getData('s0HetWSfOkuJi1mLCROZ');
+    print(userOne['city']);
+    return Apartment(
+        city: await userOne['city'],
+        address: await userOne['address'],
+        apartmentImage: await userOne['apartmentImage'],
+        profileImage: await userOne['profileImage'],
+        savedFavorite: await userOne['savedFavorite'],
+        goingTo: await userOne['goingTo'],
+        userID: await userOne['userID']);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+    return Scaffold(
+        body: StreamBuilder(
+            stream: FirebaseFirestore.instance.collection("users").snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return const Text('Loading...');
+              }
+              List<Apartment> apartmentsLists = [];
+
+              // for (var doc in snapshot.data.docs) {
+              //   var userDocument = doc.data();
+              //   apartmentsLists.add(Apartment(
+              //       city: userDocument['city'],
+              //       address: userDocument['address'],
+              //       apartmentImage: userDocument['apartmentImage'],
+              //       profileImage: userDocument['profileImage'],
+              //       savedFavorite: userDocument['savedFavorite'],
+              //       goingTo: userDocument['goingTo'],
+              //       userID: userDocument['userID']));
+              // }
+
+              // snapshot.data!.docs.forEach((doc) {
+              //   apartmentsLists.add(Apartment(
+              //       city: doc.data().['city'] ?? "not available",
+              //       address: doc['address'] ?? "not available",
+              //       apartmentImage: doc['apartmentImage'] ?? "no available",
+              //       profileImage: doc['profileImage'] ?? "not available",
+              //       savedFavorite: doc['savedFavorite'] ?? false,
+              //       goingTo: doc['goingTo'] ?? ["not available"],
+              //       userID: doc['userID'] ?? "not available"));
+              // });
+
+              snapshot.data!.docs.forEach((doc) {
+                Object? testmap = doc.data();
+                LinkedHashMap<dynamic, dynamic> testlinked =
+                    testmap as LinkedHashMap<dynamic, dynamic>;
+                Map<String, dynamic> userMap =
+                    testlinked.map((a, b) => MapEntry(a, b));
+
+                apartmentsLists.add(Apartment(
+                    city: userMap['city'] ?? "not available",
+                    address: userMap['address'] ?? "not available",
+                    apartmentImage: userMap['apartmentImage'] ?? "no available",
+                    profileImage: userMap['profileImage'] ?? "not available",
+                    savedFavorite: userMap['savedFavorite'] ?? false,
+                    goingTo: ["test1", "test2"],
+                    userID: userMap['userID'] ?? "not available"));
+              });
+              // opdataere apartmentlist med searchkey.
+              apartmentsLists = apartmentsLists
+                  .where((s) =>
+                      s.city.toLowerCase().contains(searchKey.toLowerCase()))
+                  .toList();
+
+              // print("Apartsmentslist: ${apartmentsLists}");
+
+              return Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    // Sample Data
-                    Text(
-                      "Welcome back!",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14.0,
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w500),
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            // Sample Data
+                            Text(
+                              "Welcome back!",
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14.0,
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              "Jefferson", // TODO: Get username from Firebase"${user?.displayName}"
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 24.0,
+                                  fontFamily: "Poppins",
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const CircleAvatar(
+                          backgroundImage:
+                              AssetImage("assets/sample/profile2.jpg"),
+                          radius: 27.0,
+                        )
+                      ],
                     ),
-                    Text(
-                      "Jefferson", // TODO: Get username from Firebase"${user?.displayName}"
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24.0,
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.bold),
+                    const SizedBox(
+                      height: 15.0,
                     ),
-                  ],
-                ),
-                const CircleAvatar(
-                  backgroundImage: AssetImage("assets/sample/profile2.jpg"),
-                  radius: 27.0,
-                )
-              ],
-            ),
-            const SizedBox(
-              height: 15.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: 3,
-                  // TODO: Style TextField
-                  child: SizedBox(
-                    height: 45.0,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          // TODO: Style TextField
+                          child: SizedBox(
+                            height: 45.0,
+                            child: TextField(
+                              onChanged: (value) {
+                                setState(() {
+                                  searchKey = value;
+                                });
+                              },
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: const BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xFFEEEEEE),
+                                labelText: 'Search for a city',
+                                prefixIcon: const Icon(Icons.search),
+                              ),
+                            ),
                           ),
                         ),
-                        filled: true,
-                        fillColor: const Color(0xFFEEEEEE),
-                        labelText: 'Search',
-                        prefixIcon: const Icon(Icons.search),
-                      ),
+                        Expanded(
+                            flex: 1,
+                            child: Container(
+                              margin: const EdgeInsets.fromLTRB(36.0, 0, 0, 0),
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(12.0)),
+                                color: Colors.grey[200],
+                                // color: Color.fromRGBO(242, 242, 243, 1.0),
+                              ),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.filter_list_alt),
+                                color: Colors.blueGrey,
+                              ),
+                            ))
+                      ],
                     ),
-                  ),
+                    const SizedBox(height: 15.0),
+                    const Text(
+                      "Accommodation",
+                      style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10.0),
+                    Expanded(
+                        child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: apartmentsLists.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return apartmentsLists[index].getCard();
+                      },
+                    )),
+                  ],
                 ),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(36.0, 0, 0, 0),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(12.0)),
-                        color: Colors.grey[200],
-                        // color: Color.fromRGBO(242, 242, 243, 1.0),
-                      ),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.filter_list_alt),
-                        color: Colors.blueGrey,
-                      ),
-                    ))
-              ],
-            ),
-            const SizedBox(height: 15.0),
-            const Text(
-              "Accommodation",
-              style: TextStyle(
-                  fontFamily: "Poppins",
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10.0),
-            Expanded(
-                child: ListView.builder(
-
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              itemCount: apartmentList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return apartmentList[index].getCard();
-              },
-            )),
-
-          ],
-        ),
-      ),
-    );
+              );
+            }));
   }
 }

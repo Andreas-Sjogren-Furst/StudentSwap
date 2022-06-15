@@ -30,9 +30,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       
-      routes: {
-        '/apartment-screen':(context) => ApartmentScreen()
-      },
+      // routes: {
+      //   '/apartment-screen':(context) => ApartmentScreen()
+      // },
       debugShowCheckedModeBanner: false,
       // home: checkLogin(),
       initialRoute: '/',
@@ -40,12 +40,13 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => const checkLogin(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        profile_apartment.routeName: (context) => const profile_apartment(),
+        ProfileApartment.routeName: (context) => const ProfileApartment(),
         ChatScreen.routeName: (context) => ChatScreen(),
         FavoritesScreen.routeName: (context) => FavoritesScreen(),
         ProfileScreen.routeName: (context) => ProfileScreen(),
         SearchScreen.routeName: (context) => SearchScreen(),
         FailScreen.routeName: (context) => FailScreen(),
+        ApartmentScreen.routeName: (context) => ApartmentScreen()
       },
     );
   }

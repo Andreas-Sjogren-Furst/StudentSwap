@@ -21,10 +21,8 @@ class __ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
@@ -61,7 +59,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
             children: [
               FlatButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, profile_apartment.routeName);
+                  Navigator.pushNamed(context, ProfileApartment.routeName);
                 },
                 child: const Text(
                   'Apartment images',
@@ -97,7 +95,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const profile_apartment()),
+                        builder: (context) => const ProfileApartment()),
                   );
                 },
                 child: const Text(
@@ -156,7 +154,6 @@ class __ProfileScreenState extends State<ProfileScreen> {
             color: Colors.grey,
           )
         ],
-      ),
-    );
+      );
   }
 }
