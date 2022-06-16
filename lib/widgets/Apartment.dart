@@ -53,13 +53,12 @@ Future<bool> checkFavorite(ApartmentCard apartmentCard) async {
   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
   var userDocument = await FirestoreUserReference.doc(uid).get();
 
-  if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
+  if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
     return true;
   } else {
     return false;
   }
 }
-
 
 Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
   final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -70,15 +69,11 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
   var userDocument = await FirestoreUserReference.doc(uid).get();
 
   if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
-    return users
-        .doc(uid)
-        .update({
+    return users.doc(uid).update({
       'favorites': FieldValue.arrayRemove([apartmentCard.userID])
     });
   } else {
-    return users
-        .doc(uid)
-        .update({
+    return users.doc(uid).update({
       'favorites': FieldValue.arrayUnion([apartmentCard.userID])
     });
   }
@@ -90,13 +85,11 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
   //     'favorites': FieldValue.arrayUnion([apartmentCard.address])
   //     });
 
-
   // } else {
   //   return users.doc(uid).update({
   //     'favorites': FieldValue.arrayRemove([apartmentCard.address])
   //   });
   // }
-
 
   // Code can't be reached.
   /*if (saved) {
@@ -212,7 +205,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               onPressed: () {
                                 setState(() {
                                   saved = !saved;
-                                  ;// TODO: Save favorited items
+                                  ; // TODO: Save favorited items
                                 });
                               }, // TODO: Add favorite function
                               label: const Text(
@@ -224,7 +217,9 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               ),
                               icon: Icon(
                                 // ignore: unnecessary_cast
-                                saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
+                                saved
+                                    ? Icons.favorite_sharp
+                                    : Icons.favorite_border_sharp,
                                 size: 24.0,
                               ),
                               style: TextButton.styleFrom(
