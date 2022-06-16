@@ -12,121 +12,127 @@ class Apartment {
   late String address;
   late String apartmentImage;
   late String profileImage;
-
+  late String semester;
   late bool savedFavorite;
   late String userID;
-  late List<String> goingTo;
+  late List<dynamic> goingTo;
+  late String appartmentType;
 
   bool saved = false;
 
-  Apartment(
-      {required this.city,
-      required this.address,
-      required this.apartmentImage,
-      required this.profileImage,
-      required this.savedFavorite,
-      required this.goingTo,
-      required this.userID});
+  Apartment({
+    required this.city,
+    required this.address,
+    required this.apartmentImage,
+    required this.profileImage,
+    required this.savedFavorite,
+    required this.goingTo,
+    required this.userID,
+    required this.semester,
+    required this.appartmentType,
+  });
 
   ApartmentCard getCard() {
     return ApartmentCard(
-        apartmentImage: apartmentImage,
-        city: city,
-        address: address,
-        profileImage: profileImage,
-        savedFavorite: savedFavorite,
-        userID: userID,
-        goingTo: goingTo);
+      apartmentImage: apartmentImage,
+      city: city,
+      address: address,
+      profileImage: profileImage,
+      savedFavorite: savedFavorite,
+      userID: userID,
+      goingTo: goingTo,
+      semester: semester,
+      appartmentType: appartmentType,
+    );
   }
 }
 
-// Future<bool> checkFavorite(Apartment apartmentCard) async {
-//   final uid = FirebaseAuth.instance.currentUser!.uid;
+Future<bool> checkFavorite(ApartmentCard apartmentCard) async {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+
+  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
+  var userDocument = await FirestoreUserReference.doc(uid).get();
+
+  if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
+    return true;
+  } else {
+    return false;
+  }
+}
 
 
-
-//   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-//   var userDocument = await FirestoreUserReference.doc(uid).get(); 
-
-//   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-//     return true; 
-//   } else {
-//     return false; 
-//   }
-// }
-
-//   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-//   var userDocument = await FirestoreUserReference.doc(uid).get();
-
-
-//   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-//     return true;
-//   } else {
-//     return false;
-//   }
-// }
-
-Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
+Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  // final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-  // var userDocument = await FirestoreUserReference.doc(uid).get(); 
+  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
+  var userDocument = await FirestoreUserReference.doc(uid).get();
 
-  // var userDocument = await FirestoreUserReference.doc(uid).get();
+  if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
+    return users
+        .doc(uid)
+        .update({
+      'favorites': FieldValue.arrayRemove([apartmentCard.userID])
+    });
+  } else {
+    return users
+        .doc(uid)
+        .update({
+      'favorites': FieldValue.arrayUnion([apartmentCard.userID])
+    });
+  }
 
-
-  // if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-  //   return users
-  //   .doc(uid)
-  //   .update({
-  //     'favorites': FieldValue.arrayRemove([apartmentCard.address])
-  //     });
-
-  // } else {
+  // if(saved){
   //   return users
   //   .doc(uid)
   //   .update({
   //     'favorites': FieldValue.arrayUnion([apartmentCard.address])
   //     });
+
+
+  // } else {
+  //   return users.doc(uid).update({
+  //     'favorites': FieldValue.arrayRemove([apartmentCard.address])
+  //   });
   // }
 
-  if(saved){
-    return users
-    .doc(uid)
-    .update({
+
+  // Code can't be reached.
+  /*if (saved) {
+    return users.doc(uid).update({
       'favorites': FieldValue.arrayUnion([apartmentCard.address])
-      });
-
-
+    });
   } else {
     return users.doc(uid).update({
       'favorites': FieldValue.arrayRemove([apartmentCard.address])
     });
-  }
+  }*/
 }
 
 class ApartmentCard extends StatefulWidget {
-  const ApartmentCard({
-    Key? key,
-    required this.apartmentImage,
-    required this.city,
-    required this.address,
-    required this.profileImage,
-    required this.userID,
-    required this.savedFavorite,
-    required this.goingTo,
-  }) : super(key: key);
+  const ApartmentCard(
+      {Key? key,
+      required this.apartmentImage,
+      required this.city,
+      required this.address,
+      required this.profileImage,
+      required this.userID,
+      required this.savedFavorite,
+      required this.goingTo,
+      required this.semester,
+      required this.appartmentType})
+      : super(key: key);
 
   final String apartmentImage;
   final String city;
   final String address;
   final String profileImage;
-
+  final String semester;
   final String userID;
   final bool savedFavorite;
-  final List<String> goingTo;
+  final List<dynamic> goingTo;
+  final String appartmentType;
 
   @override
   State<ApartmentCard> createState() => _ApartmentCardState();
@@ -149,7 +155,8 @@ class _ApartmentCardState extends State<ApartmentCard> {
               'profileImage': widget.profileImage,
               'userID': widget.userID,
               'savedFavorite': widget.savedFavorite,
-              'goingTo': widget.goingTo
+              'goingTo': widget.goingTo,
+              "semester": widget.semester,
             });
       },
       child: Card(
@@ -204,7 +211,8 @@ class _ApartmentCardState extends State<ApartmentCard> {
                           TextButton.icon(
                               onPressed: () {
                                 setState(() {
-                                  saved = !saved; // TODO: Save favorited items
+                                  saved = !saved;
+                                  ;// TODO: Save favorited items
                                 });
                               }, // TODO: Add favorite function
                               label: const Text(
@@ -215,9 +223,8 @@ class _ApartmentCardState extends State<ApartmentCard> {
                                     fontWeight: FontWeight.w600),
                               ),
                               icon: Icon(
-                                saved
-                                    ? Icons.favorite_sharp
-                                    : Icons.favorite_border_sharp,
+                                // ignore: unnecessary_cast
+                                saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
                                 size: 24.0,
                               ),
                               style: TextButton.styleFrom(
