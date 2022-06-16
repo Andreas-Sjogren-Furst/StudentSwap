@@ -264,87 +264,267 @@ class FilterSheet extends StatefulWidget {
 
 class _FilterSheetState extends State<FilterSheet> {
   List<String> _cityChips = [];
+  List<bool> _semesterChips = [true, false, false];
+  List<bool> _apartmentTypeChips = [true, false, false];
   var _searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
       style: const TextStyle(fontFamily: "Poppins", color: Colors.black),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          TextField(
-            controller: _searchController,
-            onChanged: (value) {
-              //setState(() {
-              // searchKey = value;
-              //});
-            },
-            onSubmitted: (value) {
-              setState(() {
-                _cityChips.add(value);
-                _searchController.clear();
-              });
-            },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: const BorderSide(
-                  width: 0,
-                  style: BorderStyle.none,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.close_rounded),
+                  iconSize: 24.0,
                 ),
-              ),
-              filled: true,
-              fillColor: const Color(0xFFEEEEEE),
-              labelText: 'Search for a city',
-              prefixIcon: const Icon(Icons.search),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          SizedBox(
-            height: 32.0,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: _cityChips.length,
-              itemBuilder: (context, index) => (Chip(
-                label: Text(_cityChips[index]),
-                deleteIcon: const Icon(
-                  Icons.clear,
-                  size: 16.0,
-                ),
-                backgroundColor: Theme.of(context).primaryColorLight,
-                deleteIconColor: Theme.of(context).primaryColor,
-                onDeleted: () {
-                  setState(() {
-                    _cityChips.removeAt(index);
-                  });
-                },
-              )),
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(width: 3.0);
-              },
-            ),
-          ),
-          const Divider(
-            height: 24.0,
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Text("Semester",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
-          ),
-          SizedBox(
-            height: 32.0,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: const [
-                ChoiceChip(label: Text("Any"), selected: true),
-                ChoiceChip(label: Text("Fall"), selected: false),
-                ChoiceChip(label: Text("Autumn"), selected: false),
+                const Text("Filters",
+                    style:
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500)),
+                TextButton(
+                  onPressed: () {},
+                  style: TextButton.styleFrom(
+                    textStyle: const TextStyle(
+                        fontSize: 16.0,
+                        fontFamily: "Poppins",
+                        fontWeight: FontWeight.w400),
+                  ),
+                  child: const Text("Done"),
+                )
               ],
             ),
-          )
-        ]),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              const SizedBox(
+                height: 8.0,
+              ),
+              TextField(
+                controller: _searchController,
+                onChanged: (value) {
+                  //setState(() {
+                  // searchKey = value;
+                  //});
+                },
+                onSubmitted: (value) {
+                  setState(() {
+                    _cityChips.add(value);
+                    _searchController.clear();
+                  });
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(
+                      width: 0,
+                      style: BorderStyle.none,
+                    ),
+                  ),
+                  filled: true,
+                  fillColor: const Color(0xFFEEEEEE),
+                  labelText: 'Search for a city',
+                  prefixIcon: const Icon(Icons.search),
+                ),
+              ),
+              const SizedBox(height: 18.0),
+              SizedBox(
+                height: 32.0,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _cityChips.length,
+                  itemBuilder: (context, index) => (Chip(
+                    label: Text(_cityChips[index]),
+                    deleteIcon: const Icon(
+                      Icons.clear,
+                      size: 16.0,
+                    ),
+                    backgroundColor: Theme.of(context).primaryColorLight,
+                    deleteIconColor: Theme.of(context).primaryColor,
+                    onDeleted: () {
+                      setState(() {
+                        _cityChips.removeAt(index);
+                      });
+                    },
+                  )),
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(width: 3.0);
+                  },
+                ),
+              ),
+              const Divider(
+                height: 24.0,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text("Semester",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
+              ),
+              SizedBox(
+                height: 32.0,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    ChoiceChip(
+                        label: const Text("Any"),
+                        selected: _semesterChips[0],
+                        selectedColor: Theme.of(context).primaryColor,
+                        labelStyle: TextStyle(
+                          color:
+                              _semesterChips[0] ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                        onSelected: (bool _newValue) {
+                          setState(() {
+                            if (_newValue) {
+                              _semesterChips[0] = true;
+                              _semesterChips[1] = false;
+                              _semesterChips[2] = false;
+                            }
+                          });
+                        }),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    ChoiceChip(
+                        label: Text("Fall"),
+                        selected: _semesterChips[1],
+                        selectedColor: Theme.of(context).primaryColor,
+                        labelStyle: TextStyle(
+                          color:
+                              _semesterChips[1] ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                        onSelected: (bool _newValue) {
+                          setState(() {
+                            if (_newValue) {
+                              _semesterChips[0] = false;
+                              _semesterChips[1] = true;
+                              _semesterChips[2] = false;
+                            }
+                          });
+                        }),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    ChoiceChip(
+                        label: Text("Autumn"),
+                        selected: _semesterChips[2],
+                        selectedColor: Theme.of(context).primaryColor,
+                        labelStyle: TextStyle(
+                          color:
+                              _semesterChips[2] ? Colors.white : Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                        onSelected: (bool _newValue) {
+                          setState(() {
+                            if (_newValue) {
+                              _semesterChips[0] = false;
+                              _semesterChips[1] = false;
+                              _semesterChips[2] = true;
+                            }
+                          });
+                        }),
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 24.0,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text("Apartment Type",
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
+              ),
+              SizedBox(
+                height: 32.0,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    ChoiceChip(
+                        label: const Text("Any"),
+                        selected: _apartmentTypeChips[0],
+                        selectedColor: Theme.of(context).primaryColor,
+                        labelStyle: TextStyle(
+                          color: _apartmentTypeChips[0]
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                        onSelected: (bool _newValue) {
+                          setState(() {
+                            if (_newValue) {
+                              _apartmentTypeChips[0] = true;
+                              _apartmentTypeChips[1] = false;
+                              _apartmentTypeChips[2] = false;
+                            }
+                          });
+                        }),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    ChoiceChip(
+                        label: Text("Dorm"),
+                        selected: _apartmentTypeChips[1],
+                        selectedColor: Theme.of(context).primaryColor,
+                        labelStyle: TextStyle(
+                          color: _apartmentTypeChips[1]
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                        onSelected: (bool _newValue) {
+                          setState(() {
+                            if (_newValue) {
+                              _apartmentTypeChips[0] = false;
+                              _apartmentTypeChips[1] = true;
+                              _apartmentTypeChips[2] = false;
+                            }
+                          });
+                        }),
+                    const SizedBox(
+                      width: 8.0,
+                    ),
+                    ChoiceChip(
+                        label: Text("Apartment"),
+                        selected: _apartmentTypeChips[2],
+                        selectedColor: Theme.of(context).primaryColor,
+                        labelStyle: TextStyle(
+                          color: _apartmentTypeChips[2]
+                              ? Colors.white
+                              : Colors.black,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16.0,
+                        ),
+                        onSelected: (bool _newValue) {
+                          setState(() {
+                            if (_newValue) {
+                              _apartmentTypeChips[0] = false;
+                              _apartmentTypeChips[1] = false;
+                              _apartmentTypeChips[2] = true;
+                            }
+                          });
+                        }),
+                  ],
+                ),
+              )
+            ]),
+          ),
+        ],
       ),
     );
   }
