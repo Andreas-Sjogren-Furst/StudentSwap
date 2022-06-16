@@ -1,5 +1,5 @@
 import 'dart:collection';
-import 'dart:html';
+//import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,6 +28,8 @@ class _SearchScreenState extends State<SearchScreen> {
   // Used for testing purposes
   String testSemester = "Any";
   String testApartment = "Any";
+
+  final TextEditingController _searchController = TextEditingController();
 
   Stream streamQuery =
       FirebaseFirestore.instance.collection("users").snapshots();
@@ -186,12 +188,22 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: SizedBox(
                             height: 45.0,
                             child: TextField(
+                              controller: _searchController,
                               onChanged: (value) {
                                 setState(() {
                                   searchKey = value;
+                                  GoingToKey = [];
+                                  testSemester = "";
+                                  testApartment = "";
                                 });
                               },
                               decoration: InputDecoration(
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:  const BorderSide(
+                                      color: Colors.grey,
+                                      width: 0.5),
+                                ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(8),
                                   borderSide: const BorderSide(
@@ -202,7 +214,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                 filled: true,
                                 fillColor: const Color(0xFFEEEEEE),
                                 labelText: 'Search for a city',
-                                prefixIcon: const Icon(Icons.search),
+                                labelStyle: const TextStyle(
+                                  color: Colors.grey,
+                                    fontSize: 16.0,
+                                    fontFamily: "Poppins",
+                                    fontWeight: FontWeight.w400
+                                ),
+                                prefixIcon: const Icon(Icons.search, color: Colors.grey,),
                               ),
                             ),
                           ),
@@ -226,6 +244,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                       }
                                   ).then((value) => {
                                     setState(() {
+                                      // Clear any previous search results
+                                      _searchController.clear();
+                                      searchKey = "";
+
                                       GoingToKey = value['city'];
 
                                       // Used for testing purposes
