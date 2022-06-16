@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         ProfileScreen.routeName: (context) => ProfileScreen(),
         SearchScreen.routeName: (context) => SearchScreen(),
         FailScreen.routeName: (context) => FailScreen(),
-        ApartmentScreen.routeName: (context) => ApartmentScreen()
+        ApartmentScreen.routeName:(context) => ApartmentScreen()
       },
     );
   }
