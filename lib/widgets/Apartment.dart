@@ -182,7 +182,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
