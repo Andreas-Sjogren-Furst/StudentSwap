@@ -8,6 +8,7 @@ import './auth_page.dart';
 import "../services/checkLogin.dart"; // '../screens/home/home_page.dart';
 
 class checkLogin extends StatelessWidget {
+  static const routeName = "/Check-Login"; 
   const checkLogin({Key? key}) : super(key: key);
 
   @override
