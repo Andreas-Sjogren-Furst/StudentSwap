@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 53, 104, 153),
-        primaryColorLight: const Color.fromARGB(255, 217, 230, 242)
+        primaryColorLight: const Color.fromARGB(255, 217, 230, 242),
+        fontFamily: "Poppins",
       ),
       // routes: {
       //   '/apartment-screen':(context) => ApartmentScreen()
@@ -44,9 +45,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) =>  StartScreen(),
+        '/': (context) => StartScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        checkLogin.routeName:(context) => checkLogin(),
+        checkLogin.routeName: (context) => checkLogin(),
         ProfileApartment.routeName: (context) => const ProfileApartment(),
         ChatScreen.routeName: (context) => ChatScreen(),
         FavoritesScreen.routeName: (context) => FavoritesScreen(),
@@ -57,7 +58,6 @@ class MyApp extends StatelessWidget {
         ApartmentScreen.routeName: (context) => ApartmentScreen(),
         StartScreen2.routeName: (context) => StartScreen2(),
         StartScreen3.routeName: (context) => StartScreen3(),
-
       },
     );
   }
