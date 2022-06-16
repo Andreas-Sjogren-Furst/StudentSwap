@@ -94,6 +94,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
         "profile_picture_url": profilePictureUrl,
         "myAddress": selectedValue1,
         "destination": selectedValue2,
+        "uid": FirebaseAuth.instance.currentUser!.uid,
       }); // her skal vi tilføje flere variabler.
     }
 
