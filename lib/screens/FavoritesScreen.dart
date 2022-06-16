@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:login_page/widgets/Apartment.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 
@@ -38,7 +39,12 @@ class FavoritesScreen extends StatelessWidget {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
-                return const Text('Loading...');
+                return const Center(
+                  child: SpinKitFadingCube(
+                    color: Colors.blue,
+                    size: 80,
+                  ),
+                );
               }
           
               List<Apartment> apartmentsLists = [];
