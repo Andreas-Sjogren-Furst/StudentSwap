@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,37 +21,35 @@ class __ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: 15,
-        ),
         Center(
-          child: Column(
-            children: const [
-              CircleAvatar(
-                  radius: 65,
-                  backgroundImage: AssetImage('assets/sample/profile2.jpg')),
-              Text(
-                'Hailey Jefferson',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+            child: Column(
+              children: const [
+                CircleAvatar(
+                    radius: 65,
+                    backgroundImage: AssetImage('assets/sample/profile2.jpg')),
+                Text(
+                  'Hailey Jefferson',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-        SizedBox(height: 15),
         Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Divider(color: Colors.grey),
-            SizedBox(
-              height: 15,
-            ),
             FlatButton(
-                padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+                padding: EdgeInsets.fromLTRB(15, 15, 0, 15),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -88,7 +84,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const profile_info()),
+                MaterialPageRoute(builder: (context) => const ProfileInfo()),
               );
             },
             child: Row(

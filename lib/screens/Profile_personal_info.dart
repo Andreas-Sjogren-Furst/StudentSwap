@@ -1,36 +1,64 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import '../services/FirebaseMethods.dart';
 
-class profile_info extends StatefulWidget {
-  const profile_info({Key? key}) : super(key: key);
-
-  @override
-  State<profile_info> createState() => _profile_infoState();
+Future<Map<String, dynamic>?> getdata(String documentId) async {
+  var users = FirebaseFirestore.instance.collection('users');
+  var userId = await users.doc(documentId).get();
+  return userId.data();
 }
 
-class _profile_infoState extends State<profile_info> {
+void writedata(String documentId, String changeVar, String toVar) async {
+  final users = FirebaseFirestore.instance.collection('users').doc(documentId);
+  await users.update({changeVar: toVar});
+}
+
+class ProfileInfo extends StatefulWidget {
+  const ProfileInfo({Key? key}) : super(key: key);
+  @override
+  State<ProfileInfo> createState() => _ProfileInfoState();
+}
+
+class _ProfileInfoState extends State<ProfileInfo> {
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController city = TextEditingController();
+  TextEditingController address = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController gender = TextEditingController();
+  TextEditingController profilePicture = TextEditingController();
+  var userAuth = FirebaseAuth.instance.currentUser!.uid;
+
+  _ProfileInfoState() {
+    getdata(userAuth).then((userData) => setState(() {
+          firstName.text = userData?['First name'];
+          lastName.text = userData?['Last name'];
+          city.text = userData?['City'];
+          address.text = userData?['Address'];
+          email.text = userData?['E-mail'];
+          gender.text = userData?['Gender'];
+        }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Personal information'),
+        title: const Text('Personal information'),
         backgroundColor: Theme.of(context).primaryColor,
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Center(
+          const Center(
             child: CircleAvatar(
               radius: 65,
               backgroundImage: AssetImage('assets/sample/profile2.jpg'),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
             child: Text(
               'Edit personal info',
               style: TextStyle(
@@ -43,62 +71,74 @@ class _profile_infoState extends State<profile_info> {
           Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TextFormField(
-                decoration: InputDecoration(
+                controller: firstName,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'First name',
                 ),
-                initialValue: 'Hailey',
-                onSaved: (String? value) {},
+                onFieldSubmitted: (String inputField) {
+                  writedata(userAuth, 'First name', inputField);
+                },
               )),
           Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TextFormField(
-                decoration: InputDecoration(
+                controller: lastName,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Last name',
                 ),
-                initialValue: 'Jefferson',
-                onSaved: (String? value) {},
+                onFieldSubmitted: (String inputField) {
+                  writedata(userAuth, 'Last name', inputField);
+                },
               )),
           Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TextFormField(
-                decoration: InputDecoration(
+                controller: city,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'City',
                 ),
-                initialValue: 'Amsterdam',
-                onSaved: (String? value) {},
+                onFieldSubmitted: (String inputField) {
+                  writedata(userAuth, 'City', inputField);
+                },
               )),
           Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TextFormField(
-                decoration: InputDecoration(
+                controller: address,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Address',
                 ),
-                initialValue: 'Osdorpplein 372A, 1068 EV',
-                onSaved: (String? value) {},
+                onFieldSubmitted: (String inputField) {
+                  writedata(userAuth, 'Address', inputField);
+                },
               )),
           Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TextFormField(
-                decoration: InputDecoration(
+                controller: email,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'E-mail',
                 ),
-                initialValue: 'haley@jessica.com',
-                onSaved: (String? value) {},
+                onFieldSubmitted: (String inputField) {
+                  writedata(userAuth, 'E-mail', inputField);
+                },
               )),
           Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
               child: TextFormField(
-                decoration: InputDecoration(
+                controller: gender,
+                decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Gender',
                 ),
-                initialValue: 'Female',
-                onSaved: (String? value) {},
+                onFieldSubmitted: (String inputField) {
+                  writedata(userAuth, 'Gender', inputField);
+                },
               )),
         ],
       ),
