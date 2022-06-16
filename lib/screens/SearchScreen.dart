@@ -23,6 +23,10 @@ class _SearchScreenState extends State<SearchScreen> {
   List<String> GoingToKey = []; // ønsker af byer man vil til.
   String Semesterkey = ""; // Hvilket semester, any, spring, autumn,
 
+  // Used for testing purposes
+  String testSemester = "Any";
+  String testApartment = "Any";
+
   Stream streamQuery =
       FirebaseFirestore.instance.collection("users").snapshots();
 
@@ -207,9 +211,23 @@ class _SearchScreenState extends State<SearchScreen> {
                                   showModalBottomSheet(
                                       context: context,
                                       builder: (context) {
-                                        return FilterSheet();
+                                        return FilterSheet(goingToKey: GoingToKey, semesterKey: testSemester, apartmentType: testApartment,); // TODO: apartmentType not working
                                       }
-                                  );
+                                  ).then((value) => {
+                                    setState(() {
+                                      GoingToKey = value['city'];
+
+                                      // Used for testing purposes
+                                      testSemester = value['semester'];
+                                      testApartment = value['apartmentType'];
+
+                                      // TODO: Make keys exist in Firebase
+                                      // Not implemnted yet. Keys doesn't exist in Firebase.
+                                      // Semesterkey = value['semester'];
+                                      // apartmentTypeWishes = value['apartmentType'];
+                                    })
+
+                                  });
                                 },
                                 icon: const Icon(Icons.filter_list_alt),
                                 color: Colors.blueGrey,
@@ -245,8 +263,12 @@ class _SearchScreenState extends State<SearchScreen> {
 
 class FilterSheet extends StatefulWidget {
   const FilterSheet({
-    Key? key,
+    Key? key, this.goingToKey = const [], this.semesterKey = "Any", this.apartmentType = "Any",
   }) : super(key: key);
+
+  final List<String> goingToKey;
+  final String semesterKey;
+  final String apartmentType;
 
   @override
   State<FilterSheet> createState() => _FilterSheetState();
@@ -254,10 +276,42 @@ class FilterSheet extends StatefulWidget {
 
 class _FilterSheetState extends State<FilterSheet> {
 
+  // List of cities to be displayed in the chips
   List<String> _cityChips = [];
-  List<bool> _semesterChips = [true, false, false];
-  List<bool> _apartmentTypeChips = [true, false, false];
-  var _searchController = TextEditingController();
+
+  // List of semesters that are available
+  List<bool> _semesterChipsBool = [true, false, false];
+  final List<String> _semesterChips = ["Any", "Spring", "Autumn"];
+
+  // List of apartment types that are available
+  List<bool> _apartmentTypeChipsBool = [true, false, false];
+  final List<String> _apartmentTypeChips = ["Any", "Dorm", "Apartment"];
+
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _cityChips.addAll(widget.goingToKey);
+    if(widget.semesterKey.isNotEmpty) {
+
+      // Set all elements of semesterChipsBool to false
+      _semesterChipsBool.setAll(0, [false,false,false]);
+
+      // Set the correct element to true
+      _semesterChipsBool[_semesterChips.indexWhere((element) => element.contains(widget.semesterKey))] = true;
+
+    }
+    if(widget.apartmentType.isNotEmpty) {
+      // Set all elements of apartmentTypeChipsBool to false
+      _apartmentTypeChipsBool.setAll(0, [false,false,false]);
+
+      // Set the correct element to true
+      _apartmentTypeChipsBool[_apartmentTypeChips.indexWhere((element) => element.contains(widget.apartmentType))] = true;
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -271,7 +325,9 @@ class _FilterSheetState extends State<FilterSheet> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
                   icon: Icon(Icons.close_rounded),
                   iconSize: 24.0,
                 ),
@@ -282,9 +338,17 @@ class _FilterSheetState extends State<FilterSheet> {
                         fontWeight: FontWeight.w500)
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    var values = {
+                      "city": _cityChips,
+                      "semester": _semesterChips[(_semesterChipsBool.indexWhere((element) => element == true)).toInt()],
+                      "apartmentType": _apartmentTypeChips[(_apartmentTypeChipsBool.indexWhere((element) => element == true)).toInt()],
+                    };
+
+                    Navigator.pop(context, values);
+                  },
                   style: TextButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 16.0, fontFamily: "Poppins", fontWeight: FontWeight.w400),
+                    textStyle: const TextStyle(fontSize: 15.0, fontFamily: "Poppins", fontWeight: FontWeight.w400),
                   ),
                   child: const Text("Done"),
                 )
@@ -325,7 +389,7 @@ class _FilterSheetState extends State<FilterSheet> {
                   ),
                 ),
                 const SizedBox(height: 18.0),
-                SizedBox(
+                _cityChips.isNotEmpty ? SizedBox(
                   height: 32.0,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
@@ -347,149 +411,155 @@ class _FilterSheetState extends State<FilterSheet> {
                       return const SizedBox(width: 3.0);
                     },
                   ),
-                ),
-                const Divider(height: 24.0,),
+                ) : Container(),
+                const Divider(height: 30.0,),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: Text("Semester", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
                 ),
-                SizedBox(
-                  height: 32.0,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ChoiceChip(
-                        label: const Text("Any"),
-                        selected: _semesterChips[0],
-                        selectedColor: Theme.of(context).primaryColor,
-                        labelStyle: TextStyle(
-                          color: _semesterChips[0] ? Colors.white : Colors.black,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16.0,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: SizedBox(
+                    height: 32.0,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        ChoiceChip(
+                          label: const Text("Any"),
+                          selected: _semesterChipsBool[0],
+                          selectedColor: Theme.of(context).primaryColor,
+                          labelStyle: TextStyle(
+                            color: _semesterChipsBool[0] ? Colors.white : Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16.0,
+                          ),
+                          onSelected: (bool _newValue) {
+                            setState((){
+                              if (_newValue) {
+                                _semesterChipsBool[0] = true;
+                                _semesterChipsBool[1] = false;
+                                _semesterChipsBool[2] = false;
+                              }
+                            });
+                          }
                         ),
-                        onSelected: (bool _newValue) {
-                          setState((){
-                            if (_newValue) {
-                              _semesterChips[0] = true;
-                              _semesterChips[1] = false;
-                              _semesterChips[2] = false;
+                        const SizedBox(width: 8.0,),
+                        ChoiceChip(
+                            label: const Text("Spring"),
+                            selected: _semesterChipsBool[1],
+                            selectedColor: Theme.of(context).primaryColor,
+                            labelStyle: TextStyle(
+                              color: _semesterChipsBool[1] ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0,
+                            ),
+                            onSelected: (bool _newValue) {
+                              setState((){
+                                if (_newValue) {
+                                  _semesterChipsBool[0] = false;
+                                  _semesterChipsBool[1] = true;
+                                  _semesterChipsBool[2] = false;
+                                }
+                              });
                             }
-                          });
-                        }
-                      ),
-                      const SizedBox(width: 8.0,),
-                      ChoiceChip(
-                          label: Text("Fall"),
-                          selected: _semesterChips[1],
-                          selectedColor: Theme.of(context).primaryColor,
-                          labelStyle: TextStyle(
-                            color: _semesterChips[1] ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16.0,
-                          ),
-                          onSelected: (bool _newValue) {
-                            setState((){
-                              if (_newValue) {
-                                _semesterChips[0] = false;
-                                _semesterChips[1] = true;
-                                _semesterChips[2] = false;
-                              }
-                            });
-                          }
-                      ),
-                      const SizedBox(width: 8.0,),
-                      ChoiceChip(
-                          label: Text("Autumn"),
-                          selected: _semesterChips[2],
-                          selectedColor: Theme.of(context).primaryColor,
-                          labelStyle: TextStyle(
-                            color: _semesterChips[2] ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16.0,
-                          ),
-                          onSelected: (bool _newValue) {
-                            setState((){
-                              if (_newValue) {
-                                _semesterChips[0] = false;
-                                _semesterChips[1] = false;
-                                _semesterChips[2] = true;
-                              }
-                            });
-                          }
-                      ),
-                    ],
+                        ),
+                        const SizedBox(width: 8.0,),
+                        ChoiceChip(
+                            label: const Text("Autumn"),
+                            selected: _semesterChipsBool[2],
+                            selectedColor: Theme.of(context).primaryColor,
+                            labelStyle: TextStyle(
+                              color: _semesterChipsBool[2] ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0,
+                            ),
+                            onSelected: (bool _newValue) {
+                              setState((){
+                                if (_newValue) {
+                                  _semesterChipsBool[0] = false;
+                                  _semesterChipsBool[1] = false;
+                                  _semesterChipsBool[2] = true;
+                                }
+                              });
+                            }
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                const Divider(height: 24.0,),
+                const Divider(height: 30.0,),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: 8.0),
                   child: Text("Apartment Type", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
                 ),
-                SizedBox(
-                  height: 32.0,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ChoiceChip(
-                          label: const Text("Any"),
-                          selected: _apartmentTypeChips[0],
-                          selectedColor: Theme.of(context).primaryColor,
-                          labelStyle: TextStyle(
-                            color: _apartmentTypeChips[0] ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16.0,
-                          ),
-                          onSelected: (bool _newValue) {
-                            setState((){
-                              if (_newValue) {
-                                _apartmentTypeChips[0] = true;
-                                _apartmentTypeChips[1] = false;
-                                _apartmentTypeChips[2] = false;
-                              }
-                            });
-                          }
-                      ),
-                      const SizedBox(width: 8.0,),
-                      ChoiceChip(
-                          label: Text("Dorm"),
-                          selected: _apartmentTypeChips[1],
-                          selectedColor: Theme.of(context).primaryColor,
-                          labelStyle: TextStyle(
-                            color: _apartmentTypeChips[1] ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16.0,
-                          ),
-                          onSelected: (bool _newValue) {
-                            setState((){
-                              if (_newValue) {
-                                _apartmentTypeChips[0] = false;
-                                _apartmentTypeChips[1] = true;
-                                _apartmentTypeChips[2] = false;
-                              }
-                            });
-                          }
-                      ),
-                      const SizedBox(width: 8.0,),
-                      ChoiceChip(
-                          label: Text("Apartment"),
-                          selected: _apartmentTypeChips[2],
-                          selectedColor: Theme.of(context).primaryColor,
-                          labelStyle: TextStyle(
-                            color: _apartmentTypeChips[2] ? Colors.white : Colors.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16.0,
-                          ),
-                          onSelected: (bool _newValue) {
-                            setState((){
-                              if (_newValue) {
-                                _apartmentTypeChips[0] = false;
-                                _apartmentTypeChips[1] = false;
-                                _apartmentTypeChips[2] = true;
-                              }
-                            });
-                          }
-                      ),
-                    ],
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: SizedBox(
+                    height: 32.0,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        ChoiceChip(
+                            label: const Text("Any"),
+                            selected: _apartmentTypeChipsBool[0],
+                            selectedColor: Theme.of(context).primaryColor,
+                            labelStyle: TextStyle(
+                              color: _apartmentTypeChipsBool[0] ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0,
+                            ),
+                            onSelected: (bool _newValue) {
+                              setState((){
+                                if (_newValue) {
+                                  _apartmentTypeChipsBool[0] = true;
+                                  _apartmentTypeChipsBool[1] = false;
+                                  _apartmentTypeChipsBool[2] = false;
+                                }
+                              });
+                            }
+                        ),
+                        const SizedBox(width: 8.0,),
+                        ChoiceChip(
+                            label: Text("Dorm"),
+                            selected: _apartmentTypeChipsBool[1],
+                            selectedColor: Theme.of(context).primaryColor,
+                            labelStyle: TextStyle(
+                              color: _apartmentTypeChipsBool[1] ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0,
+                            ),
+                            onSelected: (bool _newValue) {
+                              setState((){
+                                if (_newValue) {
+                                  _apartmentTypeChipsBool[0] = false;
+                                  _apartmentTypeChipsBool[1] = true;
+                                  _apartmentTypeChipsBool[2] = false;
+                                }
+                              });
+                            }
+                        ),
+                        const SizedBox(width: 8.0,),
+                        ChoiceChip(
+                            label: Text("Apartment"),
+                            selected: _apartmentTypeChipsBool[2],
+                            selectedColor: Theme.of(context).primaryColor,
+                            labelStyle: TextStyle(
+                              color: _apartmentTypeChipsBool[2] ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16.0,
+                            ),
+                            onSelected: (bool _newValue) {
+                              setState((){
+                                if (_newValue) {
+                                  _apartmentTypeChipsBool[0] = false;
+                                  _apartmentTypeChipsBool[1] = false;
+                                  _apartmentTypeChipsBool[2] = true;
+                                }
+                              });
+                            }
+                        ),
+                      ],
+                    ),
                   ),
                 )
             ]),
