@@ -30,10 +30,12 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(_pages[_selectedPageIndex]["title"] as String),
+      // appBar: AppBar(
+      //   title: Text(_pages[_selectedPageIndex]["title"] as String),
+      // ),
+      body: SafeArea(
+        child: _pages[_selectedPageIndex]["page"] as Widget, // Index from state.
       ),
-      body: _pages[_selectedPageIndex]["page"] as Widget, // Index from state.
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
         backgroundColor: Theme.of(context).primaryColor,

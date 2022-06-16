@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -18,7 +16,7 @@ class ApartmentScreen extends StatefulWidget {
 }
 
 class _ApartmentScreenState extends State<ApartmentScreen> {
-  String oneOrMore(List<String> destinationer) {
+  String oneOrMore(List<dynamic> destinationer) {
     return destinationer.length > 1 ? 'Destinations' : 'Destination';
   }
 
@@ -26,7 +24,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
   Widget build(BuildContext context) {
 
   double screenWidth = MediaQuery.of(context).size.width;
-  double screenHeight = MediaQuery.of(context).size.height; 
+  double screenHeight = MediaQuery.of(context).size.height;
 
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -37,11 +35,11 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
     String profileImage = args['profileImage'] ?? 'not available';
     String userID = args['userID'] ?? 'not available';
     bool savedFavorite = args['savedFavorite'] != null;
-    List<String> goingTo = args['goingTo'];
+    List<dynamic> goingTo = args['goingTo'];
 
     //String listeAfDestinationer = goingTo.map((g) => g.toString()).toString();
 
-    String listeAfDestinationer(List<String> value) {
+    String listeAfDestinationer(List<dynamic> value) {
       String output = '';
       value.forEach((x) => x.toString());
       output = value.join(', ');
@@ -70,7 +68,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
         elevation: 0,
       ),
       body: Column(children: [
-        
+
         SizedBox(
           height: 45,
         ),
@@ -144,7 +142,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
               fontFamily: 'Poppins',
               fontWeight: FontWeight.bold,
               fontSize: 16,
-          
+
             ),),
           ),
         ),
@@ -169,11 +167,11 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                         alignment: Alignment.topLeft,
                         height: screenHeight/5,
                         width: 20,
-                        
+
                         child: Column(children: [
                           Align(
                             alignment: Alignment.topLeft,
-                            child: Text("From", 
+                            child: Text("From",
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 14,
@@ -189,12 +187,12 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                 fontFamily: 'Poppins',
                                 fontSize: 12
                               ),
-                              
+
                               ),
                             )
                         ],
                         ),
-                        
+
                       ),
                     ),
                     Expanded(
@@ -203,11 +201,11 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                         alignment: Alignment.topCenter,
                         height: screenHeight/5,
                         width: 20,
-                        
+
                         child: Column(children: [
                           Align(
                             alignment: Alignment.topLeft,
-                            child: Text("Description", 
+                            child: Text("Description",
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 14,
@@ -223,16 +221,16 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                 fontFamily: 'Poppins',
                                 fontSize: 12
                               ),
-                              
+
                               ),
                             )
                         ],
                         ),
-                       
+
                       ),
                     ),
-                    
-                    
+
+
                   ]),
                 ))),
 
@@ -246,7 +244,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
               fontFamily: 'Poppins',
               fontWeight: FontWeight.bold,
               fontSize: 16,
-        
+
             ),),
           ),
         ),
