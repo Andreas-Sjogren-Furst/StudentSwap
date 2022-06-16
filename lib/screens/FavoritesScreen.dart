@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -77,7 +76,11 @@ class FavoritesScreen extends StatelessWidget {
                     profileImage: userMap['profileImage'] ?? "not available",
                     savedFavorite: userMap['savedFavorite'] ?? false,
                     goingTo: ["test1", "test2"],
-                    userID: userMap['userID'] ?? "not available"));
+                    userID: userMap['userID'] ?? "not available",
+                        semester: userMap['semester'] ?? "not available",
+                        appartmentType: userMap['apartmentType'] ?? "not available"));
+
+
                     }
                 }
               );

@@ -61,7 +61,7 @@ Future<bool> checkFavorite(ApartmentCard apartmentCard) async {
 }
 
 
-Future<void> updateUserFavorite(ApartmentCard apartmentCard) async{
+Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
@@ -69,19 +69,18 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard) async{
   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
   var userDocument = await FirestoreUserReference.doc(uid).get();
 
-  if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
+  if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
     return users
-    .doc(uid)
-    .update({
+        .doc(uid)
+        .update({
       'favorites': FieldValue.arrayRemove([apartmentCard.userID])
-      });
-
+    });
   } else {
     return users
-    .doc(uid)
-    .update({
+        .doc(uid)
+        .update({
       'favorites': FieldValue.arrayUnion([apartmentCard.userID])
-      });
+    });
   }
 
   // if(saved){
@@ -98,7 +97,9 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard) async{
   //   });
   // }
 
-  if (saved) {
+
+  // Code can't be reached.
+  /*if (saved) {
     return users.doc(uid).update({
       'favorites': FieldValue.arrayUnion([apartmentCard.address])
     });
@@ -106,7 +107,7 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard) async{
     return users.doc(uid).update({
       'favorites': FieldValue.arrayRemove([apartmentCard.address])
     });
-  }
+  }*/
 }
 
 class ApartmentCard extends StatefulWidget {
