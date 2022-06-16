@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:login_page/widgets/Apartment.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+
+
 class FavoritesScreen extends StatelessWidget {
   static const routeName = "/Favorites-Screen";
 
