@@ -39,8 +39,8 @@ class _TabScreenState extends State<TabScreen> {
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
         backgroundColor: Theme.of(context).primaryColor,
-        unselectedItemColor: Theme.of(context).primaryColor,
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Theme.of(context).primaryColor,
         currentIndex: _selectedPageIndex,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
