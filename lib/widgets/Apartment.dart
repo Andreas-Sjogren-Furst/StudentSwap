@@ -54,34 +54,44 @@ Future<bool> checkFavorite(ApartmentCard apartmentCard) async {
   var userDocument = await FirestoreUserReference.doc(uid).get();
 
   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-    return true;
+    return await true;
   } else {
-    return false;
+    return await false;
   }
 }
 
 
-Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
+Future<void> updateUserFavorite(ApartmentCard apartmentCard, bool saved) async {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
+  
+  final users = FirebaseFirestore.instance.collection('users').doc(uid);
+  if(saved) {
+  await users.update({
+    "favorites": FieldValue.arrayUnion(['s0HetWSfOkuJi1mLCROZ']),
+  });
+} else {
+  await users.update({
+    "favorites": FieldValue.arrayRemove(['s0HetWSfOkuJi1mLCROZ']),
+  });
+}
+}
 
-  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-  var userDocument = await FirestoreUserReference.doc(uid).get();
 
-  if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
-    return users
-        .doc(uid)
-        .update({
-      'favorites': FieldValue.arrayRemove([apartmentCard.userID])
-    });
-  } else {
-    return users
-        .doc(uid)
-        .update({
-      'favorites': FieldValue.arrayUnion([apartmentCard.userID])
-    });
-  }
+
+  // if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
+  //   return users
+  //       .doc(uid)
+  //       .update({
+  //     'favorites': FieldValue.arrayRemove([apartmentCard.userID])
+  //   });
+  // } else {
+  //   return users
+  //       .doc(uid)
+  //       .update({
+  //     'favorites': FieldValue.arrayUnion([apartmentCard.userID])
+  //   });
+  // }
 
   // if(saved){
   //   return users
@@ -108,7 +118,6 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
       'favorites': FieldValue.arrayRemove([apartmentCard.address])
     });
   }*/
-}
 
 class ApartmentCard extends StatefulWidget {
   const ApartmentCard(
@@ -214,6 +223,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
                                   saved = !saved;
                                   ;// TODO: Save favorited items
                                 });
+                                updateUserFavorite(widget, saved);
                               }, // TODO: Add favorite function
                               label: const Text(
                                 "Save",

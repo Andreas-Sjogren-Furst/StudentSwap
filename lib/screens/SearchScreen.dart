@@ -100,7 +100,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     testmap as LinkedHashMap<dynamic, dynamic>;
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
-                print("apartment list add");
+                
 
                 apartmentsLists.add(Apartment(
                     city: userMap['city'] ?? "not available",
@@ -112,7 +112,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     userID: userMap['userID'] ?? "not available",
                     semester: userMap['semester'] ?? "not available",
                     appartmentType:
-                        userMap['appartmentType'] ?? "not available"));
+                        userMap['appartmentType'] ?? "not available"
+                    ));
               }
               // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.
               apartmentsLists = apartmentsLists
