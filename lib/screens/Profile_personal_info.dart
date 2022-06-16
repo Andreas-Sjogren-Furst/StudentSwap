@@ -78,7 +78,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     labelText: 'First name',
                   ),
                   onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'First name', inputField);
+                    writedata(userAuth, 'firstName', inputField);
                   },
                 )),
             Padding(
@@ -90,7 +90,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     labelText: 'Last name',
                   ),
                   onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'Last name', inputField);
+                    writedata(userAuth, 'lastName', inputField);
                   },
                 )),
             Padding(
@@ -102,7 +102,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     labelText: 'City',
                   ),
                   onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'City', inputField);
+                    writedata(userAuth, 'myCountry', inputField);
                   },
                 )),
             Padding(
@@ -114,7 +114,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     labelText: 'Address',
                   ),
                   onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'Address', inputField);
+                    writedata(userAuth, 'myAddress', inputField);
                   },
                 )),
             Padding(
@@ -126,7 +126,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     labelText: 'E-mail',
                   ),
                   onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'E-mail', inputField);
+                    writedata(userAuth, 'Email', inputField);
                   },
                 )),
             Padding(
@@ -138,7 +138,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     labelText: 'Gender',
                   ),
                   onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'Gender', inputField);
+                    writedata(userAuth, 'gender', inputField);
                   },
                 )),
           ],
