@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  String userName = "loading...";
   String searchKey = ""; // En by i search.
   List<String> GoingToKey = []; // ønsker af byer man vil til.
   String Semesterkey = ""; // Hvilket semester, any, spring, autumn,
@@ -30,6 +32,11 @@ class _SearchScreenState extends State<SearchScreen> {
     final FirestoreUserReference =
         FirebaseFirestore.instance.collection("users");
     return await FirestoreUserReference.doc(uid).get();
+  }
+
+  Future<String> getUserName(String uid) async {
+    final userDocument = await getData(uid);
+    return userDocument['username'].toString();
   }
 
   String setGoingToKey(String semester) {
@@ -77,6 +84,10 @@ class _SearchScreenState extends State<SearchScreen> {
               if (!snapshot.hasData) {
                 return const Text('Loading...');
               }
+
+              getUserName(FirebaseMethods.userId).then((value) {
+                return value;
+              });
 
               for (var doc in snapshot.data!.docs) {
                 Object? testmap = doc.data();
@@ -143,7 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              "Jefferson", // TODO: Get username from Firebase"${user?.displayName}"
+                              "Jeff", // TODO: Get username from Firebase"${user?.displayName}"
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 24.0,
@@ -208,8 +219,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       context: context,
                                       builder: (context) {
                                         return FilterSheet();
-                                      }
-                                  );
+                                      });
                                 },
                                 icon: const Icon(Icons.filter_list_alt),
                                 color: Colors.blueGrey,
@@ -253,7 +263,6 @@ class FilterSheet extends StatefulWidget {
 }
 
 class _FilterSheetState extends State<FilterSheet> {
-
   List<String> _cityChips = [];
   var _searchController = TextEditingController();
 
@@ -263,76 +272,78 @@ class _FilterSheetState extends State<FilterSheet> {
       style: const TextStyle(fontFamily: "Poppins", color: Colors.black),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _searchController,
-              onChanged: (value) {
-                //setState(() {
-                  // searchKey = value;
-                //});
-              },
-              onSubmitted: (value) {
-                setState(() {
-                  _cityChips.add(value);
-                  _searchController.clear();
-                });
-              },
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    width: 0,
-                    style: BorderStyle.none,
-                  ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          TextField(
+            controller: _searchController,
+            onChanged: (value) {
+              //setState(() {
+              // searchKey = value;
+              //});
+            },
+            onSubmitted: (value) {
+              setState(() {
+                _cityChips.add(value);
+                _searchController.clear();
+              });
+            },
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  width: 0,
+                  style: BorderStyle.none,
                 ),
-                filled: true,
-                fillColor: const Color(0xFFEEEEEE),
-                labelText: 'Search for a city',
-                prefixIcon: const Icon(Icons.search),
               ),
+              filled: true,
+              fillColor: const Color(0xFFEEEEEE),
+              labelText: 'Search for a city',
+              prefixIcon: const Icon(Icons.search),
             ),
-            const SizedBox(height: 16.0),
-            SizedBox(
-              height: 32.0,
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                itemCount: _cityChips.length,
-                itemBuilder: (context, index) =>(
-                   Chip(
-                     label: Text(_cityChips[index]),
-                     deleteIcon: const Icon(Icons.clear, size: 16.0,),
-                     backgroundColor: Theme.of(context).primaryColorLight,
-                     deleteIconColor: Theme.of(context).primaryColor,
-                     onDeleted: () {
-                       setState(() {
-                           _cityChips.removeAt(index);
-                       });
-                     },
-                   )
+          ),
+          const SizedBox(height: 16.0),
+          SizedBox(
+            height: 32.0,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: _cityChips.length,
+              itemBuilder: (context, index) => (Chip(
+                label: Text(_cityChips[index]),
+                deleteIcon: const Icon(
+                  Icons.clear,
+                  size: 16.0,
                 ),
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(width: 3.0);
+                backgroundColor: Theme.of(context).primaryColorLight,
+                deleteIconColor: Theme.of(context).primaryColor,
+                onDeleted: () {
+                  setState(() {
+                    _cityChips.removeAt(index);
+                  });
                 },
-              ),
+              )),
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(width: 3.0);
+              },
             ),
-            const Divider(height: 24.0,),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Text("Semester", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
+          ),
+          const Divider(
+            height: 24.0,
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Semester",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
+          ),
+          SizedBox(
+            height: 32.0,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: const [
+                ChoiceChip(label: Text("Any"), selected: true),
+                ChoiceChip(label: Text("Fall"), selected: false),
+                ChoiceChip(label: Text("Autumn"), selected: false),
+              ],
             ),
-            SizedBox(
-              height: 32.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: const [
-                  ChoiceChip(label: Text("Any"), selected: true),
-                  ChoiceChip(label: Text("Fall"), selected: false),
-                  ChoiceChip(label: Text("Autumn"), selected: false),
-                ],
-              ),
-            )
+          )
         ]),
       ),
     );
