@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:login_page/screens/ApartmentScreen.dart';
 import './services/checkLogin.dart';
 import 'package:login_page/screens/TabsScreen.dart';
 import 'package:login_page/services/checkLogin.dart';
@@ -11,8 +10,11 @@ import "./screens/SearchScreen.dart";
 import "./screens/FavoritesScreen.dart";
 import "./screens/ChatScreen.dart";
 import "./screens/FailScreen.dart";
+import "./screens/login/register_page2.dart";
+import "./screens/login/login_page.dart";
 
 import 'firebase_options.dart';
+import 'screens/login/register_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,10 +31,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      
-      // routes: {
-      //   '/apartment-screen':(context) => ApartmentScreen()
-      // },
       debugShowCheckedModeBanner: false,
       // home: checkLogin(),
       initialRoute: '/',
@@ -40,14 +38,20 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => const checkLogin(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        ProfileApartment.routeName: (context) => const ProfileApartment(),
         ChatScreen.routeName: (context) => ChatScreen(),
         FavoritesScreen.routeName: (context) => FavoritesScreen(),
         ProfileScreen.routeName: (context) => ProfileScreen(),
         SearchScreen.routeName: (context) => SearchScreen(),
         FailScreen.routeName: (context) => FailScreen(),
-        ApartmentScreen.routeName: (context) => ApartmentScreen()
+        RegisterPage.routeName: (context) => RegisterPage(),
+        RegisterPage2.routeName: (context) => RegisterPage2(),
+        LoginPage.routeName: (context) => LoginPage(),
+        TabScreen.routeName: (context) => TabScreen(),
       },
     );
   }
 }
+
+
+
+
