@@ -40,71 +40,56 @@ class Apartment {
   }
 }
 
-// Future<bool> checkFavorite(Apartment apartmentCard) async {
-//   final uid = FirebaseAuth.instance.currentUser!.uid;
+Future<bool> checkFavorite(ApartmentCard apartmentCard) async {
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+
+  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
+  var userDocument = await FirestoreUserReference.doc(uid).get(); 
+
+  if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
+    return true; 
+  } else {
+    return false; 
+  }
+}
 
 
-
-//   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-//   var userDocument = await FirestoreUserReference.doc(uid).get(); 
-
-//   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-//     return true; 
-//   } else {
-//     return false; 
-//   }
-// }
-
-//   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-//   var userDocument = await FirestoreUserReference.doc(uid).get();
-
-
-//   if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-//     return true;
-//   } else {
-//     return false;
-//   }
-// }
-
-Future<void> updateUser(ApartmentCard apartmentCard, bool saved) {
+Future<void> updateUserFavorite(ApartmentCard apartmentCard) async{
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
   CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-  // final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-  // var userDocument = await FirestoreUserReference.doc(uid).get(); 
+  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
+  var userDocument = await FirestoreUserReference.doc(uid).get(); 
 
-  // var userDocument = await FirestoreUserReference.doc(uid).get();
+  if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
+    return users
+    .doc(uid)
+    .update({
+      'favorites': FieldValue.arrayRemove([apartmentCard.userID])
+      });
 
+  } else {
+    return users
+    .doc(uid)
+    .update({
+      'favorites': FieldValue.arrayUnion([apartmentCard.userID])
+      });
+  }
 
-  // if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-  //   return users
-  //   .doc(uid)
-  //   .update({
-  //     'favorites': FieldValue.arrayRemove([apartmentCard.address])
-  //     });
-
-  // } else {
+  // if(saved){
   //   return users
   //   .doc(uid)
   //   .update({
   //     'favorites': FieldValue.arrayUnion([apartmentCard.address])
   //     });
+
+
+  // } else {
+  //   return users.doc(uid).update({
+  //     'favorites': FieldValue.arrayRemove([apartmentCard.address])
+  //   });
   // }
-
-  if(saved){
-    return users
-    .doc(uid)
-    .update({
-      'favorites': FieldValue.arrayUnion([apartmentCard.address])
-      });
-
-
-  } else {
-    return users.doc(uid).update({
-      'favorites': FieldValue.arrayRemove([apartmentCard.address])
-    });
-  }
 }
 
 class ApartmentCard extends StatefulWidget {
@@ -204,7 +189,8 @@ class _ApartmentCardState extends State<ApartmentCard> {
                           TextButton.icon(
                               onPressed: () {
                                 setState(() {
-                                  saved = !saved; // TODO: Save favorited items
+                                  saved = !saved; 
+                                  ;// TODO: Save favorited items
                                 });
                               }, // TODO: Add favorite function
                               label: const Text(
@@ -215,9 +201,8 @@ class _ApartmentCardState extends State<ApartmentCard> {
                                     fontWeight: FontWeight.w600),
                               ),
                               icon: Icon(
-                                saved
-                                    ? Icons.favorite_sharp
-                                    : Icons.favorite_border_sharp,
+                                // ignore: unnecessary_cast
+                                saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
                                 size: 24.0,
                               ),
                               style: TextButton.styleFrom(
