@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,6 +20,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  String userName = "loading...";
   String searchKey = ""; // En by i search.
   List<String> GoingToKey = []; // ønsker af byer man vil til.
   String Semesterkey = ""; // Hvilket semester, any, spring, autumn,
@@ -34,6 +36,11 @@ class _SearchScreenState extends State<SearchScreen> {
     final FirestoreUserReference =
         FirebaseFirestore.instance.collection("users");
     return await FirestoreUserReference.doc(uid).get();
+  }
+
+  Future<String> getUserName(String uid) async {
+    final userDocument = await getData(uid);
+    return userDocument['username'].toString();
   }
 
   String setGoingToKey(String semester) {
@@ -81,6 +88,10 @@ class _SearchScreenState extends State<SearchScreen> {
               if (!snapshot.hasData) {
                 return const Text('Loading...');
               }
+
+              getUserName(FirebaseMethods.userId).then((value) {
+                return value;
+              });
 
               for (var doc in snapshot.data!.docs) {
                 Object? testmap = doc.data();
@@ -147,7 +158,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              "Jefferson", // TODO: Get username from Firebase"${user?.displayName}"
+                              "Jeff", // TODO: Get username from Firebase"${user?.displayName}"
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 24.0,
@@ -331,12 +342,9 @@ class _FilterSheetState extends State<FilterSheet> {
                   icon: Icon(Icons.close_rounded),
                   iconSize: 24.0,
                 ),
-                const Text(
-                    "Filters",
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.w500)
-                ),
+                const Text("Filters",
+                    style:
+                        TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500)),
                 TextButton(
                   onPressed: () {
                     var values = {
