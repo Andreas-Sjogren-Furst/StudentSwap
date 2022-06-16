@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/screens/TabsScreen.dart';
@@ -31,9 +30,16 @@ class _RegisterPageState2 extends State<RegisterPage2> {
     'Netherlands', 'Amsterdam', 'Netherlands Antilles', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Norfolk Island', 'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama', 'Papua New Guinea', 'Paracel Islands', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn Islands', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania', 'Russia', 'Rwanda', 'Saint Helena', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Pierre and Miquelon', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia and Montenegro', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia and the South Sandwich Islands', 'Spain', 'Spratly Islands', 'Sri Lanka', 'Sudan', 'Suriname', 'Svalbard', 'Swaziland', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Timor-Leste', 'Togo', 'Tokelau', 'Tonga', 'Trinidad and Tobago', 'Tromelin Island', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Venezuela', 'Vietnam', 'Virgin Islands', 'Wake Island', 'Wallis and Futuna', 'West Bank', 'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe',
   ];
 
+  final List<String> gender = [
+    'Male',
+    'Female',
+    'Non-Binary',
+  ];
+
   String? selectedValue;
   String? selectedValue1;
   String? selectedValue2;
+  String? selectedValue3;
 
 
   // text controllers
@@ -41,6 +47,9 @@ class _RegisterPageState2 extends State<RegisterPage2> {
   final _myCountryController = TextEditingController();
   final _destinationController = TextEditingController();
   final _myAddressController = TextEditingController();
+  final _firstName = TextEditingController();
+  final _lastName = TextEditingController();
+  final _gender = TextEditingController();
 
   // To get the user UID . TODO: null check safety.
   File? get get_key_UserImagePicker_pickedImage =>
@@ -54,6 +63,9 @@ class _RegisterPageState2 extends State<RegisterPage2> {
     _myCountryController.dispose();
     _destinationController.dispose();
     _myAddressController.dispose();
+    _firstName.dispose();
+    _lastName.dispose();
+    _gender.dispose();
     super.dispose();
   }
 
@@ -94,7 +106,10 @@ class _RegisterPageState2 extends State<RegisterPage2> {
         "profile_picture_url": profilePictureUrl,
         "myCountry": selectedValue1,
         "destination": selectedValue2,
+        "gender": selectedValue3,
         "myAddress": _myAddressController.text.trim(),
+        "firstName": _firstName.text.trim(),
+        "lastName": _lastName.text.trim(),
       }); // her skal vi tilføje flere variabler.
     }
 
@@ -136,7 +151,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                       )),
 
                   //Welcome
-                  SizedBox(height: 15),
+                  SizedBox(height: 10),
                   Text(
                     "Register below with your details!",
                     style: TextStyle(
@@ -146,11 +161,11 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                       color: Colors.white,
                     ),
                   ),
-                  SizedBox(height: 25),
+                  SizedBox(height: 20),
 
                   UserImagePicker(key: key_UserImagePicker),
 
-                  SizedBox(height: 25),
+                  SizedBox(height: 20),
 
                   //Semester textfield
                   Padding(
@@ -226,7 +241,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         //This to clear the search value when you close the menu
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
-                            _myCountryController.clear();
+                            _semesterController.clear();
                           }
                         },
                       ),
@@ -360,7 +375,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           ),
                           color: Colors.white,
                         ),
-                        searchController: _myCountryController,
+                        searchController: _destinationController,
                         searchInnerWidget: Padding(
                           padding: const EdgeInsets.only(
                             top: 8,
@@ -370,7 +385,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           ),
                           child: TextFormField(
                             textCapitalization: TextCapitalization.sentences,
-                            controller: _myCountryController,
+                            controller: _destinationController,
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: const EdgeInsets.symmetric(
@@ -390,9 +405,137 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         },
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
-                            _myCountryController.clear();
+                            _destinationController.clear();
                           }
                         },
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 10),
+
+                  //Gender textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          ' Gender',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey[700],
+
+                          ),
+                        ),
+                        items: gender
+                            .map((item) =>
+                            DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ))
+                            .toList(),
+                        value: selectedValue3,
+                        onChanged: (value) {
+                          setState(() {
+                            selectedValue3 = value as String;
+                          });
+                        },
+                        buttonHeight: 62,
+                        buttonWidth: 370,
+                        itemHeight: 62,
+                        dropdownMaxHeight: 250,
+                        buttonDecoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: Colors.black26,
+                          ),
+                          color: Colors.white,
+                        ),
+                        searchController: _gender,
+                        searchInnerWidget: Padding(
+                          padding: const EdgeInsets.only(
+                            top: 8,
+                            bottom: 4,
+                            right: 8,
+                            left: 8,
+                          ),
+                          child: TextFormField(
+                            textCapitalization: TextCapitalization.sentences,
+                            controller: _gender,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 8,
+                              ),
+                              hintText: 'Search for Gender',
+                              hintStyle: const TextStyle(fontSize: 12),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                        searchMatchFn: (item, searchValue) {
+                          return (item.value.toString().contains(searchValue));
+                        },
+                        onMenuStateChange: (isOpen) {
+                          if (!isOpen) {
+                            _gender.clear();
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+
+                  //FirstName
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: TextField(
+                      controller:
+                      _firstName, //What the user put in the textfield
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        hintText: 'Firstname',
+                        fillColor: Colors.grey[200],
+                        filled: true,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+
+                  //Lastname
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: TextField(
+                      controller:
+                      _lastName, //What the user put in the textfield
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        hintText: 'Lastname',
+                        fillColor: Colors.grey[200],
+                        filled: true,
                       ),
                     ),
                   ),
