@@ -15,28 +15,58 @@ class _ProfileApartmentState extends State<ProfileApartment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Apartment Photos"),
-        backgroundColor: Theme.of(context).primaryColor,
-      ),
-      body: DefaultTextStyle(
-        style: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 18,
-          fontFamily: 'Poppins',
-          color: Colors.black,
-        ),
-        child: SingleChildScrollView(
+      body: SafeArea(
+        child: DefaultTextStyle(
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            fontFamily: 'Poppins',
+            color: Colors.black,
+          ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              TopPhoto(),
-              SizedBox(height: 8.0),
-              PhotoGrid(),
-            ],
+
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios_new_rounded, size: 24.0,),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 24.0),
+                        child: Text(
+                          'Apartment Photos',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TopPhoto(),
+                    SizedBox(height: 8.0),
+                    PhotoGrid(),
+                  ],
+                ),
+            ),
+              )],
           ),
         ),
-      ),
+      )
+
     );
   }
 }
