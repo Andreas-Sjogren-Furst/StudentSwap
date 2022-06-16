@@ -38,22 +38,22 @@ class _RegisterPageState2 extends State<RegisterPage2> {
 
   // text controllers
   final _semesterController = TextEditingController();
-  final _myAddressController = TextEditingController();
+  final _myCountryController = TextEditingController();
   final _destinationController = TextEditingController();
+  final _myAddressController = TextEditingController();
 
   // To get the user UID . TODO: null check safety.
   File? get get_key_UserImagePicker_pickedImage =>
       key_UserImagePicker.currentState?.pickedImage;
-
-  var destinations = [];
 
   // final _userImagePicker = new UserImagePicker();
 
   @override
   void dispose() {
     _semesterController.dispose();
-    _myAddressController.dispose();
+    _myCountryController.dispose();
     _destinationController.dispose();
+    _myAddressController.dispose();
     super.dispose();
   }
 
@@ -92,9 +92,9 @@ class _RegisterPageState2 extends State<RegisterPage2> {
           .update({
         "semester": selectedValue,
         "profile_picture_url": profilePictureUrl,
-        "myAddress": selectedValue1,
+        "myCountry": selectedValue1,
         "destination": selectedValue2,
-        "uid": FirebaseAuth.instance.currentUser!.uid,
+        "myAddress": _myAddressController.text.trim(),
       }); // her skal vi tilføje flere variabler.
     }
 
@@ -226,7 +226,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         //This to clear the search value when you close the menu
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
-                            _myAddressController.clear();
+                            _myCountryController.clear();
                           }
                         },
                       ),
@@ -277,7 +277,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           ),
                           color: Colors.white,
                         ),
-                        searchController: _myAddressController,
+                        searchController: _myCountryController,
                         searchInnerWidget: Padding(
                           padding: const EdgeInsets.only(
                             top: 8,
@@ -287,7 +287,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           ),
                           child: TextFormField(
                             textCapitalization: TextCapitalization.sentences,
-                            controller: _myAddressController,
+                            controller: _myCountryController,
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: const EdgeInsets.symmetric(
@@ -308,7 +308,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         //This to clear the search value when you close the menu
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
-                            _myAddressController.clear();
+                            _myCountryController.clear();
                           }
                         },
                       ),
@@ -360,7 +360,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           ),
                           color: Colors.white,
                         ),
-                        searchController: _myAddressController,
+                        searchController: _myCountryController,
                         searchInnerWidget: Padding(
                           padding: const EdgeInsets.only(
                             top: 8,
@@ -370,7 +370,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           ),
                           child: TextFormField(
                             textCapitalization: TextCapitalization.sentences,
-                            controller: _myAddressController,
+                            controller: _myCountryController,
                             decoration: InputDecoration(
                               isDense: true,
                               contentPadding: const EdgeInsets.symmetric(
@@ -390,9 +390,32 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         },
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
-                            _myAddressController.clear();
+                            _myCountryController.clear();
                           }
                         },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+
+                  //address textfield
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: TextField(
+                      controller:
+                      _myAddressController, //What the user put in the textfield
+                      decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.deepPurple),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        hintText: 'My City/Address',
+                        fillColor: Colors.grey[200],
+                        filled: true,
                       ),
                     ),
                   ),
