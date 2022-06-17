@@ -64,8 +64,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Divider(color: Colors.grey),
-            FlatButton(
-                padding: EdgeInsets.all(15),
+            TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -95,8 +94,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
         const Divider(
           color: Colors.grey,
         ),
-        FlatButton(
-            padding: const EdgeInsets.all(15),
+        TextButton(
             onPressed: () {
               Navigator.push(
                 context,
@@ -121,8 +119,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
               ],
             )),
         const Divider(color: Colors.grey),
-        FlatButton(
-          padding: const EdgeInsets.all(15),
+        TextButton(
           onPressed: () {
             FirebaseAuth.instance.signOut();
           },
