@@ -17,6 +17,7 @@ class Apartment {
   late String userID;
   late List<dynamic> goingTo;
   late String appartmentType;
+  
 
   bool saved = false;
 
@@ -30,6 +31,8 @@ class Apartment {
     required this.userID,
     required this.semester,
     required this.appartmentType,
+    
+
   });
 
   ApartmentCard getCard() {
@@ -43,6 +46,7 @@ class Apartment {
       goingTo: goingTo,
       semester: semester,
       appartmentType: appartmentType,
+    
     );
   }
 }
@@ -53,12 +57,13 @@ Future<bool> checkFavorite(ApartmentCard apartmentCard) async {
   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
   var userDocument = await FirestoreUserReference.doc(uid).get();
 
-  if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
+  if(userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
     return true;
   } else {
     return false;
   }
 }
+
 
 Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
   final uid = FirebaseAuth.instance.currentUser!.uid;
@@ -69,11 +74,15 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
   var userDocument = await FirestoreUserReference.doc(uid).get();
 
   if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
-    return users.doc(uid).update({
+    return users
+        .doc(uid)
+        .update({
       'favorites': FieldValue.arrayRemove([apartmentCard.userID])
     });
   } else {
-    return users.doc(uid).update({
+    return users
+        .doc(uid)
+        .update({
       'favorites': FieldValue.arrayUnion([apartmentCard.userID])
     });
   }
@@ -85,11 +94,13 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
   //     'favorites': FieldValue.arrayUnion([apartmentCard.address])
   //     });
 
+
   // } else {
   //   return users.doc(uid).update({
   //     'favorites': FieldValue.arrayRemove([apartmentCard.address])
   //   });
   // }
+
 
   // Code can't be reached.
   /*if (saved) {
@@ -114,7 +125,8 @@ class ApartmentCard extends StatefulWidget {
       required this.savedFavorite,
       required this.goingTo,
       required this.semester,
-      required this.appartmentType})
+      required this.appartmentType
+      })
       : super(key: key);
 
   final String apartmentImage;
@@ -126,6 +138,7 @@ class ApartmentCard extends StatefulWidget {
   final bool savedFavorite;
   final List<dynamic> goingTo;
   final String appartmentType;
+ 
 
   @override
   State<ApartmentCard> createState() => _ApartmentCardState();
@@ -175,7 +188,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -205,7 +218,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               onPressed: () {
                                 setState(() {
                                   saved = !saved;
-                                  ; // TODO: Save favorited items
+                                  ;// TODO: Save favorited items
                                 });
                               }, // TODO: Add favorite function
                               label: const Text(
@@ -217,9 +230,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               ),
                               icon: Icon(
                                 // ignore: unnecessary_cast
-                                saved
-                                    ? Icons.favorite_sharp
-                                    : Icons.favorite_border_sharp,
+                                saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
                                 size: 24.0,
                               ),
                               style: TextButton.styleFrom(
