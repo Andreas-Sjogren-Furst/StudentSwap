@@ -24,11 +24,13 @@ class __ProfileScreenState extends State<ProfileScreen> {
   final Stream<QuerySnapshot> _usersStream =
       FirebaseFirestore.instance.collection('users').snapshots();
   var firstName = 'Loading...';
+  var lastName = 'Loading...';
   var profileImage =
       'https://firebasestorage.googleapis.com/v0/b/studentswap-fbf76.appspot.com/o/blankImage.jpeg?alt=media&token=0d0a00ce-a80e-41e7-930e-cb23fc9ccf68';
   __ProfileScreenState() {
     getdata(userId).then((userData) => setState(() {
           firstName = userData?['firstName'];
+          lastName = userData?['lastName'];
           profileImage = userData?['profileImage'];
         }));
   }
@@ -47,7 +49,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
                 CircleAvatar(
                     radius: 65, backgroundImage: NetworkImage(profileImage)),
                 Text(
-                  firstName,
+                  '$firstName $lastName',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
