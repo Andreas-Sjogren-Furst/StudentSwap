@@ -86,6 +86,12 @@ class FavoritesScreen extends StatelessWidget {
                 }
               });
 
+              if (apartmentsLists.isEmpty) {
+                return Center(
+                  child: Text("No Favorites, find yours at the search screen."),
+                );
+              }
+
               return Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
                 child: Column(
