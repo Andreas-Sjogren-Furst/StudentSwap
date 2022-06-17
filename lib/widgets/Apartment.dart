@@ -3,10 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:login_page/screens/ApartmentScreen.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Apartment {
   late String city;
@@ -173,7 +171,6 @@ class _ApartmentCardState extends State<ApartmentCard> {
                                   //saved = !saved;
                                   _saved =
                                       !_saved; // TODO: Save favorited items
-
                                 });
                                 updateUserFavorite(widget, _saved);
                               }, // TODO: Add favorite function
@@ -187,7 +184,6 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               icon: Icon(
                                 // ignore: unnecessary_cast
                                 _saved
-
                                     ? Icons.favorite_sharp
                                     : Icons.favorite_border_sharp,
                                 size: 24.0,

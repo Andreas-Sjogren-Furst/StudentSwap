@@ -48,7 +48,6 @@ class FavoritesScreen extends StatelessWidget {
 
               var currentUserFavorties = [];
 
-
               snapshot.data!.docs.forEach((doc) {
                 Object? testmap = doc.data();
                 LinkedHashMap<dynamic, dynamic> testlinked =
@@ -70,8 +69,8 @@ class FavoritesScreen extends StatelessWidget {
                     testlinked.map((a, b) => MapEntry(a, b));
                 if (favoriteUser.contains(userMap['userID'])) {
                   apartmentsLists.add(Apartment(
-                      city: userMap['city'] ?? "not available",
-                      address: userMap['address'] ?? "not available",
+                      city: userMap['myCountry'] ?? "not available",
+                      address: userMap['myAdress'] ?? "not available",
                       apartmentImage:
                           userMap['apartmentImage'] ?? "no available",
                       profileImage: userMap['profileImage'] ?? "not available",
@@ -79,7 +78,6 @@ class FavoritesScreen extends StatelessWidget {
                           (currentUserFavorties.contains(userMap["userID"]))
                               ? true
                               : false,
-
                       goingTo: ["test1", "test2"],
                       userID: userMap['userID'] ?? "not available",
                       semester: userMap['semester'] ?? "not available",

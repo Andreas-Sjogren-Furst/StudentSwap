@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/services/FirebaseMethods.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+import "package:flutter_spinkit/flutter_spinkit.dart";
 
 import 'package:login_page/widgets/Apartment.dart';
 
@@ -101,12 +101,13 @@ class _SearchScreenState extends State<SearchScreen> {
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
 
-                if (userMap["userID"] != FirebaseMethods.userId) {
+                if (userMap["userID"] != FirebaseMethods.userId ||
+                    userMap["apartmentImage"] != null) {
                   apartmentsLists.add(Apartment(
                       city: userMap['myCountry'] ?? "not available",
-                      address: userMap['address'] ?? "not available",
+                      address: userMap['myAddress'] ?? "not available",
                       apartmentImage:
-                          userMap['apartmentImage'] ?? "no available",
+                          userMap['apartmentImage'] ?? "not available",
                       profileImage: userMap['profileImage'] ?? "not available",
                       savedFavorite:
                           (currentUserFavorties.contains(userMap["userID"]))
@@ -121,13 +122,17 @@ class _SearchScreenState extends State<SearchScreen> {
               }
               // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.
               apartmentsLists = apartmentsLists
-                  .where((apartment) => apartment.city
-                      .toLowerCase()
-                      .contains(searchKey.toLowerCase()))
+                  .where((apartment) =>
+                      apartment.city
+                          .toLowerCase()
+                          .contains(searchKey.toLowerCase()) &&
+                      apartment.city != "not available")
+                  .where((apartment) =>
+                      apartment.apartmentImage != "not available")
+                  .toList()
                   .where((apartment) =>
                       GoingToKey.isEmpty ||
-                      GoingToKey.map(
-                              (goingToKeyString) => goingToKeyString.toLowerCase())
+                      GoingToKey.map((goingToKeyString) => goingToKeyString.toLowerCase())
                           .toList()
                           .contains(apartment.city.toLowerCase()))
                   .where((apartment) => apartment.semester
