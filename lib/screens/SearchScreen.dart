@@ -88,7 +88,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
                 if (userMap["userID"] == FirebaseMethods.userId) {
                   currentUserFavorties =
-                      userMap["favorites"]; // Hent favoritter
+                      userMap["favorites"] ?? []; // Hent favoritter
                   currentUserName = userMap["firstName"] ?? "lolcat";
                   currentUserProfilePicture = userMap["profileImage"];
                 }
