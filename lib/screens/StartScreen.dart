@@ -5,77 +5,94 @@ import 'package:flutter/material.dart';
 import 'StartScreen2.dart';
 
 class StartScreen extends StatefulWidget {
-  static const routeName = "/Start-Screen"; 
+  static const routeName = "/Start-Screen";
 
   @override
   State<StartScreen> createState() => _StartScreenState();
 }
 
 class _StartScreenState extends State<StartScreen> {
-
-
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width; 
+    double screenWidth = MediaQuery.of(context).size.width;
 
     // TODO: implement build
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            Color.fromARGB(255, 32, 40, 35),
-            Color.fromARGB(255, 26, 51, 76)
-          ],
-        ),
-      ),
-      child: Scaffold(
-        
-        backgroundColor: Colors.transparent,
-        body: Column(
-          children: [
-            SizedBox(height: 250,),
-            Text("StudentSwap",
-          style: TextStyle(color: Colors.white, 
-          fontSize: 50,
-          fontWeight: FontWeight.bold),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 32, 40, 35),
+              Color.fromARGB(255, 26, 51, 76)
+            ],
           ),
-          SizedBox(height: 15,),
-          Text("Worry less on accomendation, and focus more on study",
-          style: TextStyle(color: Colors.white, fontSize: 15),),
-          SizedBox(height: 45,),
-          Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(context, StartScreen2.routeName);
-                      },
-                      child: Center(
+        ),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 250,
+                ),
+                Text(
+                  "StudentSwap",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  "Worry less on accomendation, and focus more on study",
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+                SizedBox(
+                  height: 45,
+                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
                         child: Container(
-                          width: screenWidth/3,
-                          padding: EdgeInsets.all(20),
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'EXPLORE',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15,
-                              ),
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: <Color>[
+                                Color(0xFF0D47A1),
+                                Color(0xFF1976D2),
+                                Color(0xFF42A5F5),
+                              ],
                             ),
                           ),
                         ),
                       ),
-                    ),
-              ),
-          ],
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(30.0),
+                          primary: Colors.white,
+                          textStyle: const TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () {
+                          Navigator.pushNamed(context, StartScreen2.routeName);
+                        },
+                        child: const Text(
+                          'EXPLORE',
+                          style: TextStyle(
+                              fontFamily: 'Poppins',
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-      )
-    );
+        ));
   }
 }
