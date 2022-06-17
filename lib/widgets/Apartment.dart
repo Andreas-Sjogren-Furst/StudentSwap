@@ -6,6 +6,7 @@ import 'package:login_page/screens/ApartmentScreen.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Apartment {
   late String city;
@@ -89,6 +90,8 @@ Future<void> updateUserFavorite(ApartmentCard apartmentCard, bool saved) async {
 
 
 
+
+
   // if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
   //   return users
   //       .doc(uid)
@@ -158,9 +161,34 @@ class ApartmentCard extends StatefulWidget {
 }
 
 class _ApartmentCardState extends State<ApartmentCard> {
-  @override
-  bool saved = false; 
+   bool _saved = false; 
 
+   Future<void> _loadSaved(String userid) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      if(prefs.getBool(userid) == null) {
+        prefs.setBool(userid, false);
+      } else {
+      _saved = (prefs.getBool(userid) ?? false);
+      }
+    });
+  }
+
+  Future<void> _setSaved(String userid, bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _saved = !(prefs.getBool(userid) ?? false);
+      prefs.setBool(userid, _saved);
+    });
+  }
+
+  @override 
+  void initState() {
+    super.initState();
+    _loadSaved(widget.userID);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       customBorder:
@@ -230,10 +258,11 @@ class _ApartmentCardState extends State<ApartmentCard> {
                           TextButton.icon(
                               onPressed: () {
                                 setState(() {
-                                  saved = !saved;
+                                  //saved = !saved;
+                                  _setSaved(widget.userID, _saved)
                                   ;// TODO: Save favorited items
                                 });
-                                updateUserFavorite(widget, saved);
+                                updateUserFavorite(widget, _saved);
                               }, // TODO: Add favorite function
                               label: const Text(
                                 "Save",
@@ -244,11 +273,11 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               ),
                               icon: Icon(
                                 // ignore: unnecessary_cast
-                                saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
+                                _saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
                                 size: 24.0,
                               ),
                               style: TextButton.styleFrom(
-                                primary: saved ? Colors.red : Colors.grey,
+                                primary: _saved ? Colors.red : Colors.grey,
                                 padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0),
                               )),
                           CircleAvatar(
