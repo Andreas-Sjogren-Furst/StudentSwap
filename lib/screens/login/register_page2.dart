@@ -20,14 +20,274 @@ class _RegisterPageState2 extends State<RegisterPage2> {
   final key_UserImagePicker = new GlobalKey<UserImagePickerState>();
 
   final List<String> semester = [
-    'Spring',
-    'Fall',
+    'Spring - 2022',
+    'Fall - 2022',
+    'Spring - 2023',
+    'Fall - 2023',
+    'Spring - 2024',
+    'Fall - 2024',
+    'Spring - 2025',
+    'Fall - 2025',
   ];
 
-  final List<String> countries = [
-    'Afghanistan', 'Akrotiri', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', ' Antarctica', 'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Ashmore and Cartier Islands', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas, The', 'Bahrain', 'Bangladesh', 'Barbados', 'Bassas da India', 'Belarus', 'Belgium', 'Belize', 'Benin', 'Bermuda', 'Bhutan', 'Bolivia', 'Bosnia and Herzegovina', 'Botswana', 'Bouvet Island', 'Brazil', 'British Indian Ocean Territory', 'British Virgin Islands', 'Brunei', 'Bulgaria', 'Burkina Faso', 'Burma', 'Burundi', 'Cambodia', 'Cameroon', 'Canada', 'Cape Verde', 'Cayman Islands', 'Central African Republic', 'Chad', 'Chile', 'China', 'Christmas Island', 'Clipperton Island', 'Cocos (Keeling) Islands', 'Colombia', 'Comoros', 'Congo, Democratic Republic of the', 'Congo, Republic of the', 'Cook Islands', 'Coral Sea Islands', 'Costa Rica', 'Cote d\'Ivoire', 'Croatia', 'Cuba', 'Cyprus', 'Czech Republic', 'Denmark', 'Dhekelia', 'Djibouti', 'Dominica', 'Dominican Republic', 'Ecuador', 'Egypt', 'El Salvador', 'Equatorial Guinea', 'Eritrea', 'Estonia', 'Ethiopia', 'Europa Island', 'Falkland Islands (Islas Malvinas)', 'Faroe Islands', 'Fiji', 'Finland', 'France', 'French Guiana', 'French Polynesia', 'French Southern and Antarctic Lands', 'Gabon', 'Gambia', 'The Gaza Strip', 'Georgia', 'Germany', 'Ghana', 'Gibraltar', 'Glorioso Islands', 'Greece',
-    'Greenland', 'Grenada', 'Guadeloupe', 'Guam', 'Guatemala', 'Guernsey', 'Guinea', 'Guinea-Bissau', 'Guyana', 'Haiti', 'Heard Island and McDonald Islands', 'Holy See (Vatican City)', 'Honduras', 'Hong Kong', 'Hungary', 'Iceland', 'India', 'Indonesia', 'Iran', 'Iraq', 'Ireland', 'Isle of Man', 'Israel', 'Italy', 'Jamaica', 'Jan Mayen', 'Japan', 'Jersey', 'Jordan', 'Juan de Nova Island', 'Kazakhstan', 'Kenya', 'Kiribati', 'Korea, North', 'Korea, South', 'Kuwait', 'Kyrgyzstan', 'Laos', 'Latvia', 'Lebanon', 'Lesotho', 'Liberia', 'Libya', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Macau', 'Macedonia', 'Madagascar', 'Malawi', 'Malaysia', 'Maldives', 'Mali', 'Malta', 'Marshall Islands', 'Martinique', 'Mauritania', 'Mauritius', 'Mayotte', 'Mexico', 'Micronesia, Federated States of', 'Moldova', 'Monaco', 'Mongolia', 'Montserrat', 'Morocco', 'Mozambique', 'Namibia', 'Nauru', 'Navassa Island', 'Nepal',
-    'Netherlands', 'Amsterdam', 'Netherlands Antilles', 'New Caledonia', 'New Zealand', 'Nicaragua', 'Niger', 'Nigeria', 'Niue', 'Norfolk Island', 'Northern Mariana Islands', 'Norway', 'Oman', 'Pakistan', 'Palau', 'Panama', 'Papua New Guinea', 'Paracel Islands', 'Paraguay', 'Peru', 'Philippines', 'Pitcairn Islands', 'Poland', 'Portugal', 'Puerto Rico', 'Qatar', 'Reunion', 'Romania', 'Russia', 'Rwanda', 'Saint Helena', 'Saint Kitts and Nevis', 'Saint Lucia', 'Saint Pierre and Miquelon', 'Saint Vincent and the Grenadines', 'Samoa', 'San Marino', 'Sao Tome and Principe', 'Saudi Arabia', 'Senegal', 'Serbia and Montenegro', 'Seychelles', 'Sierra Leone', 'Singapore', 'Slovakia', 'Slovenia', 'Solomon Islands', 'Somalia', 'South Africa', 'South Georgia and the South Sandwich Islands', 'Spain', 'Spratly Islands', 'Sri Lanka', 'Sudan', 'Suriname', 'Svalbard', 'Swaziland', 'Sweden', 'Switzerland', 'Syria', 'Taiwan', 'Tajikistan', 'Tanzania', 'Thailand', 'Timor-Leste', 'Togo', 'Tokelau', 'Tonga', 'Trinidad and Tobago', 'Tromelin Island', 'Tunisia', 'Turkey', 'Turkmenistan', 'Turks and Caicos Islands', 'Tuvalu', 'Uganda', 'Ukraine', 'United Arab Emirates', 'United Kingdom', 'United States', 'Uruguay', 'Uzbekistan', 'Vanuatu', 'Venezuela', 'Vietnam', 'Virgin Islands', 'Wake Island', 'Wallis and Futuna', 'West Bank', 'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe',
+  final List<dynamic> countries = [
+    'Afghanistan',
+    'Akrotiri',
+    'Albania',
+    'Algeria',
+    'American Samoa',
+    'Andorra',
+    'Angola',
+    'Anguilla',
+    ' Antarctica',
+    'Antigua and Barbuda',
+    'Argentina',
+    'Armenia',
+    'Aruba',
+    'Ashmore and Cartier Islands',
+    'Australia',
+    'Austria',
+    'Azerbaijan',
+    'Bahamas, The',
+    'Bahrain',
+    'Bangladesh',
+    'Barbados',
+    'Bassas da India',
+    'Belarus',
+    'Belgium',
+    'Belize',
+    'Benin',
+    'Bermuda',
+    'Bhutan',
+    'Bolivia',
+    'Bosnia and Herzegovina',
+    'Botswana',
+    'Bouvet Island',
+    'Brazil',
+    'British Indian Ocean Territory',
+    'British Virgin Islands',
+    'Brunei',
+    'Bulgaria',
+    'Burkina Faso',
+    'Burma',
+    'Burundi',
+    'Cambodia',
+    'Cameroon',
+    'Canada',
+    'Cape Verde',
+    'Cayman Islands',
+    'Central African Republic',
+    'Chad',
+    'Chile',
+    'China',
+    'Christmas Island',
+    'Clipperton Island',
+    'Cocos (Keeling) Islands',
+    'Colombia',
+    'Comoros',
+    'Congo, Democratic Republic of the',
+    'Congo, Republic of the',
+    'Cook Islands',
+    'Coral Sea Islands',
+    'Costa Rica',
+    'Cote d\'Ivoire',
+    'Croatia',
+    'Cuba',
+    'Cyprus',
+    'Czech Republic',
+    'Denmark',
+    'Dhekelia',
+    'Djibouti',
+    'Dominica',
+    'Dominican Republic',
+    'Ecuador',
+    'Egypt',
+    'El Salvador',
+    'Equatorial Guinea',
+    'Eritrea',
+    'Estonia',
+    'Ethiopia',
+    'Europa Island',
+    'Falkland Islands (Islas Malvinas)',
+    'Faroe Islands',
+    'Fiji',
+    'Finland',
+    'France',
+    'French Guiana',
+    'French Polynesia',
+    'French Southern and Antarctic Lands',
+    'Gabon',
+    'Gambia',
+    'The Gaza Strip',
+    'Georgia',
+    'Germany',
+    'Ghana',
+    'Gibraltar',
+    'Glorioso Islands',
+    'Greece',
+    'Greenland',
+    'Grenada',
+    'Guadeloupe',
+    'Guam',
+    'Guatemala',
+    'Guernsey',
+    'Guinea',
+    'Guinea-Bissau',
+    'Guyana',
+    'Haiti',
+    'Heard Island and McDonald Islands',
+    'Holy See (Vatican City)',
+    'Honduras',
+    'Hong Kong',
+    'Hungary',
+    'Iceland',
+    'India',
+    'Indonesia',
+    'Iran',
+    'Iraq',
+    'Ireland',
+    'Isle of Man',
+    'Israel',
+    'Italy',
+    'Jamaica',
+    'Jan Mayen',
+    'Japan',
+    'Jersey',
+    'Jordan',
+    'Juan de Nova Island',
+    'Kazakhstan',
+    'Kenya',
+    'Kiribati',
+    'Korea, North',
+    'Korea, South',
+    'Kuwait',
+    'Kyrgyzstan',
+    'Laos',
+    'Latvia',
+    'Lebanon',
+    'Lesotho',
+    'Liberia',
+    'Libya',
+    'Liechtenstein',
+    'Lithuania',
+    'Luxembourg',
+    'Macau',
+    'Macedonia',
+    'Madagascar',
+    'Malawi',
+    'Malaysia',
+    'Maldives',
+    'Mali',
+    'Malta',
+    'Marshall Islands',
+    'Martinique',
+    'Mauritania',
+    'Mauritius',
+    'Mayotte',
+    'Mexico',
+    'Micronesia, Federated States of',
+    'Moldova',
+    'Monaco',
+    'Mongolia',
+    'Montserrat',
+    'Morocco',
+    'Mozambique',
+    'Namibia',
+    'Nauru',
+    'Navassa Island',
+    'Nepal',
+    'Netherlands',
+    'Netherlands Antilles',
+    'New Caledonia',
+    'New Zealand',
+    'Nicaragua',
+    'Niger',
+    'Nigeria',
+    'Niue',
+    'Norfolk Island',
+    'Northern Mariana Islands',
+    'Norway',
+    'Oman',
+    'Pakistan',
+    'Palau',
+    'Panama',
+    'Papua New Guinea',
+    'Paracel Islands',
+    'Paraguay',
+    'Peru',
+    'Philippines',
+    'Pitcairn Islands',
+    'Poland',
+    'Portugal',
+    'Puerto Rico',
+    'Qatar',
+    'Reunion',
+    'Romania',
+    'Russia',
+    'Rwanda',
+    'Saint Helena',
+    'Saint Kitts and Nevis',
+    'Saint Lucia',
+    'Saint Pierre and Miquelon',
+    'Saint Vincent and the Grenadines',
+    'Samoa',
+    'San Marino',
+    'Sao Tome and Principe',
+    'Saudi Arabia',
+    'Senegal',
+    'Serbia and Montenegro',
+    'Seychelles',
+    'Sierra Leone',
+    'Singapore',
+    'Slovakia',
+    'Slovenia',
+    'Solomon Islands',
+    'Somalia',
+    'South Africa',
+    'South Georgia and the South Sandwich Islands',
+    'Spain',
+    'Spratly Islands',
+    'Sri Lanka',
+    'Sudan',
+    'Suriname',
+    'Svalbard',
+    'Swaziland',
+    'Sweden',
+    'Switzerland',
+    'Syria',
+    'Taiwan',
+    'Tajikistan',
+    'Tanzania',
+    'Thailand',
+    'Timor-Leste',
+    'Togo',
+    'Tokelau',
+    'Tonga',
+    'Trinidad and Tobago',
+    'Tromelin Island',
+    'Tunisia',
+    'Turkey',
+    'Turkmenistan',
+    'Turks and Caicos Islands',
+    'Tuvalu',
+    'Uganda',
+    'Ukraine',
+    'United Arab Emirates',
+    'United Kingdom',
+    'United States',
+    'Uruguay',
+    'Uzbekistan',
+    'Vanuatu',
+    'Venezuela',
+    'Vietnam',
+    'Virgin Islands',
+    'Wake Island',
+    'Wallis and Futuna',
+    'West Bank',
+    'Western Sahara',
+    'Yemen',
+    'Zambia',
+    'Zimbabwe',
   ];
 
   final List<String> gender = [
@@ -36,11 +296,10 @@ class _RegisterPageState2 extends State<RegisterPage2> {
     'Non-Binary',
   ];
 
-  String? selectedValue;
-  String? selectedValue1;
-  String? selectedValue2;
-  String? selectedValue3;
-
+  String? Semester;
+  String? myCountry;
+  List<dynamic> goingTo = [];
+  String? Gender;
 
   // text controllers
   final _semesterController = TextEditingController();
@@ -83,36 +342,35 @@ class _RegisterPageState2 extends State<RegisterPage2> {
       );
       return;
     }
-      Navigator.pushNamed(context, TabScreen.routeName);
+    Navigator.pushNamed(context, TabScreen.routeName);
 
-      // Tilføj bruger til user collection i Firestore.
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child("user_images")
-          .child(RegisterPageState.authResult!.user!.uid)
-          .child("profile_image.jpg");
+    // Tilføj bruger til user collection i Firestore.
+    final ref = FirebaseStorage.instance
+        .ref()
+        .child("user_images")
+        .child(RegisterPageState.authResult!.user!.uid)
+        .child("profile_image.jpg");
 
-      await ref
-          .putFile(get_key_UserImagePicker_pickedImage!)
-          .whenComplete(() => null);
+    await ref
+        .putFile(get_key_UserImagePicker_pickedImage!)
+        .whenComplete(() => null);
 
-      final String profilePictureUrl = await ref.getDownloadURL();
+    final String profilePictureUrl = await ref.getDownloadURL();
 
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(RegisterPageState.authResult!.user!.uid)
-          .update({
-        "semester": selectedValue,
-        "profile_picture_url": profilePictureUrl,
-        "myCountry": selectedValue1,
-        "destination": selectedValue2,
-        "gender": selectedValue3,
-        "myAddress": _myAddressController.text.trim(),
-        "firstName": _firstName.text.trim(),
-        "lastName": _lastName.text.trim(),
-      }); // her skal vi tilføje flere variabler.
-    }
-
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(RegisterPageState.authResult!.user!.uid)
+        .update({
+      "semester": Semester,
+      "profileImage": profilePictureUrl,
+      "myCountry": myCountry,
+      "goingTo": goingTo,
+      "gender": Gender,
+      "myAddress": _myAddressController.text.trim(),
+      "firstName": _firstName.text.trim(),
+      "lastName": _lastName.text.trim(),
+    }); // her skal vi tilføje flere variabler.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -174,29 +432,27 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                       child: DropdownButton2(
                         isExpanded: true,
                         hint: Text(
-                          ' Semester',
+                          ' The semester you want to go on exchange',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[700],
-
                           ),
                         ),
                         items: semester
-                            .map((item) =>
-                            DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ))
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
                             .toList(),
-                        value: selectedValue,
+                        value: Semester,
                         onChanged: (value) {
                           setState(() {
-                            selectedValue = value as String;
+                            Semester = value as String;
                           });
                         },
                         buttonHeight: 62,
@@ -260,25 +516,23 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[700],
-
                           ),
                         ),
                         items: countries
-                            .map((item) =>
-                            DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ))
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
                             .toList(),
-                        value: selectedValue1,
+                        value: myCountry,
                         onChanged: (value) {
                           setState(() {
-                            selectedValue1 = value as String;
+                            myCountry = value as String;
                           });
                         },
                         buttonHeight: 62,
@@ -332,42 +586,89 @@ class _RegisterPageState2 extends State<RegisterPage2> {
 
                   SizedBox(height: 10),
 
-                  //Their country textfield
+                  //goingTo
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton2(
                         isExpanded: true,
                         hint: Text(
-                          ' Destination',
+                          ' Destination/Destinations',
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[700],
-
                           ),
                         ),
-                        items: countries
-                            .map((item) =>
-                            DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ))
-                            .toList(),
-                        value: selectedValue2,
-                        onChanged: (value) {
-                          setState(() {
-                            selectedValue2 = value as String;
-                          });
-                        },
+                        items: countries.map((item) {
+                          return DropdownMenuItem<String>(
+                            value: item,
+                            //disable default onTap to avoid closing menu when selecting an item
+                            enabled: false,
+                            child: StatefulBuilder(
+                              builder: (context, menuSetState) {
+                                final _isSelected = goingTo.contains(item);
+                                return InkWell(
+                                  onTap: () {
+                                    _isSelected
+                                        ? goingTo.remove(item)
+                                        : goingTo.add(item);
+                                    //This rebuilds the StatefulWidget to update the button's text
+                                    setState(() {});
+                                    //This rebuilds the dropdownMenu Widget to update the check mark
+                                    menuSetState(() {});
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0),
+                                    child: Row(
+                                      children: [
+                                        _isSelected
+                                            ? const Icon(
+                                                Icons.check_box_outlined)
+                                            : const Icon(
+                                                Icons.check_box_outline_blank),
+                                        const SizedBox(width: 16),
+                                        Text(
+                                          item,
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }).toList(),
+
+                        value: goingTo.isEmpty ? null : goingTo.last,
+                        onChanged: (value) {},
                         buttonHeight: 62,
                         buttonWidth: 370,
                         itemHeight: 62,
                         dropdownMaxHeight: 250,
+                        itemPadding: EdgeInsets.zero,
+                        selectedItemBuilder: (context) {
+                          return goingTo.map(
+                            (item) {
+                              return Container(
+                                alignment: AlignmentDirectional.center,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Text(
+                                  goingTo.join(', '),
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                              );
+                            },
+                          ).toList();
+                        },
                         buttonDecoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
@@ -403,9 +704,10 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         searchMatchFn: (item, searchValue) {
                           return (item.value.toString().contains(searchValue));
                         },
+                        //This to clear the search value when you close the menu
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
-                            _destinationController.clear();
+                            _myCountryController.clear();
                           }
                         },
                       ),
@@ -425,25 +727,23 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           style: TextStyle(
                             fontSize: 14,
                             color: Colors.grey[700],
-
                           ),
                         ),
                         items: gender
-                            .map((item) =>
-                            DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ))
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
                             .toList(),
-                        value: selectedValue3,
+                        value: Gender,
                         onChanged: (value) {
                           setState(() {
-                            selectedValue3 = value as String;
+                            Gender = value as String;
                           });
                         },
                         buttonHeight: 62,
@@ -500,7 +800,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                      _firstName, //What the user put in the textfield
+                          _firstName, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -523,7 +823,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                      _lastName, //What the user put in the textfield
+                          _lastName, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -546,7 +846,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                      _myAddressController, //What the user put in the textfield
+                          _myAddressController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),

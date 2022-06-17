@@ -22,21 +22,24 @@ class ProfileInfo extends StatefulWidget {
 class _ProfileInfoState extends State<ProfileInfo> {
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
-  TextEditingController city = TextEditingController();
+  TextEditingController country = TextEditingController();
   TextEditingController address = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController gender = TextEditingController();
   TextEditingController profilePicture = TextEditingController();
+  String profileImage =
+      'https://firebasestorage.googleapis.com/v0/b/studentswap-fbf76.appspot.com/o/Blank_image.jpeg?alt=media&token=005320db-a0b7-48c8-b653-44285e7c079a';
   var userAuth = FirebaseAuth.instance.currentUser!.uid;
 
   _ProfileInfoState() {
     getdata(userAuth).then((userData) => setState(() {
-          firstName.text = userData?['First name'];
-          lastName.text = userData?['Last name'];
-          city.text = userData?['City'];
-          address.text = userData?['Address'];
-          email.text = userData?['E-mail'];
-          gender.text = userData?['Gender'];
+          firstName.text = userData?['firstName'];
+          lastName.text = userData?['lastName'];
+          country.text = userData?['myCountry'];
+          address.text = userData?['myAddress'];
+          email.text = userData?['Email'];
+          gender.text = userData?['gender'];
+          profileImage = userData?['profileImage'];
         }));
   }
 
@@ -52,14 +55,17 @@ class _ProfileInfoState extends State<ProfileInfo> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: CircleAvatar(
-                radius: 65,
-                backgroundImage: AssetImage('assets/sample/profile2.jpg'),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: CircleAvatar(
+                  radius: 65,
+                  backgroundImage: NetworkImage(profileImage),
+                ),
               ),
             ),
             const Padding(
-              padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+              padding: EdgeInsets.all(15),
               child: Text(
                 'Edit personal info',
                 style: TextStyle(
@@ -70,7 +76,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(15),
                 child: TextFormField(
                   controller: firstName,
                   decoration: const InputDecoration(
@@ -82,7 +88,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(15),
                 child: TextFormField(
                   controller: lastName,
                   decoration: const InputDecoration(
@@ -94,19 +100,19 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(15),
                 child: TextFormField(
-                  controller: city,
+                  controller: country,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'City',
+                    labelText: 'Country',
                   ),
                   onFieldSubmitted: (String inputField) {
                     writedata(userAuth, 'myCountry', inputField);
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(15),
                 child: TextFormField(
                   controller: address,
                   decoration: const InputDecoration(
@@ -118,7 +124,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(15),
                 child: TextFormField(
                   controller: email,
                   decoration: const InputDecoration(
@@ -130,7 +136,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(15),
                 child: TextFormField(
                   controller: gender,
                   decoration: const InputDecoration(

@@ -22,7 +22,7 @@ class RegisterPageState extends State<RegisterPage> {
   final _confirmPasswordController = TextEditingController();
 
   static UserCredential?
-  authResult; // To get the user UID . TODO: null check safety.
+      authResult; // To get the user UID . TODO: null check safety.
 
   @override
   void dispose() {
@@ -37,22 +37,21 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future nextPage() async {
-      if (passwordConfirmed() != null) {
-        authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
-        Navigator.pushNamed(context, RegisterPage2.routeName);
+    if (passwordConfirmed() != null) {
+      authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      Navigator.pushNamed(context, RegisterPage2.routeName);
 
-        await FirebaseFirestore.instance
-            .collection("users")
-            .doc(authResult!.user!.uid)
-            .set({
-          "Email": _emailController.text.trim(),
-          "uid": FirebaseAuth.instance.currentUser!.uid,
-        }); // her skal vi tilføje flere variabler.
-      }
-    } 
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(authResult!.user!.uid)
+          .set({
+        "Email": _emailController.text.trim(),
+        "uid": FirebaseAuth.instance.currentUser!.uid,
+      }); // her skal vi tilføje flere variabler.
+    }
   }
 
   bool passwordConfirmed() {
@@ -120,7 +119,7 @@ class RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                      _emailController, //What the user put in the textfield
+                          _emailController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -144,7 +143,7 @@ class RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                      _passwordController, //What the user put in the textfield
+                          _passwordController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -168,7 +167,7 @@ class RegisterPageState extends State<RegisterPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                      _confirmPasswordController, //What the user put in the textfield
+                          _confirmPasswordController, //What the user put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),

@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import './ProfileApartment.dart';
 import './Profile_personal_info.dart';
 
+Future<Map<String, dynamic>?> getdata(String documentId) async {
+  var users = FirebaseFirestore.instance.collection('users');
+  var userId = await users.doc(documentId).get();
+  return userId.data();
+}
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
   static const routeName = "/profile-Screen";
@@ -15,8 +21,20 @@ class __ProfileScreenState extends State<ProfileScreen> {
   //static const routeName = "/profile-Screen";
   final user = FirebaseAuth.instance.currentUser;
   final userId = FirebaseAuth.instance.currentUser!.uid;
-  final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('users').snapshots();
+  var firstName = 'Loading...';
+  var lastName = '';
+  var profileImage =
+      'https://firebasestorage.googleapis.com/v0/b/studentswap-fbf76.appspot.com/o/Blank_image.jpeg?alt=media&token=005320db-a0b7-48c8-b653-44285e7c079a';
+
+  @override
+  void initState() {
+    getdata(userId).then((userData) => setState(() {
+          firstName = userData?['firstName'];
+          lastName = userData?['lastName'];
+          profileImage = userData?['profileImage'];
+        }));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +46,12 @@ class __ProfileScreenState extends State<ProfileScreen> {
           child: Padding(
             padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
             child: Column(
-              children: const [
+              children: [
                 CircleAvatar(
-                    radius: 65,
-                    backgroundImage: AssetImage('assets/sample/profile2.jpg')),
+                    radius: 65, backgroundImage: NetworkImage(profileImage)),
                 Text(
-                  'Hailey Jefferson',
-                  style: TextStyle(
+                  '$firstName $lastName',
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -47,9 +64,9 @@ class __ProfileScreenState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(color: Colors.grey),
+            const Divider(color: Colors.grey),
             FlatButton(
-                padding: EdgeInsets.fromLTRB(15, 15, 0, 15),
+                padding: const EdgeInsets.all(15),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -80,7 +97,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
           color: Colors.grey,
         ),
         FlatButton(
-            padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+            padding: const EdgeInsets.all(15),
             onPressed: () {
               Navigator.push(
                 context,
@@ -106,7 +123,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
             )),
         const Divider(color: Colors.grey),
         FlatButton(
-          padding: const EdgeInsets.fromLTRB(15, 15, 0, 15),
+          padding: const EdgeInsets.all(15),
           onPressed: () {
             FirebaseAuth.instance.signOut();
           },
