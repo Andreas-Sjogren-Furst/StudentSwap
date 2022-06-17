@@ -46,6 +46,9 @@ class FavoritesScreen extends StatelessWidget {
               List<Apartment> apartments = [];
               List<dynamic> favoriteUser = [];
 
+              var currentUserFavorties = [];
+
+
               snapshot.data!.docs.forEach((doc) {
                 Object? testmap = doc.data();
                 LinkedHashMap<dynamic, dynamic> testlinked =
@@ -55,6 +58,7 @@ class FavoritesScreen extends StatelessWidget {
 
                 if (userMap['userID'] == uid) {
                   favoriteUser = userMap['favorites'];
+                  currentUserFavorties = userMap["favorites"];
                 }
               });
 
@@ -71,7 +75,11 @@ class FavoritesScreen extends StatelessWidget {
                       apartmentImage:
                           userMap['apartmentImage'] ?? "no available",
                       profileImage: userMap['profileImage'] ?? "not available",
-                      savedFavorite: userMap['savedFavorite'] ?? false,
+                      savedFavorite:
+                          (currentUserFavorties.contains(userMap["userID"]))
+                              ? true
+                              : false,
+
                       goingTo: ["test1", "test2"],
                       userID: userMap['userID'] ?? "not available",
                       semester: userMap['semester'] ?? "not available",
