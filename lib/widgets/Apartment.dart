@@ -48,89 +48,20 @@ class Apartment {
   }
 }
 
-checkFavorite(ApartmentCard apartmentCard) async {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  var hej = 0; 
-
-  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-  var userDocument = await FirestoreUserReference.doc(uid).get();
-
-  if(await userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))){
-    hej = 1; 
-    return hej; 
-  } else {
-    hej = 2; 
-    return hej; 
-  }
-}
-
-Future<DocumentSnapshot<Map<String, dynamic>>> giveFavorites() async {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  final users = FirebaseFirestore.instance.collection('users').doc(uid);
-  print(await users.get());
-  return await users.get(); 
-
-}
-
 Future<void> updateUserFavorite(ApartmentCard apartmentCard, bool saved) async {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
-  
   final users = FirebaseFirestore.instance.collection('users').doc(uid);
-  if(saved) {
-  await users.update({
-    "favorites": FieldValue.arrayUnion([apartmentCard.userID]),
-  });
-} else {
-  await users.update({
-    "favorites": FieldValue.arrayRemove([apartmentCard.userID]),
-  });
-}
-}
-
-
-
-
-
-  // if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
-  //   return users
-  //       .doc(uid)
-  //       .update({
-  //     'favorites': FieldValue.arrayRemove([apartmentCard.userID])
-  //   });
-  // } else {
-  //   return users
-  //       .doc(uid)
-  //       .update({
-  //     'favorites': FieldValue.arrayUnion([apartmentCard.userID])
-  //   });
-  // }
-
-  // if(saved){
-  //   return users
-  //   .doc(uid)
-  //   .update({
-  //     'favorites': FieldValue.arrayUnion([apartmentCard.address])
-  //     });
-
-
-  // } else {
-  //   return users.doc(uid).update({
-  //     'favorites': FieldValue.arrayRemove([apartmentCard.address])
-  //   });
-  // }
-
-
-  // Code can't be reached.
-  /*if (saved) {
-    return users.doc(uid).update({
-      'favorites': FieldValue.arrayUnion([apartmentCard.address])
+  if (saved) {
+    await users.update({
+      "favorites": FieldValue.arrayUnion([apartmentCard.userID]),
     });
   } else {
-    return users.doc(uid).update({
-      'favorites': FieldValue.arrayRemove([apartmentCard.address])
+    await users.update({
+      "favorites": FieldValue.arrayRemove([apartmentCard.userID]),
     });
-  }*/
+  }
+}
 
 class ApartmentCard extends StatefulWidget {
   const ApartmentCard(
@@ -161,31 +92,12 @@ class ApartmentCard extends StatefulWidget {
 }
 
 class _ApartmentCardState extends State<ApartmentCard> {
-   bool _saved = false; 
+  bool _saved = false;
 
-   Future<void> _loadSaved(String userid) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      if(prefs.getBool(userid) == null) {
-        prefs.setBool(userid, false);
-      } else {
-      _saved = (prefs.getBool(userid) ?? false);
-      }
-    });
-  }
-
-  Future<void> _setSaved(String userid, bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _saved = !(prefs.getBool(userid) ?? false);
-      prefs.setBool(userid, _saved);
-    });
-  }
-
-  @override 
+  @override
   void initState() {
     super.initState();
-    _loadSaved(widget.userID);
+    _saved = widget.savedFavorite;
   }
 
   @override
@@ -259,8 +171,8 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               onPressed: () {
                                 setState(() {
                                   //saved = !saved;
-                                  _setSaved(widget.userID, _saved)
-                                  ;// TODO: Save favorited items
+                                  _saved =
+                                      !_saved; // TODO: Save favorited items
                                 });
                                 updateUserFavorite(widget, _saved);
                               }, // TODO: Add favorite function
@@ -273,7 +185,9 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               ),
                               icon: Icon(
                                 // ignore: unnecessary_cast
-                                _saved ? Icons.favorite_sharp : Icons.favorite_border_sharp,
+                                _saved
+                                    ? Icons.favorite_sharp
+                                    : Icons.favorite_border_sharp,
                                 size: 24.0,
                               ),
                               style: TextButton.styleFrom(
@@ -298,5 +212,3 @@ class _ApartmentCardState extends State<ApartmentCard> {
     );
   }
 }
-
-

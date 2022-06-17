@@ -34,7 +34,8 @@ class _TabScreenState extends State<TabScreen> {
       //   title: Text(_pages[_selectedPageIndex]["title"] as String),
       // ),
       body: SafeArea(
-        child: _pages[_selectedPageIndex]["page"] as Widget, // Index from state.
+        child:
+            _pages[_selectedPageIndex]["page"] as Widget, // Index from state.
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
@@ -44,7 +45,8 @@ class _TabScreenState extends State<TabScreen> {
         currentIndex: _selectedPageIndex,
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
-          BottomNavigationBarItem(icon: Icon(Icons.star), label: "Favorites"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite), label: "Favorites"),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chat"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
         ],
