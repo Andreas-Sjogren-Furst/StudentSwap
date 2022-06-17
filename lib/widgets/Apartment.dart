@@ -141,7 +141,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 32.0, 16.0, 16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -173,6 +173,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
                                   //saved = !saved;
                                   _saved =
                                       !_saved; // TODO: Save favorited items
+
                                 });
                                 updateUserFavorite(widget, _saved);
                               }, // TODO: Add favorite function
@@ -186,6 +187,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               icon: Icon(
                                 // ignore: unnecessary_cast
                                 _saved
+
                                     ? Icons.favorite_sharp
                                     : Icons.favorite_border_sharp,
                                 size: 24.0,

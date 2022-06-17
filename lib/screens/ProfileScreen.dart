@@ -1,9 +1,14 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './ProfileApartment.dart';
+import './Profile_personal_info.dart';
+
+Future<Map<String, dynamic>?> getdata(String documentId) async {
+  var users = FirebaseFirestore.instance.collection('users');
+  var userId = await users.doc(documentId).get();
+  return userId.data();
+}
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -18,79 +23,47 @@ class __ProfileScreenState extends State<ProfileScreen> {
   final userId = FirebaseAuth.instance.currentUser!.uid;
   final Stream<QuerySnapshot> _usersStream =
       FirebaseFirestore.instance.collection('users').snapshots();
+  var firstName = 'Loading...';
+  var profileImage =
+      'https://firebasestorage.googleapis.com/v0/b/studentswap-fbf76.appspot.com/o/blankImage.jpeg?alt=media&token=0d0a00ce-a80e-41e7-930e-cb23fc9ccf68';
+  __ProfileScreenState() {
+    getdata(userId).then((userData) => setState(() {
+          firstName = userData?['firstName'];
+          profileImage = userData?['profileImage'];
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(15),
             child: Column(
-              children: const [
+              children: [
                 CircleAvatar(
-                    radius: 65,
-                    backgroundImage: AssetImage('assets/sample/profile2.jpg')),
-                SizedBox(
-                  height: 15,
-                ),
+                    radius: 65, backgroundImage: NetworkImage(profileImage)),
                 Text(
-                  'Hailey Jefferson',
-                  style: TextStyle(
+                  firstName,
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(
-                  height: 25,
-                ),
-                Divider(
-                  color: Colors.grey,
-                  thickness: 1,
-                ),
               ],
             ),
           ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FlatButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, ProfileApartment.routeName);
-                },
-                child: const Text(
-                  'Apartment images',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 18,
-                    fontFamily: 'Poppins',
-                  ),
-                ),
-              ),
-              const Icon(
-                Icons.keyboard_arrow_right_outlined,
-                color: Colors.black,
-                size: 24,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Divider(
-            color: Colors.grey,
-            thickness: 1,
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FlatButton(
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Divider(color: Colors.grey),
+            FlatButton(
+                padding: EdgeInsets.all(15),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -98,62 +71,79 @@ class __ProfileScreenState extends State<ProfileScreen> {
                         builder: (context) => const ProfileApartment()),
                   );
                 },
-                child: const Text(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: const [
+                    Text(
+                      'Apartment images',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_right_outlined,
+                      color: Colors.black,
+                      size: 24,
+                    ),
+                  ],
+                )),
+          ],
+        ),
+        const Divider(
+          color: Colors.grey,
+        ),
+        FlatButton(
+            padding: const EdgeInsets.all(15),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileInfo()),
+              );
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
                   'Personal information',
                   style: TextStyle(
-                    fontWeight: FontWeight.w500,
                     fontSize: 18,
                     fontFamily: 'Poppins',
                   ),
                 ),
-              ),
-              const Icon(
-                Icons.keyboard_arrow_right_outlined,
-                color: Colors.black,
-                size: 24,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          const Divider(
-            color: Colors.grey,
-            thickness: 1,
-          ),
-          SizedBox(
-            height: 15,
-          ),
-          Row(
+                Icon(
+                  Icons.keyboard_arrow_right_outlined,
+                  color: Colors.black,
+                  size: 24,
+                ),
+              ],
+            )),
+        const Divider(color: Colors.grey),
+        FlatButton(
+          padding: const EdgeInsets.all(15),
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+          },
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FlatButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-                child: const Text(
-                  'Log out',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontFamily: 'Poppins',
-                  ),
+            children: const [
+              Text(
+                'Log out',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontFamily: 'Poppins',
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.logout,
                 color: Colors.black,
                 size: 20,
               ),
             ],
           ),
-          SizedBox(
-            height: 15,
-          ),
-          Divider(
-            thickness: 1,
-            color: Colors.grey,
-          )
-        ],
-      );
+        ),
+        const Divider(color: Colors.grey)
+      ],
+    );
   }
 }

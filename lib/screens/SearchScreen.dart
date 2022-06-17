@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/services/FirebaseMethods.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:login_page/widgets/Apartment.dart';
 
@@ -65,7 +66,12 @@ class _SearchScreenState extends State<SearchScreen> {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
-                return const Text('Loading...');
+                return Center(
+                  child: SpinKitFadingCube(
+                    color: Colors.blue,
+                    size: 80,
+                  ),
+                );
               }
 
               var currentUserFavorties = [];

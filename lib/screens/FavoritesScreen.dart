@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:login_page/widgets/Apartment.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class FavoritesScreen extends StatelessWidget {
   static const routeName = "/Favorites-Screen";
@@ -33,7 +34,12 @@ class FavoritesScreen extends StatelessWidget {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
-                return const Text('Loading...');
+                return const Center(
+                  child: SpinKitFadingCube(
+                    color: Colors.blue,
+                    size: 80,
+                  ),
+                );
               }
 
               List<Apartment> apartmentsLists = [];
@@ -41,6 +47,7 @@ class FavoritesScreen extends StatelessWidget {
               List<dynamic> favoriteUser = [];
 
               var currentUserFavorties = [];
+
 
               snapshot.data!.docs.forEach((doc) {
                 Object? testmap = doc.data();
@@ -72,6 +79,7 @@ class FavoritesScreen extends StatelessWidget {
                           (currentUserFavorties.contains(userMap["userID"]))
                               ? true
                               : false,
+
                       goingTo: ["test1", "test2"],
                       userID: userMap['userID'] ?? "not available",
                       semester: userMap['semester'] ?? "not available",

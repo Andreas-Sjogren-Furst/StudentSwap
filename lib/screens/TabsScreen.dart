@@ -43,7 +43,7 @@ class _TabScreenState extends State<TabScreen> {
         unselectedItemColor: Colors.grey,
         selectedItemColor: Theme.of(context).primaryColor,
         currentIndex: _selectedPageIndex,
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
           BottomNavigationBarItem(
               icon: Icon(Icons.favorite), label: "Favorites"),

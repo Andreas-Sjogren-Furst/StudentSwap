@@ -15,32 +15,58 @@ class _ProfileApartmentState extends State<ProfileApartment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Apartment Photos"),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: SafeArea(
-          child: DefaultTextStyle(
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 18,
-              fontFamily: 'Poppins',
-              color: Colors.black,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  TopPhoto(),
-                  SizedBox(height: 8.0),
-                  PhotoGrid(),
-                ],
+      body: SafeArea(
+        child: DefaultTextStyle(
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            fontFamily: 'Poppins',
+            color: Colors.black,
+          ),
+          child: Column(
+
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios_new_rounded, size: 24.0,),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 24.0),
+                        child: Text(
+                          'Apartment Photos',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TopPhoto(),
+                    SizedBox(height: 8.0),
+                    PhotoGrid(),
+                  ],
+                ),
             ),
+              )],
           ),
         ),
-      ),
+      )
+
     );
   }
 }
@@ -63,7 +89,16 @@ class PhotoGrid extends StatelessWidget {
             children: [
               const Text("Additional photos"),
               TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: (
+                              Text("Edit additional photos")
+                          ),
+                          duration: Duration(milliseconds: 500),
+                        )
+                    );
+                  },
                   style: TextButton.styleFrom(
                     primary: Colors.grey,
                     textStyle: const TextStyle(
@@ -181,7 +216,16 @@ class TopPhoto extends StatelessWidget {
                     ],
                   ),
                   IconButton(
-                    onPressed: () {}, // TODO: Edit main photo
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: (
+                            Text("Edit main photo")
+                          ),
+                          duration: Duration(milliseconds: 500),
+                        )
+                      );
+                    }, // TODO: Edit main photo
                     icon: const Icon(Icons.edit),
                     iconSize: 24,
                     color: Colors.white,
