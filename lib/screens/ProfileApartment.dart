@@ -510,21 +510,22 @@ removePhoto(String URLpath, Reference ref, photoType pt) async {
   final docRef = FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid);
   Map<String, dynamic> updates = {};
 
-  if(pt == photoType.apartmentImage) {
+  switch (pt) {
+    case photoType.apartmentImage:
+      updates = <String, dynamic>{
+        "apartmentImage": FieldValue.delete(),
+      };
+      await ref.delete();
+      break;
 
-    updates = <String, dynamic>{
-      "apartmentImage": FieldValue.delete(),
-    };
-    await ref.delete();
-
-  } else {
-
-    updates = <String, dynamic>{
-      "additionalImages": FieldValue.arrayRemove([URLpath]),
-    };
-    await ref.child(path).delete();
-
+    case photoType.addtionalImages:
+      updates = <String, dynamic>{
+        "additionalImages": FieldValue.arrayRemove([URLpath]),
+      };
+      await ref.child(path).delete();
+      break;
   }
+
   docRef.update(updates);
 }
 
