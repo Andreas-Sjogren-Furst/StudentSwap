@@ -1,11 +1,8 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
@@ -94,6 +91,7 @@ class _ProfileApartmentState extends State<ProfileApartment> {
 }
 
 // Main photo at the top
+//ignore: must_be_immutable
 class TopPhoto extends StatefulWidget {
   TopPhoto({
     Key? key,
@@ -141,7 +139,7 @@ class _TopPhotoState extends State<TopPhoto> {
                     ImageDialog(
                       ni: NetworkImage(widget.mainPhotoPath),
                       ref: widget.mainPhotoRef,
-                      main: photoType.apartmentImage,
+                      main: PhotoType.apartmentImage,
                 ));
           },
           child: SizedBox(
@@ -206,7 +204,8 @@ class _TopPhotoState extends State<TopPhoto> {
                                     leading: Icon(Icons.add_a_photo_rounded, color: Theme.of(context).primaryColor,),
                                     onTap: () {
                                       setState(() async {
-                                        getImageFromDevice(photoType.apartmentImage, gallery: false, mainRef: widget.mainPhotoRef);
+                                        Navigator.pop(context);
+                                        getImageFromDevice(PhotoType.apartmentImage, gallery: false, mainRef: widget.mainPhotoRef);
                                         getMainPhotoFromFirebase();
                                       });
                                     },
@@ -216,7 +215,8 @@ class _TopPhotoState extends State<TopPhoto> {
                                     leading: Icon(Icons.folder_copy_rounded, color: Theme.of(context).primaryColor,),
                                     onTap: () {
                                       setState(() async {
-                                        await getImageFromDevice(photoType.apartmentImage, gallery: true, mainRef: widget.mainPhotoRef);
+                                        Navigator.pop(context);
+                                        await getImageFromDevice(PhotoType.apartmentImage, gallery: true, mainRef: widget.mainPhotoRef);
                                         getMainPhotoFromFirebase();
                                       });
                                     },
@@ -243,6 +243,7 @@ class _TopPhotoState extends State<TopPhoto> {
 
 
 // Grid of photos at the bottom
+//ignore: must_be_immutable
 class PhotoGrid extends StatefulWidget {
   PhotoGrid({
     Key? key,
@@ -270,11 +271,11 @@ class _PhotoGridState extends State<PhotoGrid> {
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
         if (snapshot.hasError) {
-          return Text("Something went wrong");
+          return const Text("Something went wrong");
         }
 
         if (snapshot.hasData && !snapshot.data!.exists) {
-          return Text("Document does not exist");
+          return const Text("Document does not exist");
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
@@ -307,13 +308,13 @@ class _PhotoGridState extends State<PhotoGrid> {
                                           .of(context)
                                           .primaryColor,),
                                       onTap: () async {
+                                        Navigator.pop(context);
                                         await getImageFromDevice(
-                                            photoType.addtionalImages,
+                                            PhotoType.addtionalImages,
                                             gallery: false,
                                             additionalRef: widget.additionalPhotoRef);
                                         setState(()  {
-
-                                          //getMainPhotoFromFirebase();
+                                          // Don't remove! Used to update list of photos.
                                         });
                                       },
                                     ),
@@ -324,12 +325,13 @@ class _PhotoGridState extends State<PhotoGrid> {
                                           .of(context)
                                           .primaryColor,),
                                       onTap: () async {
+                                        Navigator.pop(context);
                                         await getImageFromDevice(
-                                            photoType.addtionalImages,
+                                            PhotoType.addtionalImages,
                                             gallery: true,
                                             additionalRef: widget.additionalPhotoRef);
                                         setState(()  {
-
+                                          // Don't remove! Used to update list of photos.
                                         });
                                       },
                                     )
@@ -375,9 +377,12 @@ class _PhotoGridState extends State<PhotoGrid> {
                                 ImageDialog(
                                   ni: NetworkImage(widget.additionalPhotosPath![index]),
                                   ref: widget.additionalPhotoRef,
-                                  main: photoType.addtionalImages,
+                                  main: PhotoType.addtionalImages,
                                 ),
                             );
+                        setState(() {
+                          // Used for updating user-actions
+                        });
                       },
                       child: SizedBox(
                           width: MediaQuery
@@ -414,7 +419,7 @@ class ImageDialog extends StatefulWidget {
 
   final NetworkImage ni;
   final Reference ref;
-  final photoType main;
+  final PhotoType main;
 
   @override
   State<ImageDialog> createState() => _ImageDialogState();
@@ -431,7 +436,7 @@ class _ImageDialogState extends State<ImageDialog> {
               image: widget.ni,
               fit: BoxFit.contain,
             ),
-            Positioned(
+            widget.main==PhotoType.addtionalImages ? Positioned(
                 bottom: 10,
                 right: 10,
                 child:
@@ -441,11 +446,56 @@ class _ImageDialogState extends State<ImageDialog> {
                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
                   ),
                     child: IconButton(
-                        onPressed: ()  {
-                          removePhoto(widget.ni.url, widget.ref, photoType.addtionalImages);
-                          setState(() {});
+                        onPressed: () async {
+
+                          var result = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: const Text("Delete this photo?"),
+                                content: const Text("Are you sure you want to delete this photo? \n\nThis action cannot be undone. "),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, false),
+                                    child: const Text('Cancel'),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, true),
+                                    child: const Text('Delete'),
+                                  ),
+                                ],
+
+                          ));
+
+                          if (result) {
+                            await removePhoto(widget.ni.url, widget.ref, PhotoType.addtionalImages);
+                            setState(() {
+                              Navigator.pop(context);
+                            });
+                          }
                         },
-                        icon: const Icon(Icons.delete, size: 24.0, color: Colors.red,)))),
+                        icon: const Icon(Icons.delete),
+                        iconSize: 24.0,
+                        color: Colors.red,
+                    ))
+            ) : Wrap(),
+            Positioned(
+                top: 10,
+                left: 10,
+                child:  Container(
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(150, 0, 0, 0),
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.close_rounded),
+                    iconSize: 24.0,
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                )
+            ),
         ]),
     );
   }
@@ -455,9 +505,9 @@ class _ImageDialogState extends State<ImageDialog> {
 /* Functions */
 
 // Gets photo from either gallery or camera
-getImageFromDevice(photoType pt,  {required bool gallery ,Reference? mainRef, Reference? additionalRef}) async {
+getImageFromDevice(PhotoType pt,  {required bool gallery ,Reference? mainRef, Reference? additionalRef}) async {
 
-  var uuid = Uuid();
+  var uuid = const Uuid();
 
   XFile? pickedFile = await ImagePicker().pickImage(
     source: gallery ? ImageSource.gallery : ImageSource.camera,
@@ -494,29 +544,27 @@ getImageFromDevice(photoType pt,  {required bool gallery ,Reference? mainRef, Re
 }
 
 // Removes photo from Firebase Storage and Firestore
-removePhoto(String URLpath, Reference ref, photoType pt) async {
+removePhoto(String urlPath, Reference ref, PhotoType pt) async {
 
-  var temp = URLpath.split("%2F");
+  var temp = urlPath.split("%2F");
   var pathStrings = temp[3].split("?");
   var path = pathStrings[0];
-
-  print("q2123123123123123123");
-  print("HejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHej");
 
   final docRef = FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid);
   Map<String, dynamic> updates = {};
 
   switch (pt) {
-    case photoType.apartmentImage:
-      updates = <String, dynamic>{
+    case PhotoType.apartmentImage:
+      // Doesn't work.
+      /*updates = <String, dynamic>{
         "apartmentImage": FieldValue.delete(),
       };
       await ref.delete();
-      break;
+      break;*/
 
-    case photoType.addtionalImages:
+    case PhotoType.addtionalImages:
       updates = <String, dynamic>{
-        "additionalImages": FieldValue.arrayRemove([URLpath]),
+        "additionalImages": FieldValue.arrayRemove([urlPath]),
       };
       await ref.child(path).delete();
       break;
@@ -535,13 +583,13 @@ Future<Map<String, dynamic>?> getData(String documentId) async {
 /* Enums */
 
 // Identifies which photo type to use
-enum photoType {
+enum PhotoType {
   apartmentImage,
   addtionalImages,
 }
 
 // Identifies which input to use
-enum photoInput {
+enum PhotoInput {
   camera,
   gallery
 }
