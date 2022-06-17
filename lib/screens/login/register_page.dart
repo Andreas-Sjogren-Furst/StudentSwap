@@ -37,7 +37,6 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future nextPage() async {
-    try {
       if (passwordConfirmed() != null) {
         authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
@@ -53,13 +52,7 @@ class RegisterPageState extends State<RegisterPage> {
           "uid": FirebaseAuth.instance.currentUser!.uid,
         }); // her skal vi tilføje flere variabler.
       }
-    } catch (e) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please Enter Valid Email and Password'),
-        ),
-      );
-    }
+    } 
   }
 
   bool passwordConfirmed() {
