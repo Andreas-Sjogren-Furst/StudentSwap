@@ -15,8 +15,7 @@ class StartScreen3 extends StatelessWidget {
         appBar: AppBar(
           iconTheme: IconThemeData(
             color: Color.fromARGB(255, 26, 51, 76),)
-          ,backgroundColor: Colors.transparent,
-          elevation: 0,
+          ,backgroundColor: Colors.transparent
         ),
         backgroundColor: Colors.transparent,
         body: Center(
@@ -34,46 +33,34 @@ class StartScreen3 extends StatelessWidget {
             SizedBox(height: 5,),
             Text("and focus on your studies",
             style: TextStyle(color: Colors.grey[700], fontSize: 15),),
-            SizedBox(height: 20,),
+            SizedBox(height: 100,),
             Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: Stack(
-              children: <Widget>[
-                Positioned.fill(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          Color(0xFF0D47A1),
-                          Color(0xFF1976D2),
-                          Color(0xFF42A5F5),
-                        ],
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(context, checkLogin.routeName);
+                      },
+                      child: Center(
+                        child: Container(
+                          width: screenWidth/3,
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color:  Color.fromARGB(255, 26, 51, 76),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'GO TO LOGIN',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.all(30.0),
-                    primary: Colors.white,
-                    textStyle: const TextStyle(fontSize: 20),
-                  ),
-                  onPressed: () {
-                     Navigator.pushNamed(context, checkLogin.routeName);
-                  },
-                  child: const Text('GO TO LOGIN',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold
-
-                  ),),
-                ),
-              ],
-            ),
-          ),
               ),
             ],
             ),
@@ -81,5 +68,3 @@ class StartScreen3 extends StatelessWidget {
       );
   }
 }
-
-// 
