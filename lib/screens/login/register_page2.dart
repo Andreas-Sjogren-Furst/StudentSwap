@@ -288,6 +288,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
     'Yemen',
     'Zambia',
     'Zimbabwe',
+
   ];
 
   final List<String> gender = [
@@ -300,6 +301,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
   String? myCountry;
   List<dynamic> goingTo = [];
   String? Gender;
+
 
   // text controllers
   final _semesterController = TextEditingController();
@@ -371,6 +373,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
       "lastName": _lastName.text.trim(),
     }); // her skal vi tilføje flere variabler.
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -627,6 +630,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                                                 Icons.check_box_outlined)
                                             : const Icon(
                                                 Icons.check_box_outline_blank),
+
                                         const SizedBox(width: 16),
                                         Text(
                                           item,
@@ -657,6 +661,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                                 alignment: AlignmentDirectional.center,
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0),
+
                                 child: Text(
                                   goingTo.join(', '),
                                   style: const TextStyle(
@@ -714,7 +719,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                     ),
                   ),
 
-                  SizedBox(height: 10),
+                SizedBox(height: 10),
 
                   //Gender textfield
                   Padding(

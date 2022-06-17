@@ -46,12 +46,19 @@ class FavoritesScreen extends StatelessWidget {
               List<Apartment> apartments = [];
               List<dynamic> favoriteUser = [];
 
+              var currentUserFavorties = [];
+
               snapshot.data!.docs.forEach((doc) {
                 Object? testmap = doc.data();
                 LinkedHashMap<dynamic, dynamic> testlinked =
                     testmap as LinkedHashMap<dynamic, dynamic>;
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
+
+                if (userMap['userID'] == uid) {
+                  favoriteUser = userMap['favorites'];
+                  currentUserFavorties = userMap["favorites"];
+                }
               });
 
               snapshot.data!.docs.forEach((doc) {
@@ -62,12 +69,15 @@ class FavoritesScreen extends StatelessWidget {
                     testlinked.map((a, b) => MapEntry(a, b));
                 if (favoriteUser.contains(userMap['userID'])) {
                   apartmentsLists.add(Apartment(
-                      city: userMap['city'] ?? "not available",
-                      address: userMap['address'] ?? "not available",
+                      city: userMap['myCountry'] ?? "not available",
+                      address: userMap['myAdress'] ?? "not available",
                       apartmentImage:
                           userMap['apartmentImage'] ?? "no available",
                       profileImage: userMap['profileImage'] ?? "not available",
-                      savedFavorite: userMap['savedFavorite'] ?? false,
+                      savedFavorite:
+                          (currentUserFavorties.contains(userMap["userID"]))
+                              ? true
+                              : false,
                       goingTo: ["test1", "test2"],
                       userID: userMap['userID'] ?? "not available",
                       semester: userMap['semester'] ?? "not available",
@@ -75,12 +85,6 @@ class FavoritesScreen extends StatelessWidget {
                           userMap['apartmentType'] ?? "not available"));
                 }
               });
-
-              if (apartmentsLists.isEmpty) {
-                return Center(
-                  child: Text("No Favorites, find some at search screen."),
-                );
-              }
 
               return Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),

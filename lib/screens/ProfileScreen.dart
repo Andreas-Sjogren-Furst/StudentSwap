@@ -28,12 +28,14 @@ class __ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+
     getdata(userId).then((userData) => setState(() {
           firstName = userData?['firstName'];
           lastName = userData?['lastName'];
           profileImage = userData?['profileImage'];
         }));
     super.initState();
+
   }
 
   @override
@@ -44,7 +46,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
       children: [
         Center(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+            padding: const EdgeInsets.all(15),
             child: Column(
               children: [
                 CircleAvatar(
@@ -67,6 +69,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
             const Divider(color: Colors.grey),
             FlatButton(
                 padding: const EdgeInsets.all(15),
+
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -98,6 +101,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
         ),
         FlatButton(
             padding: const EdgeInsets.all(15),
+
             onPressed: () {
               Navigator.push(
                 context,
@@ -124,6 +128,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
         const Divider(color: Colors.grey),
         FlatButton(
           padding: const EdgeInsets.all(15),
+
           onPressed: () {
             FirebaseAuth.instance.signOut();
           },

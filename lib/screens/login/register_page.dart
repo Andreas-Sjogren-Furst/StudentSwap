@@ -52,6 +52,7 @@ class RegisterPageState extends State<RegisterPage> {
         "uid": FirebaseAuth.instance.currentUser!.uid,
       }); // her skal vi tilføje flere variabler.
     }
+
   }
 
   bool passwordConfirmed() {

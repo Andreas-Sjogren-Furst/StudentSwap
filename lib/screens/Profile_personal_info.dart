@@ -40,6 +40,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
           email.text = userData?['Email'];
           gender.text = userData?['gender'];
           profileImage = userData?['profileImage'];
+
         }));
   }
 
@@ -61,6 +62,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                 child: CircleAvatar(
                   radius: 65,
                   backgroundImage: NetworkImage(profileImage),
+
                 ),
               ),
             ),
