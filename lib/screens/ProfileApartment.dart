@@ -250,7 +250,7 @@ class PhotoGrid extends StatefulWidget {
   }) : super(key: key);
 
   //Map<String?, dynamic>? additionalPhotosPath;
-  List<String> additionalPhotosPath;
+  List<String>? additionalPhotosPath;
 
   var additionalPhotoRef = FirebaseStorage.instance
       .ref()
@@ -280,11 +280,7 @@ class _PhotoGridState extends State<PhotoGrid> {
         if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
 
-          //widget.additionalPhotosPath = data['additionalImages'];
-
-          widget.additionalPhotosPath = List.from(data['additionalImages']);
-          
-
+          widget.additionalPhotosPath = data['additionalImages'] != null ? List.from(data['additionalImages']) : [];
         }
 
         return Padding(
@@ -369,7 +365,7 @@ class _PhotoGridState extends State<PhotoGrid> {
                       mainAxisSpacing: 3.0,
                       childAspectRatio: 1.0),
                   padding: EdgeInsets.zero,
-                  itemCount: widget.additionalPhotosPath != null  ? widget.additionalPhotosPath.length : 0, //widget.additionalPhotosPath?.length,
+                  itemCount: widget.additionalPhotosPath != null  ? widget.additionalPhotosPath!.length : 0, //widget.additionalPhotosPath?.length,
                   itemBuilder: (BuildContext context, int index) {
                     return InkWell(
                       onTap: () async {
@@ -377,7 +373,7 @@ class _PhotoGridState extends State<PhotoGrid> {
                             context: context,
                             builder: (_) =>
                                 ImageDialog(
-                                  ni: NetworkImage(widget.additionalPhotosPath[index]),
+                                  ni: NetworkImage(widget.additionalPhotosPath![index]),
                                   ref: widget.additionalPhotoRef,
                                   main: photoType.addtionalImages,
                                 ),
@@ -390,7 +386,7 @@ class _PhotoGridState extends State<PhotoGrid> {
                               .width / 3,
                           child: Image(
                               image:
-                              NetworkImage(widget.additionalPhotosPath[index]),
+                              NetworkImage(widget.additionalPhotosPath![index]),
                               fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) =>
                                 SizedBox(
