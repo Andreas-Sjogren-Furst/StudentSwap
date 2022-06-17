@@ -1,10 +1,17 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
+// Main widget
 class ProfileApartment extends StatefulWidget {
   static const routeName = "/profile-apartment";
-
   const ProfileApartment({Key? key}) : super(key: key);
 
   @override
@@ -12,6 +19,23 @@ class ProfileApartment extends StatefulWidget {
 }
 
 class _ProfileApartmentState extends State<ProfileApartment> {
+
+  final userAuth = FirebaseAuth.instance.currentUser!.uid;
+  String mainPhotoPath = "";
+  List<String> additionalPhotos = [];
+
+  _ProfileApartmentState() {
+    getData(userAuth).then((userData) => setState(() {
+
+      // Get URL to main apartment photo
+      mainPhotoPath = userData?['apartmentImage'];
+
+      // Get all additional URLs
+      Map<String, dynamic> additionalMap = userData?['additionalImages'];
+      additionalPhotos = List.from(additionalMap.values);
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,21 +48,20 @@ class _ProfileApartmentState extends State<ProfileApartment> {
             color: Colors.black,
           ),
           child: Column(
-
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4.0),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back_ios_new_rounded, size: 24.0,),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 24.0,),
                       onPressed: () {
                         Navigator.pop(context);
                       },
                     ),
-                    Expanded(
+                    const Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.only(right: 24.0),
+                        padding: EdgeInsets.only(right: 24.0),
                         child: Text(
                           'Apartment Photos',
                           textAlign: TextAlign.center,
@@ -56,9 +79,8 @@ class _ProfileApartmentState extends State<ProfileApartment> {
                   child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TopPhoto(),
-                    SizedBox(height: 8.0),
-                    PhotoGrid(),
+                    TopPhoto(mainPhotoPath: mainPhotoPath,),
+                    PhotoGrid(additionalPhotosPath: additionalPhotos,),
                   ],
                 ),
             ),
@@ -71,105 +93,41 @@ class _ProfileApartmentState extends State<ProfileApartment> {
   }
 }
 
-// Grid of photos at the bottom
-class PhotoGrid extends StatelessWidget {
-  const PhotoGrid({
+// Main photo at the top
+class TopPhoto extends StatefulWidget {
+  TopPhoto({
     Key? key,
+    this.mainPhotoPath = "",
   }) : super(key: key);
+
+  String mainPhotoPath;
+
+  // Reference to main apartment photo
+  final mainPhotoRef = FirebaseStorage.instance
+      .ref()
+      .child("user_images")
+      .child(FirebaseAuth.instance.currentUser!.uid)
+      .child("mainApartmentPhoto.jpg");
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text("Additional photos"),
-              TextButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: (
-                              Text("Edit additional photos")
-                          ),
-                          duration: Duration(milliseconds: 500),
-                        )
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    primary: Colors.grey,
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  child: const Text(
-                    "Edit",
-                  ))
-            ],
-          ),
-          const SizedBox(
-            height: 8.0,
-          ),
-          GridView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              physics: const ClampingScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 3.0,
-                  mainAxisSpacing: 3.0,
-                  childAspectRatio: 1.0),
-              padding: EdgeInsets.zero,
-              itemCount: 24,
-              itemBuilder: (BuildContext context, int index) {
-                return index % 2 == 0
-                    ? InkWell(
-                        onTap: () async {
-                          await showDialog(
-                              context: context,
-                              builder: (_) => const ImageDialog(
-                                  ai: AssetImage(
-                                      "assets/sample/apartment1.jpg")));
-                        },
-                        child: Container(
-                            width: MediaQuery.of(context).size.width / 3,
-                            child: const Image(
-                                image:
-                                    AssetImage("assets/sample/apartment1.jpg"),
-                                fit: BoxFit.cover)),
-                      )
-                    : InkWell(
-                        onTap: () async {
-                          await showDialog(
-                              context: context,
-                              builder: (_) => const ImageDialog(
-                                  ai: AssetImage(
-                                      "assets/sample/apartment2.jpg")));
-                        },
-                        child: Container(
-                            width: MediaQuery.of(context).size.width / 3,
-                            child: const Image(
-                                image:
-                                    AssetImage("assets/sample/apartment2.jpg"),
-                                fit: BoxFit.cover)),
-                      );
-              })
-        ],
-      ),
-    );
-  }
+  State<TopPhoto> createState() => _TopPhotoState();
 }
 
-// Main photo at the top
-class TopPhoto extends StatelessWidget {
-  const TopPhoto({
-    Key? key,
-  }) : super(key: key);
+class _TopPhotoState extends State<TopPhoto> {
+
+  var userID = FirebaseAuth.instance.currentUser!.uid;
+
+  @override
+  void initState() {
+    super.initState();
+    getMainPhotoFromFirebase();
+  }
+
+  getMainPhotoFromFirebase() {
+    getData(userID).then((userData) => setState(() {
+      widget.mainPhotoPath = userData?['apartmentImage'];
+    }));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,13 +137,31 @@ class TopPhoto extends StatelessWidget {
           onTap: () async {
             await showDialog(
                 context: context,
-                builder: (_) => const ImageDialog(
-                    ai: AssetImage("assets/sample/apartment1.jpg")));
+                builder: (_) =>
+                    ImageDialog(
+                      ni: NetworkImage(widget.mainPhotoPath),
+                      ref: widget.mainPhotoRef,
+                      main: photoType.apartmentImage,
+                ));
           },
           child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child:
-                const Image(image: AssetImage("assets/sample/apartment1.jpg")),
+              width: MediaQuery.of(context).size.width,
+              child:
+              //mainPhotoPath.isNotEmpty ?
+              Image(
+                  image: NetworkImage(widget.mainPhotoPath),
+                  height: MediaQuery.of(context).size.height/3,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height/3,
+                        child: Icon(
+                          Icons.error,
+                          size: 128.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      )
+              )
           ),
         ),
         Positioned(
@@ -217,14 +193,41 @@ class TopPhoto extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: (
-                            Text("Edit main photo")
-                          ),
-                          duration: Duration(milliseconds: 500),
-                        )
-                      );
+
+                      setState(() {
+
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Wrap(
+                                children: [
+                                  ListTile(
+                                    title: const Text("Take a photo"),
+                                    leading: Icon(Icons.add_a_photo_rounded, color: Theme.of(context).primaryColor,),
+                                    onTap: () {
+                                      setState(() async {
+                                        getImageFromDevice(photoType.apartmentImage, gallery: false, mainRef: widget.mainPhotoRef);
+                                        getMainPhotoFromFirebase();
+                                      });
+                                    },
+                                  ),
+                                  ListTile(
+                                    title: const Text("Add photo"),
+                                    leading: Icon(Icons.folder_copy_rounded, color: Theme.of(context).primaryColor,),
+                                    onTap: () {
+                                      setState(() async {
+                                        await getImageFromDevice(photoType.apartmentImage, gallery: true, mainRef: widget.mainPhotoRef);
+                                        getMainPhotoFromFirebase();
+                                      });
+                                    },
+                                  )
+                                ],
+                              );
+                            }
+                        );
+
+                      });
+
                     }, // TODO: Edit main photo
                     icon: const Icon(Icons.edit),
                     iconSize: 24,
@@ -238,20 +241,310 @@ class TopPhoto extends StatelessWidget {
   }
 }
 
+
+// Grid of photos at the bottom
+class PhotoGrid extends StatefulWidget {
+  PhotoGrid({
+    Key? key,
+    this.additionalPhotosPath = const [],
+  }) : super(key: key);
+
+  //Map<String?, dynamic>? additionalPhotosPath;
+  List<String> additionalPhotosPath;
+
+  var additionalPhotoRef = FirebaseStorage.instance
+      .ref()
+      .child("user_images")
+      .child(FirebaseAuth.instance.currentUser!.uid)
+      .child("additional_photos");
+
+  @override
+  State<PhotoGrid> createState() => _PhotoGridState();
+}
+
+class _PhotoGridState extends State<PhotoGrid> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).get(),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data!.exists) {
+          return Text("Document does not exist");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+
+          //widget.additionalPhotosPath = data['additionalImages'];
+
+          widget.additionalPhotosPath = List.from(data['additionalImages']);
+          
+
+        }
+
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text("Additional photos"),
+                  TextButton(
+                      onPressed: () {
+                        setState(() {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Wrap(
+                                  children: [
+                                    ListTile(
+                                      title: const Text("Take a photo"),
+                                      leading: Icon(
+                                        Icons.add_a_photo_rounded, color: Theme
+                                          .of(context)
+                                          .primaryColor,),
+                                      onTap: () async {
+                                        await getImageFromDevice(
+                                            photoType.addtionalImages,
+                                            gallery: false,
+                                            additionalRef: widget.additionalPhotoRef);
+                                        setState(()  {
+
+                                          //getMainPhotoFromFirebase();
+                                        });
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: const Text("Add photo"),
+                                      leading: Icon(
+                                        Icons.folder_copy_rounded, color: Theme
+                                          .of(context)
+                                          .primaryColor,),
+                                      onTap: () async {
+                                        await getImageFromDevice(
+                                            photoType.addtionalImages,
+                                            gallery: true,
+                                            additionalRef: widget.additionalPhotoRef);
+                                        setState(()  {
+
+                                        });
+                                      },
+                                    )
+                                  ],
+                                );
+                              }
+                          );
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                        primary: Colors.grey,
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      child: const Text(
+                        "Edit",
+                      ))
+                ],
+              ),
+              const SizedBox(
+                height: 8.0,
+              ),
+              GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 3.0,
+                      mainAxisSpacing: 3.0,
+                      childAspectRatio: 1.0),
+                  padding: EdgeInsets.zero,
+                  itemCount: widget.additionalPhotosPath != null  ? widget.additionalPhotosPath.length : 0, //widget.additionalPhotosPath?.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return InkWell(
+                      onTap: () async {
+                        await showDialog(
+                            context: context,
+                            builder: (_) =>
+                                ImageDialog(
+                                  ni: NetworkImage(widget.additionalPhotosPath[index]),
+                                  ref: widget.additionalPhotoRef,
+                                  main: photoType.addtionalImages,
+                                ),
+                            );
+                      },
+                      child: SizedBox(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width / 3,
+                          child: Image(
+                              image:
+                              NetworkImage(widget.additionalPhotosPath[index]),
+                              fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                SizedBox(
+                                  height: (MediaQuery.of(context).size.height/3)*2,
+                                  child: Icon(
+                                    Icons.error,
+                                    size: 128.0,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                )),
+                          )
+                      );
+                  })
+            ],
+          ),
+        );
+      }
+    );
+  }
+}
+
 // Dialog to show photos when clicked
-class ImageDialog extends StatelessWidget {
-  const ImageDialog({Key? key, required this.ai}) : super(key: key);
+class ImageDialog extends StatefulWidget {
+  const ImageDialog({Key? key, this.ni= const NetworkImage(""), required this.ref, required this.main}) : super(key: key);
 
-  final AssetImage ai;
+  final NetworkImage ni;
+  final Reference ref;
+  final photoType main;
 
+  @override
+  State<ImageDialog> createState() => _ImageDialogState();
+}
+
+class _ImageDialogState extends State<ImageDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
       alignment: Alignment.center,
-      child: Image(
-        image: ai,
-        fit: BoxFit.contain,
-      ),
+      child: Stack(
+          children: [
+            Image(
+              image: widget.ni,
+              fit: BoxFit.contain,
+            ),
+            Positioned(
+                bottom: 10,
+                right: 10,
+                child:
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Color.fromARGB(150, 0, 0, 0),
+                    borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  ),
+                    child: IconButton(
+                        onPressed: ()  {
+                          removePhoto(widget.ni.url, widget.ref, photoType.addtionalImages);
+                          setState(() {});
+                        },
+                        icon: const Icon(Icons.delete, size: 24.0, color: Colors.red,)))),
+        ]),
     );
   }
+}
+
+
+/* Functions */
+
+// Gets photo from either gallery or camera
+getImageFromDevice(photoType pt,  {required bool gallery ,Reference? mainRef, Reference? additionalRef}) async {
+
+  var uuid = Uuid();
+
+  XFile? pickedFile = await ImagePicker().pickImage(
+    source: gallery ? ImageSource.gallery : ImageSource.camera,
+    maxWidth: 1800,
+    maxHeight: 1800,
+  );
+  if (pickedFile != null) {
+    File imageFile = File(pickedFile.path);
+
+    if (pt.name.toString() == "apartmentImage") {
+      await mainRef!.putFile(imageFile)
+          .whenComplete(() => null);
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "apartmentImage" : await mainRef.getDownloadURL()
+      });
+
+    } else {
+      String id = uuid.v1();
+      await additionalRef!.child(id).putFile(imageFile)
+          .whenComplete(() => null);
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "additionalImages" : FieldValue.arrayUnion([await additionalRef.child(id).getDownloadURL()])
+      });
+    }
+  }
+}
+
+// Removes photo from Firebase Storage and Firestore
+removePhoto(String URLpath, Reference ref, photoType pt) async {
+
+  var temp = URLpath.split("%2F");
+  var pathStrings = temp[3].split("?");
+  var path = pathStrings[0];
+
+  print("q2123123123123123123");
+  print("HejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHejHej");
+
+  final docRef = FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid);
+  Map<String, dynamic> updates = {};
+
+  if(pt == photoType.apartmentImage) {
+
+    updates = <String, dynamic>{
+      "apartmentImage": FieldValue.delete(),
+    };
+    await ref.delete();
+
+  } else {
+
+    updates = <String, dynamic>{
+      "additionalImages": FieldValue.arrayRemove([URLpath]),
+    };
+    await ref.child(path).delete();
+
+  }
+  docRef.update(updates);
+}
+
+// Function to get the user's photos
+Future<Map<String, dynamic>?> getData(String documentId) async {
+  var users = FirebaseFirestore.instance.collection('users');
+  var userId = await users.doc(documentId).get();
+  return userId.data();
+}
+
+/* Enums */
+
+// Identifies which photo type to use
+enum photoType {
+  apartmentImage,
+  addtionalImages,
+}
+
+// Identifies which input to use
+enum photoInput {
+  camera,
+  gallery
 }
