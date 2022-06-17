@@ -6,6 +6,7 @@ import 'package:login_page/screens/ApartmentScreen.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Apartment {
   late String city;
@@ -47,60 +48,19 @@ class Apartment {
   }
 }
 
-Future<bool> checkFavorite(ApartmentCard apartmentCard) async {
+Future<void> updateUserFavorite(ApartmentCard apartmentCard, bool saved) async {
   final uid = FirebaseAuth.instance.currentUser!.uid;
 
-  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-  var userDocument = await FirestoreUserReference.doc(uid).get();
-
-  if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-Future<void> updateUserFavorite(ApartmentCard apartmentCard) async {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-
-  CollectionReference users = FirebaseFirestore.instance.collection('users');
-
-  final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
-  var userDocument = await FirestoreUserReference.doc(uid).get();
-
-  if (userDocument['favorites'].any((e) => e.contains(apartmentCard.userID))) {
-    return users.doc(uid).update({
-      'favorites': FieldValue.arrayRemove([apartmentCard.userID])
+  final users = FirebaseFirestore.instance.collection('users').doc(uid);
+  if (saved) {
+    await users.update({
+      "favorites": FieldValue.arrayUnion([apartmentCard.userID]),
     });
   } else {
-    return users.doc(uid).update({
-      'favorites': FieldValue.arrayUnion([apartmentCard.userID])
+    await users.update({
+      "favorites": FieldValue.arrayRemove([apartmentCard.userID]),
     });
   }
-
-  // if(saved){
-  //   return users
-  //   .doc(uid)
-  //   .update({
-  //     'favorites': FieldValue.arrayUnion([apartmentCard.address])
-  //     });
-
-  // } else {
-  //   return users.doc(uid).update({
-  //     'favorites': FieldValue.arrayRemove([apartmentCard.address])
-  //   });
-  // }
-
-  // Code can't be reached.
-  /*if (saved) {
-    return users.doc(uid).update({
-      'favorites': FieldValue.arrayUnion([apartmentCard.address])
-    });
-  } else {
-    return users.doc(uid).update({
-      'favorites': FieldValue.arrayRemove([apartmentCard.address])
-    });
-  }*/
 }
 
 class ApartmentCard extends StatefulWidget {
@@ -132,9 +92,15 @@ class ApartmentCard extends StatefulWidget {
 }
 
 class _ApartmentCardState extends State<ApartmentCard> {
-  @override
-  bool saved = false;
+  bool _saved = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _saved = widget.savedFavorite;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
       customBorder:
@@ -204,9 +170,12 @@ class _ApartmentCardState extends State<ApartmentCard> {
                           TextButton.icon(
                               onPressed: () {
                                 setState(() {
-                                  saved = !saved;
-                                  ; // TODO: Save favorited items
+                                  //saved = !saved;
+                                  _saved =
+                                      !_saved; // TODO: Save favorited items
+
                                 });
+                                updateUserFavorite(widget, _saved);
                               }, // TODO: Add favorite function
                               label: const Text(
                                 "Save",
@@ -217,13 +186,14 @@ class _ApartmentCardState extends State<ApartmentCard> {
                               ),
                               icon: Icon(
                                 // ignore: unnecessary_cast
-                                saved
+                                _saved
+
                                     ? Icons.favorite_sharp
                                     : Icons.favorite_border_sharp,
                                 size: 24.0,
                               ),
                               style: TextButton.styleFrom(
-                                primary: saved ? Colors.red : Colors.grey,
+                                primary: _saved ? Colors.red : Colors.grey,
                                 padding: EdgeInsets.fromLTRB(0, 20.0, 0, 0),
                               )),
                           CircleAvatar(
