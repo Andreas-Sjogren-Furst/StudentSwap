@@ -50,7 +50,7 @@ class RegisterPageState extends State<RegisterPage> {
             .doc(authResult!.user!.uid)
             .set({
           "Email": _emailController.text.trim(),
-          "userID": FirebaseAuth.instance.currentUser!.uid,
+          "uid": FirebaseAuth.instance.currentUser!.uid,
         }); // her skal vi tilføje flere variabler.
       }
     } catch (e) {

@@ -31,12 +31,12 @@ class _ProfileInfoState extends State<ProfileInfo> {
 
   _ProfileInfoState() {
     getdata(userAuth).then((userData) => setState(() {
-          firstName.text = userData?['firstName'];
-          lastName.text = userData?['lastName'];
+          firstName.text = userData?['First name'];
+          lastName.text = userData?['Last name'];
           city.text = userData?['City'];
-          address.text = userData?['myAddress'];
-          email.text = userData?['Email'];
-          gender.text = userData?['gender'];
+          address.text = userData?['Address'];
+          email.text = userData?['E-mail'];
+          gender.text = userData?['Gender'];
         }));
   }
 
@@ -53,16 +53,13 @@ class _ProfileInfoState extends State<ProfileInfo> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Center(
-              child: Padding(
-                padding: EdgeInsets.all(15),
-                child: CircleAvatar(
-                  radius: 65,
-                  backgroundImage: AssetImage('assets/sample/profile2.jpg'),
-                ),
+              child: CircleAvatar(
+                radius: 65,
+                backgroundImage: AssetImage('assets/sample/profile2.jpg'),
               ),
             ),
             const Padding(
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
               child: Text(
                 'Edit personal info',
                 style: TextStyle(
@@ -73,7 +70,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
               ),
             ),
             Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: TextFormField(
                   controller: firstName,
                   decoration: const InputDecoration(
@@ -85,7 +82,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: TextFormField(
                   controller: lastName,
                   decoration: const InputDecoration(
@@ -97,7 +94,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: TextFormField(
                   controller: city,
                   decoration: const InputDecoration(
@@ -109,7 +106,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: TextFormField(
                   controller: address,
                   decoration: const InputDecoration(
@@ -121,7 +118,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: TextFormField(
                   controller: email,
                   decoration: const InputDecoration(
@@ -133,7 +130,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                 )),
             Padding(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                 child: TextFormField(
                   controller: gender,
                   decoration: const InputDecoration(

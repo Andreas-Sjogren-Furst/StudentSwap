@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/services/FirebaseMethods.dart';
 import 'package:dropdown_search/dropdown_search.dart';
-import "package:flutter_spinkit/flutter_spinkit.dart";
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:login_page/widgets/Apartment.dart';
 
@@ -40,11 +40,17 @@ class _SearchScreenState extends State<SearchScreen> {
     return await FirestoreUserReference.doc(uid).get();
   }
 
+  Future<String> getUserName(String uid) async {
+    final userDocument = await getData(uid);
+    return userDocument['username'].toString();
+  }
+
   String setGoingToKey(String semester) {
     Semesterkey = semester;
     return semester;
   }
 
+  List<Apartment> apartmentsLists = [];
   // Sample data
   List<String> apartmentTypeWishes = [];
 
@@ -57,6 +63,22 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     db.collection("users").doc(user?.uid);
   }
+
+  // Future<Apartment?> _getUserNames() async {
+  //   dynamic userOne = await getData('VZfEnodgGN1bedOJtPWZ');
+  //   dynamic userTwo = await getData('s0HetWSfOkuJi1mLCROZ');
+  //   print(userOne['city']);
+  //   return Apartment(
+  //       city: await userOne['city'],
+  //       address: await userOne['address'],
+  //       apartmentImage: await userOne['apartmentImage'],
+  //       profileImage: await userOne['profileImage'],
+  //       savedFavorite: await userOne['savedFavorite'],
+  //       goingTo: await userOne['goingTo'],
+  //       userID: await userOne['userID'],
+  //       semester: await userOne['semester'],
+  //       appartmentType: await userOne['appartmentType']);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +96,9 @@ class _SearchScreenState extends State<SearchScreen> {
                 );
               }
 
-              var currentUserFavorties = [];
-              List<Apartment> apartmentsLists = [];
-              String currentUserName = "lolcat";
-              String currentUserProfilePicture = "";
+              getUserName(FirebaseMethods.userId).then((value) {
+                return value;
+              });
 
               for (var doc in snapshot.data!.docs) {
                 Object? testmap = doc.data();
@@ -85,54 +106,29 @@ class _SearchScreenState extends State<SearchScreen> {
                     testmap as LinkedHashMap<dynamic, dynamic>;
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
+                print("apartment list add");
 
-                if (userMap["userID"] == FirebaseMethods.userId) {
-                  currentUserFavorties =
-                      userMap["favorites"]; // Hent favoritter
-                  currentUserName = userMap["firstName"] ?? "lolcat";
-                  currentUserProfilePicture = userMap["profileImage"];
-                }
-              }
-
-              for (var doc in snapshot.data!.docs) {
-                Object? testmap = doc.data();
-                LinkedHashMap<dynamic, dynamic> testlinked =
-                    testmap as LinkedHashMap<dynamic, dynamic>;
-                Map<String, dynamic> userMap =
-                    testlinked.map((a, b) => MapEntry(a, b));
-
-                if (userMap["userID"] != FirebaseMethods.userId ||
-                    userMap["apartmentImage"] != null) {
-                  apartmentsLists.add(Apartment(
-                      city: userMap['myCountry'] ?? "not available",
-                      address: userMap['myAddress'] ?? "not available",
-                      apartmentImage:
-                          userMap['apartmentImage'] ?? "not available",
-                      profileImage: userMap['profileImage'] ?? "not available",
-                      savedFavorite:
-                          (currentUserFavorties.contains(userMap["userID"]))
-                              ? true
-                              : false, // check om bruger har gemt denne bruger.
-                      goingTo: userMap["goingTo"] ?? ["test1", "test2"],
-                      userID: userMap['userID'] ?? "not available",
-                      semester: userMap['semester'] ?? "not available",
-                      appartmentType:
-                          userMap['appartmentType'] ?? "not available"));
-                }
+                apartmentsLists.add(Apartment(
+                    city: userMap['city'] ?? "not available",
+                    address: userMap['address'] ?? "not available",
+                    apartmentImage: userMap['apartmentImage'] ?? "no available",
+                    profileImage: userMap['profileImage'] ?? "not available",
+                    savedFavorite: userMap['savedFavorite'] ?? false,
+                    goingTo: userMap["goingTo"] ?? ["test1", "test2"],
+                    userID: userMap['userID'] ?? "not available",
+                    semester: userMap['semester'] ?? "not available",
+                    appartmentType:
+                        userMap['appartmentType'] ?? "not available"));
               }
               // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.
               apartmentsLists = apartmentsLists
-                  .where((apartment) =>
-                      apartment.city
-                          .toLowerCase()
-                          .contains(searchKey.toLowerCase()) &&
-                      apartment.city != "not available")
-                  .where((apartment) =>
-                      apartment.apartmentImage != "not available")
-                  .toList()
+                  .where((apartment) => apartment.city
+                      .toLowerCase()
+                      .contains(searchKey.toLowerCase()))
                   .where((apartment) =>
                       GoingToKey.isEmpty ||
-                      GoingToKey.map((goingToKeyString) => goingToKeyString.toLowerCase())
+                      GoingToKey.map(
+                              (goingToKeyString) => goingToKeyString.toLowerCase())
                           .toList()
                           .contains(apartment.city.toLowerCase()))
                   .where((apartment) => apartment.semester
@@ -158,7 +154,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                          children: const [
                             // Sample Data
                             Text(
                               "Welcome back!",
@@ -169,7 +165,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              currentUserName, // TODO: Get username from Firebase"${user?.displayName}"
+                              "Jeff", // TODO: Get username from Firebase"${user?.displayName}"
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 24.0,
@@ -178,9 +174,9 @@ class _SearchScreenState extends State<SearchScreen> {
                             ),
                           ],
                         ),
-                        CircleAvatar(
+                        const CircleAvatar(
                           backgroundImage:
-                              NetworkImage(currentUserProfilePicture),
+                              AssetImage("assets/sample/profile2.jpg"),
                           radius: 27.0,
                         )
                       ],

@@ -9,6 +9,8 @@ import 'package:login_page/widgets/Apartment.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+
+
 class FavoritesScreen extends StatelessWidget {
   static const routeName = "/Favorites-Screen";
 
@@ -16,18 +18,21 @@ class FavoritesScreen extends StatelessWidget {
 
   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
 
-  getData() async {
-    var userDocument = await FirestoreUserReference.doc(uid).get();
+
+  getData() async{
+    var userDocument = await FirestoreUserReference.doc(uid).get(); 
     return await userDocument['favorites'];
   }
 
   createApartment(String uid) async {
     var userDocument = await FirestoreUserReference.doc(uid).get();
-    return await userDocument;
+    return await userDocument; 
   }
 
   @override
   Widget build(BuildContext context) {
+  
+
     return Scaffold(
         body: StreamBuilder(
             stream: FirebaseFirestore.instance.collection("users").snapshots(),
@@ -41,25 +46,27 @@ class FavoritesScreen extends StatelessWidget {
                   ),
                 );
               }
-
+          
               List<Apartment> apartmentsLists = [];
               List<Apartment> apartments = [];
-              List<dynamic> favoriteUser = [];
-
-              var currentUserFavorties = [];
+              List<dynamic> favoriteUser = []; 
 
               snapshot.data!.docs.forEach((doc) {
-                Object? testmap = doc.data();
-                LinkedHashMap<dynamic, dynamic> testlinked =
+                 Object? testmap = doc.data();
+                  LinkedHashMap<dynamic, dynamic> testlinked =
                     testmap as LinkedHashMap<dynamic, dynamic>;
-                Map<String, dynamic> userMap =
+                  Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
-
-                if (userMap['userID'] == uid) {
+                  
+                
+                if(userMap['userID'] == uid) {
                   favoriteUser = userMap['favorites'];
-                  currentUserFavorties = userMap["favorites"];
                 }
-              });
+              }
+              );
+
+              
+              
 
               snapshot.data!.docs.forEach((doc) {
                 Object? testmap = doc.data();
@@ -67,24 +74,23 @@ class FavoritesScreen extends StatelessWidget {
                     testmap as LinkedHashMap<dynamic, dynamic>;
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
-                if (favoriteUser.contains(userMap['userID'])) {
-                  apartmentsLists.add(Apartment(
-                      city: userMap['myCountry'] ?? "not available",
-                      address: userMap['myAdress'] ?? "not available",
-                      apartmentImage:
-                          userMap['apartmentImage'] ?? "no available",
-                      profileImage: userMap['profileImage'] ?? "not available",
-                      savedFavorite:
-                          (currentUserFavorties.contains(userMap["userID"]))
-                              ? true
-                              : false,
-                      goingTo: ["test1", "test2"],
-                      userID: userMap['userID'] ?? "not available",
-                      semester: userMap['semester'] ?? "not available",
-                      appartmentType:
-                          userMap['apartmentType'] ?? "not available"));
+                    if(favoriteUser.contains(userMap['userID'])) {
+                    apartmentsLists.add(Apartment(
+                    city: userMap['city'] ?? "not available",
+                    address: userMap['address'] ?? "not available",
+                    apartmentImage: userMap['apartmentImage'] ?? "no available",
+                    profileImage: userMap['profileImage'] ?? "not available",
+                    savedFavorite: userMap['savedFavorite'] ?? false,
+                    goingTo: ["test1", "test2"],
+                    userID: userMap['userID'] ?? "not available",
+                        semester: userMap['semester'] ?? "not available",
+                        appartmentType: userMap['apartmentType'] ?? "not available"));
+
+
+                    }
                 }
-              });
+              );
+          
 
               return Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
