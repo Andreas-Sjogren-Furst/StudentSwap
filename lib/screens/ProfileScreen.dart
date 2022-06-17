@@ -21,18 +21,21 @@ class __ProfileScreenState extends State<ProfileScreen> {
   //static const routeName = "/profile-Screen";
   final user = FirebaseAuth.instance.currentUser;
   final userId = FirebaseAuth.instance.currentUser!.uid;
-  final Stream<QuerySnapshot> _usersStream =
-      FirebaseFirestore.instance.collection('users').snapshots();
   var firstName = 'Loading...';
-  var lastName = 'Loading...';
+  var lastName = '';
   var profileImage =
-      'https://firebasestorage.googleapis.com/v0/b/studentswap-fbf76.appspot.com/o/blankImage.jpeg?alt=media&token=0d0a00ce-a80e-41e7-930e-cb23fc9ccf68';
-  __ProfileScreenState() {
+      'https://firebasestorage.googleapis.com/v0/b/studentswap-fbf76.appspot.com/o/Blank_image.jpeg?alt=media&token=005320db-a0b7-48c8-b653-44285e7c079a';
+
+  @override
+  void initState() {
+
     getdata(userId).then((userData) => setState(() {
           firstName = userData?['firstName'];
           lastName = userData?['lastName'];
           profileImage = userData?['profileImage'];
         }));
+    super.initState();
+
   }
 
   @override
@@ -63,8 +66,10 @@ class __ProfileScreenState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(color: Colors.grey),
-            TextButton(
+            const Divider(color: Colors.grey),
+            FlatButton(
+                padding: const EdgeInsets.all(15),
+
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -94,7 +99,9 @@ class __ProfileScreenState extends State<ProfileScreen> {
         const Divider(
           color: Colors.grey,
         ),
-        TextButton(
+        FlatButton(
+            padding: const EdgeInsets.all(15),
+
             onPressed: () {
               Navigator.push(
                 context,
@@ -119,7 +126,9 @@ class __ProfileScreenState extends State<ProfileScreen> {
               ],
             )),
         const Divider(color: Colors.grey),
-        TextButton(
+        FlatButton(
+          padding: const EdgeInsets.all(15),
+
           onPressed: () {
             FirebaseAuth.instance.signOut();
           },
