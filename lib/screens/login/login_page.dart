@@ -92,7 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                      _emailController, //What the use put in the textfield
+                          _emailController, //What the use put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                      _passwordController, //What the use put in the textfield
+                          _passwordController, //What the use put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
