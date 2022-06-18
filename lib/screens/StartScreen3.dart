@@ -25,7 +25,7 @@ class StartScreen3 extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(
-            color: Color.fromARGB(255, 26, 51, 76),
+            color: Colors.white,
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -60,8 +60,8 @@ class StartScreen3 extends StatelessWidget {
               SizedBox(
                 height: 20,
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              Center(
+                
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Stack(
