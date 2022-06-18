@@ -17,30 +17,30 @@ class ChatWidget extends StatelessWidget {
     return Scaffold(
       body: Row(
         children: [
-          StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection("chats/PPlVfldzdA0srBOjlgY2/messages")
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-                if (streamSnapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (streamSnapshot.hasData &&
-                    streamSnapshot.data!.docs.length > 0) {
-                  return ListView.builder(
-                    itemCount: streamSnapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(streamSnapshot.data!.docs[index]["text"]),
-                      );
-                    },
-                  );
-                } else {
-                  return Center(child: Text("Currently no messages."));
-                }
-              }),
+          // StreamBuilder(
+          //     stream: FirebaseFirestore.instance
+          //         .collection("chats/PPlVfldzdA0srBOjlgY2/messages")
+          //         .snapshots(),
+          //     builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
+          //       if (streamSnapshot.connectionState == ConnectionState.waiting) {
+          //         return Center(
+          //           child: CircularProgressIndicator(),
+          //         );
+          //       }
+          //       if (streamSnapshot.hasData &&
+          //           streamSnapshot.data!.docs.length > 0) {
+          //         return ListView.builder(
+          //           itemCount: streamSnapshot.data!.docs.length,
+          //           itemBuilder: (context, index) {
+          //             return ListTile(
+          //               title: Text(streamSnapshot.data!.docs[index]["text"]),
+          //             );
+          //           },
+          //         );
+          //       } else {
+          //         return Center(child: Text("Currently no messages."));
+          //       }
+          //     }),
           Text('Signed in as: ${user?.email}'),
           MaterialButton(
             onPressed: () async {
