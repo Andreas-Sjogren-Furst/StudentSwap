@@ -12,7 +12,6 @@ import 'ProfileApartment.dart';
 import 'dart:convert';
 
 class ApartmentScreen extends StatefulWidget {
-  
   static const routeName = "/apartment-screen";
 
   const ApartmentScreen({Key? key}) : super(key: key);
@@ -22,7 +21,6 @@ class ApartmentScreen extends StatefulWidget {
 }
 
 class _ApartmentScreenState extends State<ApartmentScreen> {
-  
   String oneOrMore(List<dynamic> destinationer) {
     return destinationer.length > 1 ? 'Destinations' : 'Destination';
   }
@@ -81,9 +79,11 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
           print(firstName);
           print(lastName);
           print(additionalImages);
-          var additionalPhotoRef = FirebaseStorage.instance.ref().child("user_images").child(FirebaseAuth.instance.currentUser!.uid).child("additional_photos");
-
-
+          var additionalPhotoRef = FirebaseStorage.instance
+              .ref()
+              .child("user_images")
+              .child(FirebaseAuth.instance.currentUser!.uid)
+              .child("additional_photos");
 
           return Scaffold(
             extendBodyBehindAppBar: true,
@@ -126,20 +126,24 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                     children: <Widget>[
                       Positioned.fill(
                         child: Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: <Color>[
-                                  Color(0xFF0D47A1),
-                                  Color(0xFF1976D2),
-                                  Color(0xFF42A5F5),
-                                ],
-                              ),
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: <Color>[
+                                Color(0xFF0D47A1),
+                                Color(0xFF1976D2),
+                                Color(0xFF42A5F5),
+                              ],
                             ),
                           ),
+                        ),
                       ),
                       TextButton.icon(
                         style: TextButton.styleFrom(
-                          padding: EdgeInsets.fromLTRB(screenWidth/30, screenHeight/40, screenWidth/30, screenHeight/40),
+                            padding: EdgeInsets.fromLTRB(
+                                screenWidth / 30,
+                                screenHeight / 40,
+                                screenWidth / 30,
+                                screenHeight / 40),
                             primary: Colors.white,
                             textStyle: TextStyle(
                                 fontFamily: 'Poppins',
@@ -159,7 +163,6 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
               SizedBox(
                 height: 10,
               ),
-             
               Padding(
                 padding: const EdgeInsets.fromLTRB(19, 8, 8, 0),
                 child: Align(
@@ -320,22 +323,42 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                           borderRadius: BorderRadius.circular(12.0),
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(12),
                           child: InkWell(
-                             onTap: () async {
-                        await showDialog(
-                            context: context,
-                            builder: (_) =>
-                                ImageDialog(
-                                  ni: NetworkImage(additionalImages[index]),
-                                  ref: additionalPhotoRef,
-                                  main: PhotoType.addtionalImages,
-                                ),
-                            );
-                        setState(() {
-                          // Used for updating user-actions
-                        });
-                      },
+                            onTap: () async {
+                              await showDialog(
+                                context: context,
+                                builder: (_) => Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)
+                                  ),
+                                  child: Container(
+                                    height: screenHeight*0.7,
+                                    width: screenWidth*0.7,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      image: DecorationImage(
+                                        image: NetworkImage(additionalImages[index]),
+                                        fit: BoxFit.fill,
+                                      )
+                                
+                                    ),
+                                    
+                                  ),
+                                ),   
+                              );
+                            
+                                
+                                
+
+                               
+                                
+                              
+                              setState(() {
+                                // Used for updating user-actions
+                              });
+                            },
+                          
                             child: Image(
                               image: NetworkImage(additionalImages[index]),
                               fit: BoxFit.contain,
