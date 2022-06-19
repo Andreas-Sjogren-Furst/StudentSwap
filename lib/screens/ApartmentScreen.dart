@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:login_page/services/FirebaseMethods.dart';
 import 'package:login_page/widgets/Apartment.dart';
 import 'dart:convert';
 
@@ -22,9 +24,8 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-  double screenWidth = MediaQuery.of(context).size.width;
-  double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
@@ -68,7 +69,6 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
         elevation: 0,
       ),
       body: Column(children: [
-
         SizedBox(
           height: 45,
         ),
@@ -112,7 +112,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
               shape: const CircleBorder(),
               color: Colors.blue,
               padding: const EdgeInsets.all(20),
-              onPressed: () {},
+              onPressed: () {
+                FirebaseMethods.updateUserChats(FirebaseMethods.userId, userID);
+              },
               child: const Icon(
                 Icons.email,
                 size: 30,
@@ -132,120 +134,113 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
             ),
           ],
         ),
-        SizedBox(height: 10,),
+        SizedBox(
+          height: 10,
+        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(19, 8, 8, 8),
           child: Align(
             alignment: Alignment.topLeft,
-            child: Text("Information",
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-
-            ),),
+            child: Text(
+              "Information",
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
           ),
         ),
-
         Expanded(
           flex: 1,
-
           child: Container(
-            width: screenWidth - 38,
+              width: screenWidth - 38,
               decoration: BoxDecoration(
-                color: Colors.blue,
-
-                borderRadius: BorderRadius.all(Radius.circular(10))),
+                  color: Colors.blue,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
               child: Container(
-
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(children: [
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        alignment: Alignment.topLeft,
-                        height: screenHeight/5,
-                        width: 20,
-
-                        child: Column(children: [
+                  child: Padding(
+                padding: const EdgeInsets.all(12),
+                child: Row(children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      alignment: Alignment.topLeft,
+                      height: screenHeight / 5,
+                      width: 20,
+                      child: Column(
+                        children: [
                           Align(
                             alignment: Alignment.topLeft,
-                            child: Text("From",
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold
-                              ),
-                              ),
-                          ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text('$city blabla blabla bla bla',
+                            child: Text(
+                              "From",
                               style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Poppins',
-                                fontSize: 12
-                              ),
-
-                              ),
-                            )
-                        ],
-                        ),
-
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        alignment: Alignment.topCenter,
-                        height: screenHeight/5,
-                        width: 20,
-
-                        child: Column(children: [
+                                  fontFamily: 'Poppins',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
                           Align(
                             alignment: Alignment.topLeft,
-                            child: Text("Description",
-                            style: TextStyle(
-                              fontFamily: 'Poppins',
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold
-                              ),
-                              ),
-                          ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Text("Jeg hedder johnson og er fra nor available, jeg er sød og imødekommende og lugter en smule af ost. Jeg træner meget og holder meget af fodbold samt cykling",
+                            child: Text(
+                              '$city blabla blabla bla bla',
                               style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'Poppins',
-                                fontSize: 12
-                              ),
-
-                              ),
-                            )
+                                  color: Colors.black,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12),
+                            ),
+                          )
                         ],
-                        ),
-
                       ),
                     ),
-
-
-                  ]),
-                ))),
-
+                  ),
+                  Expanded(
+                    flex: 2,
+                    child: Container(
+                      alignment: Alignment.topCenter,
+                      height: screenHeight / 5,
+                      width: 20,
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Description",
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Jeg hedder johnson og er fra nor available, jeg er sød og imødekommende og lugter en smule af ost. Jeg træner meget og holder meget af fodbold samt cykling",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'Poppins',
+                                  fontSize: 12),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ]),
+              ))),
         ),
         Align(
           alignment: Alignment.topLeft,
           child: Padding(
             padding: EdgeInsets.fromLTRB(19, 8, 8, 8),
-            child: Text("Pictures",
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-
-            ),),
+            child: Text(
+              "Pictures",
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
           ),
         ),
         Expanded(
@@ -273,27 +268,10 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                 ),
               );
             },
-          ),)
+          ),
+        )
       ]),
     );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Scaffold(
     //   appBar: AppBar(
