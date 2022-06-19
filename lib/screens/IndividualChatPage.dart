@@ -9,9 +9,11 @@ class IndividualChatpage extends StatefulWidget {
     Key? key,
     required this.shaKey,
     required this.counterUserName,
+    required this.currentUserName,
   }) : super(key: key);
   final String shaKey;
   final String counterUserName;
+  final String currentUserName;
 
   @override
   State<IndividualChatpage> createState() => _IndividualChatpageState();
@@ -19,6 +21,7 @@ class IndividualChatpage extends StatefulWidget {
 
 class _IndividualChatpageState extends State<IndividualChatpage> {
   late String _shaKey;
+  late String _currentUserName;
   late String _counterUserName;
   late ScrollController _scrollController;
   final myController = TextEditingController();
@@ -42,6 +45,7 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
   @override
   void initState() {
     super.initState();
+    _currentUserName = widget.currentUserName;
     _shaKey = widget.shaKey;
     _counterUserName = widget.counterUserName;
     _scrollController = ScrollController();
@@ -214,7 +218,7 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
                   FloatingActionButton(
                     onPressed: () {
                       Map<dynamic, dynamic> chatMessage = {
-                        _counterUserName: myController.text,
+                        _currentUserName: myController.text,
                       };
                       FirebaseFirestore.instance
                           .collection("chats")

@@ -7,6 +7,7 @@ class ChatLineModel {
   late String imageUrl;
   late String time;
   late String shaKey;
+  late String currentUserName;
 
   ChatLineModel({
     required this.name,
@@ -14,6 +15,7 @@ class ChatLineModel {
     required this.imageUrl,
     required this.time,
     required this.shaKey,
+    required this.currentUserName,
   });
 
   ChatsLine getChatsLine() {
@@ -23,6 +25,7 @@ class ChatLineModel {
       imageUrl: imageUrl,
       time: time,
       shaKey: shaKey,
+      currentUserName: currentUserName,
     );
   }
 }
@@ -36,12 +39,14 @@ class ChatsLine extends StatefulWidget {
     required this.imageUrl,
     required this.time,
     required this.shaKey,
+    required this.currentUserName,
   }) : super(key: key);
   final String shaKey;
   final String name;
   final String messageText;
   final String imageUrl;
   final String time;
+  final String currentUserName;
 
   @override
   _ChatsLineState createState() => _ChatsLineState();
@@ -58,6 +63,7 @@ class _ChatsLineState extends State<ChatsLine> {
                 builder: (context) => (IndividualChatpage(
                       shaKey: widget.shaKey,
                       counterUserName: widget.name,
+                      currentUserName: widget.currentUserName,
                     ))));
       },
       child: Container(
