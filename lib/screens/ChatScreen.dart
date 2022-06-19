@@ -70,22 +70,24 @@ class _ChatScreenState extends State<ChatScreen> {
                     if (chatMap["users"][0]["name"] == currentUserName) {
                       print("andreas found");
                       chatUsers.add(ChatLineModel(
-                          shaKey: chatMap["chatId"],
-                          name: chatMap["users"][1]["name"] ?? "name not found",
-                          messageText: chatMap["users"][1]["messageText"] ??
-                              "no message",
-                          imageUrl:
-                              chatMap["users"][1]["imageUrl"] ?? "no image",
-                          time: chatMap["users"][1]["time"] ?? "unknown"));
+                        shaKey: chatMap["chatId"],
+                        name: chatMap["users"][1]["name"] ?? "name not found",
+                        messageText:
+                            chatMap["users"][1]["messageText"] ?? "no message",
+                        imageUrl: chatMap["users"][1]["imageUrl"] ?? "no image",
+                        time: chatMap["users"][1]["time"] ?? "unknown",
+                        currentUserName: currentUserName,
+                      ));
                     } else {
                       chatUsers.add(ChatLineModel(
-                          shaKey: chatMap["chatId"],
-                          name: chatMap["users"][0]["name"] ?? "name not found",
-                          messageText: chatMap["users"][0]["messageText"] ??
-                              "no message",
-                          imageUrl:
-                              chatMap["users"][0]["imageUrl"] ?? "no image",
-                          time: chatMap["users"][0]["time"] ?? "unknown"));
+                        shaKey: chatMap["chatId"],
+                        name: chatMap["users"][0]["name"] ?? "name not found",
+                        messageText:
+                            chatMap["users"][0]["messageText"] ?? "no message",
+                        imageUrl: chatMap["users"][0]["imageUrl"] ?? "no image",
+                        time: chatMap["users"][0]["time"] ?? "unknown",
+                        currentUserName: currentUserName,
+                      ));
                     }
 
                     print("inside if statement $chatUsers");
