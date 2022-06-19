@@ -1,23 +1,48 @@
 import 'package:flutter/material.dart';
+import "../screens/IndividualChatPage.dart";
 
-
-
-class ChatsLine extends StatefulWidget {
+class ChatLineModel {
   late String name;
   late String messageText;
   late String imageUrl;
   late String time;
-  // late bool isMessageRead;
-  ChatsLine({
+  late String shaKey;
+
+  ChatLineModel({
     required this.name,
     required this.messageText,
     required this.imageUrl,
     required this.time,
+    required this.shaKey,
   });
 
-  getChatsLine {
-    return ChatsLine()
+  ChatsLine getChatsLine() {
+    return ChatsLine(
+      name: name,
+      messageText: messageText,
+      imageUrl: imageUrl,
+      time: time,
+      shaKey: shaKey,
+    );
   }
+}
+
+class ChatsLine extends StatefulWidget {
+  // late bool isMessageRead;
+  ChatsLine({
+    Key? key,
+    required this.name,
+    required this.messageText,
+    required this.imageUrl,
+    required this.time,
+    required this.shaKey,
+  }) : super(key: key);
+  final String shaKey;
+  final String name;
+  final String messageText;
+  final String imageUrl;
+  final String time;
+
   @override
   _ChatsLineState createState() => _ChatsLineState();
 }
@@ -26,7 +51,15 @@ class _ChatsLineState extends State<ChatsLine> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => (IndividualChatpage(
+                      shaKey: widget.shaKey,
+                      counterUserName: widget.name,
+                    ))));
+      },
       child: Container(
         padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
         child: Row(
@@ -54,6 +87,13 @@ class _ChatsLineState extends State<ChatsLine> {
                           SizedBox(
                             height: 6,
                           ),
+                          Text(
+                            widget.messageText,
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade600,
+                                fontWeight: FontWeight.normal),
+                          ),
                         ],
                       ),
                     ),
@@ -61,10 +101,10 @@ class _ChatsLineState extends State<ChatsLine> {
                 ],
               ),
             ),
-            Text(widget.time,
-                style: TextStyle(
-                  fontSize: 12,
-                )),
+            Text(
+              widget.time,
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.normal),
+            ),
           ],
         ),
       ),
