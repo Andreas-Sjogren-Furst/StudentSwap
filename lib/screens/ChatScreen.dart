@@ -93,6 +93,12 @@ class _ChatScreenState extends State<ChatScreen> {
                     print("inside if statement $chatUsers");
                   }
                 }
+                if (chatUsers.isEmpty) {
+                  return Center(
+                    child: Text(
+                        "No chats found. Go find some new friends at the Search Screen :)"),
+                  );
+                }
 
                 return Column(
                   children: [

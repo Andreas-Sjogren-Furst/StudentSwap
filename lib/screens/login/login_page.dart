@@ -3,6 +3,9 @@ import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/TabsScreen.dart';
+import 'package:login_page/services/checkLogin.dart';
+import "../../services/checkLogin.dart";
 
 class LoginPage extends StatefulWidget {
   static final routeName = "/login-page";
@@ -22,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      Navigator.pushNamed(context, TabScreen.routeName);
     } catch (e) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
@@ -92,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                      _emailController, //What the use put in the textfield
+                          _emailController, //What the use put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -116,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                      _passwordController, //What the use put in the textfield
+                          _passwordController, //What the use put in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),

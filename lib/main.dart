@@ -45,9 +45,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/': (context) => StartScreen(),
+        '/': (context) => checkLogin(),
         // When navigating to the "/second" route, build the SecondScreen widget.
-        checkLogin.routeName: (context) => checkLogin(),
+        TabScreen.routeName: (context) => TabScreen(),
         RegisterPage.routeName: (context) => RegisterPage(),
         RegisterPage2.routeName: (context) => RegisterPage2(),
         ProfileApartment.routeName: (context) => const ProfileApartment(),
@@ -57,8 +57,10 @@ class MyApp extends StatelessWidget {
         SearchScreen.routeName: (context) => SearchScreen(),
         FailScreen.routeName: (context) => FailScreen(),
         ApartmentScreen.routeName: (context) => ApartmentScreen(),
+        StartScreen.routeName: (context) => StartScreen(),
         StartScreen2.routeName: (context) => StartScreen2(),
         StartScreen3.routeName: (context) => StartScreen3(),
+        LoginPage.routeName: (context) => LoginPage(),
       },
     );
   }

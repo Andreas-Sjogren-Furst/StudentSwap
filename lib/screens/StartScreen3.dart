@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/login/login_page.dart';
 import 'package:login_page/services/checkLogin.dart';
 
 class StartScreen3 extends StatelessWidget {
@@ -12,16 +13,16 @@ class StartScreen3 extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     // TODO: implement build
     return Container(
-       decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 32, 40, 35),
-              Color.fromARGB(255, 26, 51, 76)
-            ],
-          ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 32, 40, 35),
+            Color.fromARGB(255, 26, 51, 76)
+          ],
         ),
+      ),
       child: Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(
@@ -61,7 +62,6 @@ class StartScreen3 extends StatelessWidget {
                 height: 20,
               ),
               Center(
-                
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Stack(
@@ -86,7 +86,7 @@ class StartScreen3 extends StatelessWidget {
                           textStyle: const TextStyle(fontSize: 20),
                         ),
                         onPressed: () {
-                          Navigator.pushNamed(context, checkLogin.routeName);
+                          Navigator.pushNamed(context, LoginPage.routeName);
                         },
                         child: const Text(
                           'GO TO LOGIN',
