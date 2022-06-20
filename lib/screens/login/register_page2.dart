@@ -35,7 +35,6 @@ class _RegisterPageState2 extends State<RegisterPage2> {
 
   Country countries = Country();
 
-
   final List<String> gender = [
     'Male',
     'Female',
@@ -46,7 +45,6 @@ class _RegisterPageState2 extends State<RegisterPage2> {
   String? myCountry;
   List<dynamic> goingTo = [];
   String? Gender;
-
 
   // text controllers
   final _semesterController = TextEditingController();
@@ -122,6 +120,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
         "myAddress": _myAddressController.text.trim(),
         "firstName": _firstName.text.trim(),
         "lastName": _lastName.text.trim(),
+        "description": "",
       });
     }
   }
@@ -373,8 +372,10 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                                 return InkWell(
                                   onTap: () {
                                     _isSelected
-                                        ? goingTo.remove(item)
-                                        : goingTo.add(item);
+                                        ? goingTo.remove(
+                                            item) //remove item from the list
+                                        : goingTo
+                                            .add(item); //add item to the list
                                     //This rebuilds the StatefulWidget to update the button's text
                                     setState(() {});
                                     //This rebuilds the dropdownMenu Widget to update the check mark
@@ -477,7 +478,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                     ),
                   ),
 
-                SizedBox(height: 10),
+                  SizedBox(height: 10),
 
                   //Gender textfield
                   Padding(
