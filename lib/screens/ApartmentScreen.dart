@@ -180,20 +180,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
               SizedBox(
                 height: 10,
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(19, 8, 8, 0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Information",
-                    style: TextStyle(
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
+              
               Expanded(
                 flex: 1,
                 child: Container(
