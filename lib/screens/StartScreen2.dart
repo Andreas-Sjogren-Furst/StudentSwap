@@ -23,6 +23,7 @@ class StartScreen2 extends StatelessWidget {
             ],
           ),
         ),
+      ),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
