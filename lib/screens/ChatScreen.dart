@@ -59,6 +59,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   );
                 }
 
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text("No chats"),
+                  );
+                }
+
                 List<ChatLineModel> chatUsers = [];
 
                 for (var doc in chatsSnapshot.data!.docs) {
@@ -67,10 +73,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       testmap as LinkedHashMap<dynamic, dynamic>;
                   Map<String, dynamic> chatMap =
                       testlinked.map((a, b) => MapEntry(a, b));
-                  print("before if statement");
+                  // print("before if statement");
                   if (currentUserChats.contains(chatMap["chatId"])) {
                     if (chatMap["users"][0]["name"] == currentUserName) {
-                      print("andreas found");
+                      // print("andreas found");
                       chatUsers.add(ChatLineModel(
                         shaKey: chatMap["chatId"],
                         name: chatMap["users"][1]["name"] ?? "name not found",
@@ -92,7 +98,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       ));
                     }
 
-                    print("inside if statement $chatUsers");
+                    // print("inside if statement $chatUsers");
                   }
                 }
                 if (chatUsers.isEmpty) {
