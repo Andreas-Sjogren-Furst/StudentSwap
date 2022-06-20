@@ -40,21 +40,12 @@ class FirebaseMethods {
     return userDocument;
   }
 
-  static updateUserChats(String currentUserId, String counterUserId) {
+  static String updateUserChats(String currentUserId, String counterUserId) {
     // TODO: Check om chat allerede eksisterer.
     String sha256String = generateSha256Hash(currentUserId, counterUserId);
-
-    // update currentUser:
-    FirestoreUserReference.doc(currentUserId).update({
-      "chats": FieldValue.arrayUnion([sha256String])
-    });
-
-    // update CounterUSer:
-    FirestoreUserReference.doc(counterUserId).update({
-      "chats": FieldValue.arrayUnion([sha256String])
-    });
-
     generateUserChat(sha256String, currentUserId, counterUserId);
+
+    return sha256String;
   }
 
   // Makes the chats 100% anonymous, so we can't see which user each belongs to whom,
@@ -69,31 +60,46 @@ class FirebaseMethods {
     return hash;
   }
 
-  static generateUserChat(
-      String doucmentName, String currentUserId, String counterUserId) async {
+  static generateUserChat(String chatDoucmentName, String currentUserId,
+      String counterUserId) async {
     var currentUserDocument = await getUserDocument(currentUserId);
     var counterUserDocument = await getUserDocument(counterUserId);
 
-    FirebaseFirestore.instance.collection("chats").doc(doucmentName).set(
-      {
-        "chatId": doucmentName,
-        "Messages": [],
-        "users": [
-          {
-            "name": currentUserDocument.data()["firstName"],
-            "messageText": "lastest message",
-            "imageUrl": currentUserDocument.data()["profileImage"],
-            "time": "now",
-          },
-          {
-            "name": counterUserDocument.data()["firstName"],
-            "messageText": "lastest message",
-            "imageUrl": counterUserDocument.data()["profileImage"],
-            "time": "now",
-          }
-        ]
-      },
-    );
+    if (currentUserDocument["chats"].contains(chatDoucmentName) ||
+        counterUserDocument.contains(chatDoucmentName)) {
+      FirebaseFirestore.instance.collection("chats").doc(chatDoucmentName).set(
+        {
+          "chatId": chatDoucmentName,
+          "Messages": [],
+          "users": [
+            {
+              "name": currentUserDocument.data()["firstName"],
+              "messageText": "lastest message",
+              "imageUrl": currentUserDocument.data()["profileImage"],
+              "time": "now",
+            },
+            {
+              "name": counterUserDocument.data()["firstName"],
+              "messageText": "lastest message",
+              "imageUrl": counterUserDocument.data()["profileImage"],
+              "time": "now",
+            }
+          ]
+        },
+      );
+
+      // update currentUser:
+      FirestoreUserReference.doc(currentUserId).update({
+        "chats": FieldValue.arrayUnion([chatDoucmentName])
+      });
+
+      // update CounterUSer:
+      FirestoreUserReference.doc(counterUserId).update({
+        "chats": FieldValue.arrayUnion([chatDoucmentName])
+      });
+    } else {
+      print("chat already exsits");
+    }
   }
 
 // get specific user data from firestore collection.
