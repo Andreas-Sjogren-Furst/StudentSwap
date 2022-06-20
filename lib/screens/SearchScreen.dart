@@ -130,7 +130,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   ));
                 }
               }
-              // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.
+              // opdaterer apartmentlist med searchKey.
               apartmentsLists = apartmentsLists
                   .where((apartment) =>
                       apartment.city
