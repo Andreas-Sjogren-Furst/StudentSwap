@@ -49,7 +49,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   FirebaseFirestore.instance.collection("chats").snapshots(),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> chatsSnapshot) {
-                if (!snapshot.hasData && chatsSnapshot.hasData) {
+                if (!snapshot.hasData || !chatsSnapshot.hasData) {
                   return Center(
                     child: CircularProgressIndicator(
                       backgroundColor: Colors.lightBlueAccent,

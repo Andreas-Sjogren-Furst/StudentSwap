@@ -65,8 +65,14 @@ class FirebaseMethods {
     var currentUserDocument = await getUserDocument(currentUserId);
     var counterUserDocument = await getUserDocument(counterUserId);
 
-    if (currentUserDocument["chats"].contains(chatDoucmentName) ||
-        counterUserDocument.contains(chatDoucmentName)) {
+    List<dynamic> currentUserChats = await currentUserDocument.data()["chats"];
+    List<dynamic> counterUserChats = await counterUserDocument.data()["chats"];
+
+    print(
+        "currentUserChats $currentUserChats + counterUserChats $counterUserChats");
+
+    if (!currentUserChats.contains(chatDoucmentName) ||
+        !counterUserChats.contains(chatDoucmentName)) {
       FirebaseFirestore.instance.collection("chats").doc(chatDoucmentName).set(
         {
           "chatId": chatDoucmentName,
