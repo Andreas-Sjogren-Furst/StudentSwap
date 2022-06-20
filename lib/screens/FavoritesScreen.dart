@@ -16,20 +16,15 @@ class FavoritesScreen extends StatelessWidget {
 
   final FirestoreUserReference = FirebaseFirestore.instance.collection("users");
 
-  getData() async {
+  getData() async { //Metode som henter favorit-array for current-user
     var userDocument = await FirestoreUserReference.doc(uid).get();
     return await userDocument['favorites'];
-  }
-
-  createApartment(String uid) async {
-    var userDocument = await FirestoreUserReference.doc(uid).get();
-    return await userDocument;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder(
+        body: StreamBuilder( //Steambuilder der lavet et snapshot for alle users
             stream: FirebaseFirestore.instance.collection("users").snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -48,7 +43,7 @@ class FavoritesScreen extends StatelessWidget {
 
               var currentUserFavorties = [];
 
-              snapshot.data!.docs.forEach((doc) {
+              snapshot.data!.docs.forEach((doc) {//laver foor-loop for at finde users favoritter
                 Object? testmap = doc.data();
                 LinkedHashMap<dynamic, dynamic> testlinked =
                     testmap as LinkedHashMap<dynamic, dynamic>;
@@ -61,7 +56,7 @@ class FavoritesScreen extends StatelessWidget {
                 }
               });
 
-              snapshot.data!.docs.forEach((doc) {
+              snapshot.data!.docs.forEach((doc) {//for-loop der gemmer alle favoriserede apartments under en liste
                 Object? testmap = doc.data();
                 LinkedHashMap<dynamic, dynamic> testlinked =
                     testmap as LinkedHashMap<dynamic, dynamic>;
@@ -100,7 +95,7 @@ class FavoritesScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
-                        child: ListView.builder(
+                        child: ListView.builder( //laver apartments for alle apartments som er favorites 
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       physics: const ClampingScrollPhysics(),
