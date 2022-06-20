@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import './ProfileApartment.dart';
-import './Profile_personal_info.dart';
+import 'personal_information/Profile_personal_info.dart';
 
 Future<Map<String, dynamic>?> getdata(String documentId) async {
   var users = FirebaseFirestore.instance.collection('users');

@@ -5,6 +5,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import './local_widgets/TextField.dart';
+import './local_widgets/TextFormFieldBuilder.dart';
+import './local_functions/writeData.dart';
 
 Future<Map<String, dynamic>?> getdata(String documentId) async {
   var users = FirebaseFirestore.instance.collection('users');
@@ -20,6 +23,7 @@ void writedata(String documentId, String changeVar, String toVar) async {
 class ProfileInfo extends StatefulWidget {
   String mainPhotoPath;
   ProfileInfo({Key? key, this.mainPhotoPath = ""}) : super(key: key);
+
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
   final mainPhotoRef = FirebaseStorage.instance
@@ -61,7 +65,6 @@ class _ProfileInfoState extends State<ProfileInfo> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getMainPhotoFromFirebase();
   }
@@ -145,72 +148,36 @@ class _ProfileInfoState extends State<ProfileInfo> {
               ),
               Padding(
                   padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    readOnly: true,
-                    controller: firstName,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'First name',
-                    ),
-                  )),
+                  child: TextFieldBuilder(
+                      userInfo: firstName, labelText: 'First name')),
               Padding(
                   padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    readOnly: true,
-                    controller: lastName,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Last name',
-                    ),
-                  )),
+                  child: TextFieldBuilder(
+                      userInfo: lastName, labelText: 'Last name')),
               Padding(
                   padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    controller: country,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
+                  child: TextFormFieldBuilder(
+                      fireBaseId: 'myCountry',
                       labelText: 'Country',
-                    ),
-                    onFieldSubmitted: (String inputField) {
-                      writedata(userAuth, 'myCountry', inputField);
-                    },
-                  )),
+                      userInfo: country)),
               Padding(
                   padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    controller: address,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
+                  child: TextFormFieldBuilder(
                       labelText: 'Address',
-                    ),
-                    onFieldSubmitted: (String inputField) {
-                      writedata(userAuth, 'myAddress', inputField);
-                    },
-                  )),
+                      fireBaseId: 'myAdress',
+                      userInfo: address)),
               Padding(
                   padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    controller: email,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
+                  child: TextFormFieldBuilder(
                       labelText: 'E-mail',
-                    ),
-                    onFieldSubmitted: (String inputField) {
-                      writedata(userAuth, 'Email', inputField);
-                    },
-                  )),
+                      fireBaseId: 'Email',
+                      userInfo: email)),
               Padding(
                   padding: const EdgeInsets.all(15),
-                  child: TextFormField(
-                    controller: gender,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
+                  child: TextFormFieldBuilder(
                       labelText: 'Gender',
-                    ),
-                    onFieldSubmitted: (String inputField) {
-                      writedata(userAuth, 'gender', inputField);
-                    },
-                  )),
+                      fireBaseId: 'gender',
+                      userInfo: gender)),
               Padding(
                   padding: const EdgeInsets.all(15),
                   child: TextFormField(
@@ -285,13 +252,6 @@ removePhoto(String urlPath, Reference ref, PhotoType pt) async {
 
   switch (pt) {
     case PhotoType.apartmentImage:
-    // Doesn't work.
-    /*updates = <String, dynamic>{
-        "apartmentImage": FieldValue.delete(),
-      };
-      await ref.delete();
-      break;*/
-
     case PhotoType.addtionalImages:
       updates = <String, dynamic>{
         "additionalImages": FieldValue.arrayRemove([urlPath]),
