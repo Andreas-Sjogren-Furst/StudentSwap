@@ -90,7 +90,8 @@ class _SearchScreenState extends State<SearchScreen> {
                   currentUserFavorties =
                       userMap["favorites"] ?? []; // Hent favoritter
                   currentUserName = userMap["firstName"] ?? "lolcat";
-                  currentUserProfilePicture = userMap["profileImage"];
+                  currentUserProfilePicture =
+                      userMap["profileImage"] ?? "no Image";
                 }
               }
 
