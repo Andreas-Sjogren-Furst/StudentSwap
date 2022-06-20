@@ -128,7 +128,6 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   ),
                 ),
               ),
-          ),
             ),
             const Padding(
               padding: EdgeInsets.all(15),

@@ -12,16 +12,15 @@ class StartScreen2 extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     // TODO: implement build
     return Container(
-       decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 32, 40, 35),
-              Color.fromARGB(255, 23, 43, 65),
-              Color.fromARGB(255, 26, 51, 76)
-            ],
-          ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 32, 40, 35),
+            Color.fromARGB(255, 23, 43, 65),
+            Color.fromARGB(255, 26, 51, 76)
+          ],
         ),
       ),
       child: Scaffold(
@@ -49,8 +48,7 @@ class StartScreen2 extends StatelessWidget {
                           color: Colors.white,
                           fontSize: 30,
                           fontWeight: FontWeight.w600,
-                          fontFamily: "Poppins"
-                      ),
+                          fontFamily: "Poppins"),
                     ),
                     SizedBox(
                       height: 5,
@@ -62,12 +60,13 @@ class StartScreen2 extends StatelessWidget {
                           color: Colors.white,
                           fontSize: 15,
                           fontWeight: FontWeight.w400,
-                          fontFamily: "Poppins"
-                      ),
+                          fontFamily: "Poppins"),
                     ),
                   ],
                 ),
-                const SizedBox(height: 1,),
+                const SizedBox(
+                  height: 1,
+                ),
                 Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4),
@@ -88,12 +87,14 @@ class StartScreen2 extends StatelessWidget {
                         ),
                         TextButton(
                           style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 40.0),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 25.0, horizontal: 40.0),
                             primary: Colors.white,
                             textStyle: const TextStyle(fontSize: 20),
                           ),
                           onPressed: () {
-                            Navigator.pushNamed(context, StartScreen3.routeName);
+                            Navigator.pushNamed(
+                                context, StartScreen3.routeName);
                           },
                           child: const Text(
                             'NEXT',
@@ -107,7 +108,9 @@ class StartScreen2 extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 1,)
+                const SizedBox(
+                  height: 1,
+                )
               ],
             ),
           ),
