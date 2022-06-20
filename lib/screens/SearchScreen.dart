@@ -106,20 +106,22 @@ class _SearchScreenState extends State<SearchScreen> {
                 if (userMap["userID"] != FirebaseMethods.userId ||
                     userMap["apartmentImage"] != null) {
                   apartmentsLists.add(Apartment(
-                      city: userMap['myCountry'] ?? "not available",
-                      address: userMap['myAddress'] ?? "not available",
-                      apartmentImage:
-                          userMap['apartmentImage'] ?? "not available",
-                      profileImage: userMap['profileImage'] ?? "not available",
-                      savedFavorite:
-                          (currentUserFavorties.contains(userMap["userID"]))
-                              ? true
-                              : false, // check om bruger har gemt denne bruger.
-                      goingTo: userMap["goingTo"] ?? ["test1", "test2"],
-                      userID: userMap['userID'] ?? "not available",
-                      semester: userMap['semester'] ?? "not available",
-                      appartmentType:
-                          userMap['appartmentType'] ?? "not available"));
+                    city: userMap['myCountry'] ?? "not available",
+                    address: userMap['myAddress'] ?? "not available",
+                    apartmentImage:
+                        userMap['apartmentImage'] ?? "not available",
+                    profileImage: userMap['profileImage'] ?? "not available",
+                    savedFavorite:
+                        (currentUserFavorties.contains(userMap["userID"]))
+                            ? true
+                            : false, // check om bruger har gemt denne bruger.
+                    goingTo: userMap["goingTo"] ?? ["test1", "test2"],
+                    userID: userMap['userID'] ?? "not available",
+                    semester: userMap['semester'] ?? "not available",
+                    appartmentType:
+                        userMap['appartmentType'] ?? "not available",
+                    year: userMap['year'] ?? "not available",
+                  ));
                 }
               }
               // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.
@@ -146,6 +148,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           .map((apartmentType) => apartmentType.toLowerCase())
                           .toList()
                           .contains(apartment.appartmentType.toLowerCase()))
+                  .where((appartment) => years.isEmpty || years.map((year) => year.toLowerCase()).toList().contains(appartment.year.toLowerCase()))
                   .toList();
 
               // print("Apartsmentslist: ${apartmentsLists}");
@@ -251,7 +254,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: IconButton(
                                 onPressed: () {
                                   showModalBottomSheet(
-                                    isScrollControlled: true,
+                                      isScrollControlled: true,
                                       context: context,
                                       builder: (context) {
                                         return FilterSheet(
@@ -273,14 +276,18 @@ class _SearchScreenState extends State<SearchScreen> {
                                           testApartment =
                                               value['apartmentType'];
 
-                                          List<int> tempYears = List.from(value['year']);
-                                          years = tempYears.map((element) => element.toString()).toList();
-
+                                          List<int> tempYears =
+                                              List.from(value['year']);
+                                          years = tempYears
+                                              .map((element) =>
+                                                  element.toString())
+                                              .toList();
 
                                           // TODO: Make keys exist in Firebase
                                           // Not implemnted yet. Keys doesn't exist in Firebase.
-                                          // Semesterkey = value['semester'];
-                                          // apartmentTypeWishes = value['apartmentType'];
+                                          Semesterkey = value['semester'];
+                                          apartmentTypeWishes =
+                                              value['apartmentType'];
                                         })
                                       });
                                 },
@@ -369,12 +376,11 @@ class _FilterSheetState extends State<FilterSheet> {
       _yearChips.setAll(0, [false, false, false, false, false]);
 
       // Get the selected years
-      for(int i = 0; i<widget.year.length; i++) {
-        if(_years[i] == widget.year[i]) {
+      for (int i = 0; i < widget.year.length; i++) {
+        if (_years[i] == widget.year[i]) {
           _yearChips[i] = true;
         }
       }
-
     }
     if (widget.semesterKey.isNotEmpty) {
       // Set all elements of semesterChipsBool to false
@@ -396,14 +402,14 @@ class _FilterSheetState extends State<FilterSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Wrap(
-      children: [
-        DefaultTextStyle(
+    return Wrap(children: [
+      DefaultTextStyle(
         style: const TextStyle(fontFamily: "Poppins", color: Colors.black),
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 4.0, vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -415,15 +421,14 @@ class _FilterSheetState extends State<FilterSheet> {
                     iconSize: 24.0,
                   ),
                   const Text("Filters",
-                      style:
-                          TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500)),
+                      style: TextStyle(
+                          fontSize: 16.0, fontWeight: FontWeight.w500)),
                   TextButton(
                     onPressed: () {
-
                       // Get the selected years
                       List<int> selectedYears = [];
-                      for(int i = 0; i<_years.length; i++) {
-                        if(_yearChips[i]) {
+                      for (int i = 0; i < _years.length; i++) {
+                        if (_yearChips[i]) {
                           selectedYears.add(int.parse(_years[i]));
                         }
                       }
@@ -455,278 +460,281 @@ class _FilterSheetState extends State<FilterSheet> {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 16.0),
-              child:
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                const SizedBox(
-                  height: 8.0,
-                ),
-                TextField(
-                  controller: _searchController,
-                  onChanged: (value) {
-                    //setState(() {
-                    // searchKey = value;
-                    //});
-                  },
-                  onSubmitted: (value) {
-                    setState(() {
-                      _cityChips.add(value);
-                      _searchController.clear();
-                    });
-                  },
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                    TextField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        //setState(() {
+                        // searchKey = value;
+                        //});
+                      },
+                      onSubmitted: (value) {
+                        setState(() {
+                          _cityChips.add(value);
+                          _searchController.clear();
+                        });
+                      },
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: const BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
+                        ),
+                        filled: true,
+                        fillColor: const Color(0xFFEEEEEE),
+                        labelText: 'Search for a city',
+                        prefixIcon: const Icon(Icons.search),
                       ),
                     ),
-                    filled: true,
-                    fillColor: const Color(0xFFEEEEEE),
-                    labelText: 'Search for a city',
-                    prefixIcon: const Icon(Icons.search),
-                  ),
-                ),
-                const SizedBox(height: 18.0),
-                _cityChips.isNotEmpty
-                    ? SizedBox(
+                    const SizedBox(height: 18.0),
+                    _cityChips.isNotEmpty
+                        ? SizedBox(
+                            height: 32.0,
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _cityChips.length,
+                              itemBuilder: (context, index) => (Chip(
+                                label: Text(_cityChips[index]),
+                                deleteIcon: const Icon(
+                                  Icons.clear,
+                                  size: 16.0,
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).primaryColorLight,
+                                deleteIconColor: Theme.of(context).primaryColor,
+                                onDeleted: () {
+                                  setState(() {
+                                    _cityChips.removeAt(index);
+                                  });
+                                },
+                              )),
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(width: 3.0);
+                              },
+                            ),
+                          )
+                        : Container(),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text("Year",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 16.0)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: SizedBox(
+                          height: 32.0,
+                          child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (BuildContext context, int index) {
+                                return FilterChip(
+                                  label: Text(_years[index].toString()),
+                                  selected: _yearChips[index],
+                                  selectedColor: Theme.of(context).primaryColor,
+                                  checkmarkColor: Colors.white,
+                                  labelStyle: TextStyle(
+                                    color: _yearChips[index]
+                                        ? Colors.white
+                                        : Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.0,
+                                  ),
+                                  onSelected: (bool _newValue) {
+                                    setState(() {
+                                      _yearChips[index] = _newValue;
+                                    });
+                                  },
+                                );
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) {
+                                return const SizedBox(
+                                  width: 8.0,
+                                );
+                              },
+                              itemCount: _years.length)),
+                    ),
+                    const Divider(
+                      height: 30.0,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text("Semester",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 16.0)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: SizedBox(
                         height: 32.0,
-                        child: ListView.separated(
+                        child: ListView(
                           scrollDirection: Axis.horizontal,
-                          itemCount: _cityChips.length,
-                          itemBuilder: (context, index) => (Chip(
-                            label: Text(_cityChips[index]),
-                            deleteIcon: const Icon(
-                              Icons.clear,
-                              size: 16.0,
+                          children: [
+                            ChoiceChip(
+                                label: const Text("Any"),
+                                selected: _semesterChipsBool[0],
+                                selectedColor: Theme.of(context).primaryColor,
+                                labelStyle: TextStyle(
+                                  color: _semesterChipsBool[0]
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                ),
+                                onSelected: (bool _newValue) {
+                                  setState(() {
+                                    if (_newValue) {
+                                      _semesterChipsBool[0] = true;
+                                      _semesterChipsBool[1] = false;
+                                      _semesterChipsBool[2] = false;
+                                    }
+                                  });
+                                }),
+                            const SizedBox(
+                              width: 8.0,
                             ),
-                            backgroundColor: Theme.of(context).primaryColorLight,
-                            deleteIconColor: Theme.of(context).primaryColor,
-                            onDeleted: () {
-                              setState(() {
-                                _cityChips.removeAt(index);
-                              });
-                            },
-                          )),
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const SizedBox(width: 3.0);
-                          },
+                            ChoiceChip(
+                                label: const Text("Spring"),
+                                selected: _semesterChipsBool[1],
+                                selectedColor: Theme.of(context).primaryColor,
+                                labelStyle: TextStyle(
+                                  color: _semesterChipsBool[1]
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                ),
+                                onSelected: (bool _newValue) {
+                                  setState(() {
+                                    if (_newValue) {
+                                      _semesterChipsBool[0] = false;
+                                      _semesterChipsBool[1] = true;
+                                      _semesterChipsBool[2] = false;
+                                    }
+                                  });
+                                }),
+                            const SizedBox(
+                              width: 8.0,
+                            ),
+                            ChoiceChip(
+                                label: const Text("Autumn"),
+                                selected: _semesterChipsBool[2],
+                                selectedColor: Theme.of(context).primaryColor,
+                                labelStyle: TextStyle(
+                                  color: _semesterChipsBool[2]
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                ),
+                                onSelected: (bool _newValue) {
+                                  setState(() {
+                                    if (_newValue) {
+                                      _semesterChipsBool[0] = false;
+                                      _semesterChipsBool[1] = false;
+                                      _semesterChipsBool[2] = true;
+                                    }
+                                  });
+                                }),
+                          ],
                         ),
-                      )
-                    : Container(),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text("Year",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: SizedBox(
-                    height: 32.0,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                        itemBuilder: (BuildContext context, int index) {
-                          return FilterChip(
-                            label: Text(_years[index].toString()),
-                            selected: _yearChips[index],
-                            selectedColor: Theme.of(context).primaryColor,
-                            checkmarkColor: Colors.white,
-                            labelStyle: TextStyle(
-                              color: _yearChips[index]
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                            ),
-                            onSelected: (bool _newValue) {
-                              setState(() {
-                                _yearChips[index] = _newValue;
-                              });
-                            },
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const SizedBox(
-                            width: 8.0,
-                          );
-                        },
-                        itemCount: _years.length)
-                  ),
-                ),
-                const Divider(
-                  height: 30.0,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text("Semester",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: SizedBox(
-                    height: 32.0,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        ChoiceChip(
-                            label: const Text("Any"),
-                            selected: _semesterChipsBool[0],
-                            selectedColor: Theme.of(context).primaryColor,
-                            labelStyle: TextStyle(
-                              color: _semesterChipsBool[0]
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                            ),
-                            onSelected: (bool _newValue) {
-                              setState(() {
-                                if (_newValue) {
-                                  _semesterChipsBool[0] = true;
-                                  _semesterChipsBool[1] = false;
-                                  _semesterChipsBool[2] = false;
-                                }
-                              });
-                            }),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        ChoiceChip(
-                            label: const Text("Spring"),
-                            selected: _semesterChipsBool[1],
-                            selectedColor: Theme.of(context).primaryColor,
-                            labelStyle: TextStyle(
-                              color: _semesterChipsBool[1]
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                            ),
-                            onSelected: (bool _newValue) {
-                              setState(() {
-                                if (_newValue) {
-                                  _semesterChipsBool[0] = false;
-                                  _semesterChipsBool[1] = true;
-                                  _semesterChipsBool[2] = false;
-                                }
-                              });
-                            }),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        ChoiceChip(
-                            label: const Text("Autumn"),
-                            selected: _semesterChipsBool[2],
-                            selectedColor: Theme.of(context).primaryColor,
-                            labelStyle: TextStyle(
-                              color: _semesterChipsBool[2]
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                            ),
-                            onSelected: (bool _newValue) {
-                              setState(() {
-                                if (_newValue) {
-                                  _semesterChipsBool[0] = false;
-                                  _semesterChipsBool[1] = false;
-                                  _semesterChipsBool[2] = true;
-                                }
-                              });
-                            }),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-                const Divider(
-                  height: 30.0,
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                  child: Text("Apartment Type",
-                      style:
-                          TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0),
-                  child: SizedBox(
-                    height: 32.0,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        ChoiceChip(
-                            label: const Text("Any"),
-                            selected: _apartmentTypeChipsBool[0],
-                            selectedColor: Theme.of(context).primaryColor,
-                            labelStyle: TextStyle(
-                              color: _apartmentTypeChipsBool[0]
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                            ),
-                            onSelected: (bool _newValue) {
-                              setState(() {
-                                if (_newValue) {
-                                  _apartmentTypeChipsBool[0] = true;
-                                  _apartmentTypeChipsBool[1] = false;
-                                  _apartmentTypeChipsBool[2] = false;
-                                }
-                              });
-                            }),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        ChoiceChip(
-                            label: Text("Dorm"),
-                            selected: _apartmentTypeChipsBool[1],
-                            selectedColor: Theme.of(context).primaryColor,
-                            labelStyle: TextStyle(
-                              color: _apartmentTypeChipsBool[1]
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                            ),
-                            onSelected: (bool _newValue) {
-                              setState(() {
-                                if (_newValue) {
-                                  _apartmentTypeChipsBool[0] = false;
-                                  _apartmentTypeChipsBool[1] = true;
-                                  _apartmentTypeChipsBool[2] = false;
-                                }
-                              });
-                            }),
-                        const SizedBox(
-                          width: 8.0,
-                        ),
-                        ChoiceChip(
-                            label: Text("Apartment"),
-                            selected: _apartmentTypeChipsBool[2],
-                            selectedColor: Theme.of(context).primaryColor,
-                            labelStyle: TextStyle(
-                              color: _apartmentTypeChipsBool[2]
-                                  ? Colors.white
-                                  : Colors.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16.0,
-                            ),
-                            onSelected: (bool _newValue) {
-                              setState(() {
-                                if (_newValue) {
-                                  _apartmentTypeChipsBool[0] = false;
-                                  _apartmentTypeChipsBool[1] = false;
-                                  _apartmentTypeChipsBool[2] = true;
-                                }
-                              });
-                            }),
-                      ],
+                    const Divider(
+                      height: 30.0,
                     ),
-                  ),
-                )
-              ]),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text("Apartment Type",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 16.0)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: SizedBox(
+                        height: 32.0,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ChoiceChip(
+                                label: const Text("Any"),
+                                selected: _apartmentTypeChipsBool[0],
+                                selectedColor: Theme.of(context).primaryColor,
+                                labelStyle: TextStyle(
+                                  color: _apartmentTypeChipsBool[0]
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                ),
+                                onSelected: (bool _newValue) {
+                                  setState(() {
+                                    if (_newValue) {
+                                      _apartmentTypeChipsBool[0] = true;
+                                      _apartmentTypeChipsBool[1] = false;
+                                      _apartmentTypeChipsBool[2] = false;
+                                    }
+                                  });
+                                }),
+                            const SizedBox(
+                              width: 8.0,
+                            ),
+                            ChoiceChip(
+                                label: Text("Dorm"),
+                                selected: _apartmentTypeChipsBool[1],
+                                selectedColor: Theme.of(context).primaryColor,
+                                labelStyle: TextStyle(
+                                  color: _apartmentTypeChipsBool[1]
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                ),
+                                onSelected: (bool _newValue) {
+                                  setState(() {
+                                    if (_newValue) {
+                                      _apartmentTypeChipsBool[0] = false;
+                                      _apartmentTypeChipsBool[1] = true;
+                                      _apartmentTypeChipsBool[2] = false;
+                                    }
+                                  });
+                                }),
+                            const SizedBox(
+                              width: 8.0,
+                            ),
+                            ChoiceChip(
+                                label: Text("Apartment"),
+                                selected: _apartmentTypeChipsBool[2],
+                                selectedColor: Theme.of(context).primaryColor,
+                                labelStyle: TextStyle(
+                                  color: _apartmentTypeChipsBool[2]
+                                      ? Colors.white
+                                      : Colors.black,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16.0,
+                                ),
+                                onSelected: (bool _newValue) {
+                                  setState(() {
+                                    if (_newValue) {
+                                      _apartmentTypeChipsBool[0] = false;
+                                      _apartmentTypeChipsBool[1] = false;
+                                      _apartmentTypeChipsBool[2] = true;
+                                    }
+                                  });
+                                }),
+                          ],
+                        ),
+                      ),
+                    )
+                  ]),
             ),
           ],
         ),

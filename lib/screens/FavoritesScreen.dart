@@ -82,7 +82,8 @@ class FavoritesScreen extends StatelessWidget {
                       userID: userMap['userID'] ?? "not available",
                       semester: userMap['semester'] ?? "not available",
                       appartmentType:
-                          userMap['apartmentType'] ?? "not available"));
+                          userMap['apartmentType'] ?? "not available",
+                      year: userMap['year'] ?? "not available"));
                 }
               });
 

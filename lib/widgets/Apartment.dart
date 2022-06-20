@@ -16,6 +16,7 @@ class Apartment {
   late String userID;
   late List<dynamic> goingTo;
   late String appartmentType;
+  late String year;
 
   bool saved = false;
 
@@ -29,6 +30,7 @@ class Apartment {
     required this.userID,
     required this.semester,
     required this.appartmentType,
+    required this.year,
   });
 
   ApartmentCard getCard() {
@@ -42,6 +44,7 @@ class Apartment {
       goingTo: goingTo,
       semester: semester,
       appartmentType: appartmentType,
+      year: year,
     );
   }
 }
@@ -72,7 +75,8 @@ class ApartmentCard extends StatefulWidget {
       required this.savedFavorite,
       required this.goingTo,
       required this.semester,
-      required this.appartmentType})
+      required this.appartmentType,
+      required this.year})
       : super(key: key);
 
   final String apartmentImage;
@@ -84,6 +88,7 @@ class ApartmentCard extends StatefulWidget {
   final bool savedFavorite;
   final List<dynamic> goingTo;
   final String appartmentType;
+  final String year;
 
   @override
   State<ApartmentCard> createState() => _ApartmentCardState();

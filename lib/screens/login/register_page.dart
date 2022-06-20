@@ -21,7 +21,6 @@ class RegisterPageState extends State<RegisterPage> {
   static final passwordController = TextEditingController();
   static final confirmPasswordController = TextEditingController();
 
-
   @override
   void dispose() {
     emailController.dispose();
@@ -39,13 +38,12 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   bool passwordConfirmed() {
-    if (_passwordController.text.trim() ==
-        _confirmPasswordController.text.trim()) {
+    if (passwordController.text.trim() ==
+        confirmPasswordController.text.trim()) {
       return true;
     } else {
       return false;
     }
-
   }
 
   @override
