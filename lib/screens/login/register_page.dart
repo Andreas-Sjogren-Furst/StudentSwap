@@ -21,7 +21,6 @@ class RegisterPageState extends State<RegisterPage> {
   static final passwordController = TextEditingController();
   static final confirmPasswordController = TextEditingController();
 
-
   @override
   void dispose() {
     emailController.dispose();
@@ -35,6 +34,7 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future nextPage() async {
+<<<<<<< Updated upstream
     Navigator.pushNamed(context, RegisterPage2.routeName);
   }
 
@@ -42,10 +42,18 @@ class RegisterPageState extends State<RegisterPage> {
     if (_passwordController.text.trim() ==
         _confirmPasswordController.text.trim()) {
       return true;
+=======
+    if (passwordController.text.trim() ==
+        confirmPasswordController.text.trim()) {
+      Navigator.pushNamed(context, RegisterPage2.routeName);
+>>>>>>> Stashed changes
     } else {
       return false;
     }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
   }
 
   @override

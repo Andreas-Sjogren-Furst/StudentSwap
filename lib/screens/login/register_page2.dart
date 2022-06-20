@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:login_page/screens/TabsScreen.dart';
 import 'package:login_page/widgets/UserImagePicker.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
-
 import 'register_page.dart';
 
 class RegisterPage2 extends StatefulWidget {
