@@ -53,7 +53,7 @@ class FirebaseMethods {
 
   static String generateSha256Hash(String currentUserId, String counterUserId) {
     final String currentTime = DateTime.now().toString();
-    print("current time $currentTime");
+    // print("current time $currentTime");
 
     List<int> bytes = utf8.encode('$currentUserId + $counterUserId');
     String hash = sha256.convert(bytes).toString();
@@ -68,8 +68,8 @@ class FirebaseMethods {
     List<dynamic> currentUserChats = await currentUserDocument.data()["chats"];
     List<dynamic> counterUserChats = await counterUserDocument.data()["chats"];
 
-    print(
-        "currentUserChats $currentUserChats + counterUserChats $counterUserChats");
+    // print(
+    //     "currentUserChats $currentUserChats + counterUserChats $counterUserChats");
 
     if (!currentUserChats.contains(chatDoucmentName) ||
         !counterUserChats.contains(chatDoucmentName)) {
@@ -104,7 +104,7 @@ class FirebaseMethods {
         "chats": FieldValue.arrayUnion([chatDoucmentName])
       });
     } else {
-      print("chat already exsits");
+      // print("chat already exsits");
     }
   }
 

@@ -132,7 +132,7 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
                 Object? chatDocument = snapshot.data!.data();
                 chatDocument = chatDocument as Map<dynamic, dynamic>;
                 List<dynamic> userChatMaps = chatDocument["Messages"];
-                print(userChatMaps);
+                // print(userChatMaps);
 
                 userChatMaps.forEach((chatMap) {
                   chatMap.forEach((key, value) {
@@ -232,7 +232,7 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
                           .update({
                         "Messages": FieldValue.arrayUnion([chatMessage]),
                       });
-                      print(myController.text);
+                      // print(myController.text);
                       myController.clear();
                     },
                     child: Icon(

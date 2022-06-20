@@ -16,10 +16,8 @@ import 'dart:convert';
 
 class ApartmentScreen extends StatefulWidget {
   static const routeName = "/apartment-screen";
-  
-  
-  const ApartmentScreen({Key? key}) : super(key: key);
 
+  const ApartmentScreen({Key? key}) : super(key: key);
 
   @override
   State<ApartmentScreen> createState() => _ApartmentScreenState();
@@ -84,9 +82,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
           String lastName = userDocument['lastName'];
           List<dynamic> additionalImages = userDocument['additionalImages'];
 
-          print(firstName);
-          print(lastName);
-          print(additionalImages);
+          // print(firstName);
+          // print(lastName);
+          // print(additionalImages);
           var additionalPhotoRef = FirebaseStorage.instance
               .ref()
               .child("user_images")
