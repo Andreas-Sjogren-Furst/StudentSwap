@@ -12,6 +12,7 @@ import 'package:login_page/widgets/Apartment.dart';
 
 class SearchScreen extends StatefulWidget {
   static const routeName = "/search-screen";
+  
 
   const SearchScreen({Key? key}) : super(key: key);
 
@@ -20,6 +21,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+
+  late var currentUserName = 'Johnson';
   String userName = "loading...";
   String searchKey = ""; // En by i search.
   List<String> GoingToKey = []; // ønsker af byer man vil til.
@@ -32,7 +35,12 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   Stream streamQuery =
-      FirebaseFirestore.instance.collection("users").snapshots();
+       FirebaseFirestore.instance.collection("users").snapshots();
+       
+  getCurrentUser() {
+    return currentUserName;
+  }
+    
 
   getData(String uid) async {
     final FirestoreUserReference =
@@ -76,7 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
               var currentUserFavorties = [];
               List<Apartment> apartmentsLists = [];
-              String currentUserName = "lolcat";
+               currentUserName = "loading";
               String currentUserProfilePicture = "";
 
               for (var doc in snapshot.data!.docs) {
@@ -117,7 +125,9 @@ class _SearchScreenState extends State<SearchScreen> {
                       userID: userMap['userID'] ?? "not available",
                       semester: userMap['semester'] ?? "not available",
                       appartmentType:
-                          userMap['appartmentType'] ?? "not available"));
+                          userMap['appartmentType'] ?? "not available",
+                          currentUser: getCurrentUser(),
+                          ));
                 }
               }
               // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.

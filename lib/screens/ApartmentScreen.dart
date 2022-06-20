@@ -9,12 +9,15 @@ import 'package:login_page/widgets/Apartment.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'ProfileApartment.dart';
+import 'SearchScreen.dart';
 import 'dart:convert';
 
 class ApartmentScreen extends StatefulWidget {
   static const routeName = "/apartment-screen";
-
+  
+  
   const ApartmentScreen({Key? key}) : super(key: key);
+
 
   @override
   State<ApartmentScreen> createState() => _ApartmentScreenState();
@@ -40,6 +43,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
     String userID = args['userID'] ?? 'not available';
     bool savedFavorite = args['savedFavorite'] != null;
     List<dynamic> goingTo = args['goingTo'];
+    String currentUserName = args['currentUser'];
 
     //String listeAfDestinationer = goingTo.map((g) => g.toString()).toString();
 
@@ -154,6 +158,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                         onPressed: () {
                           FirebaseMethods.updateUserChats(
                               FirebaseMethods.userId, userID);
+                              print(currentUserName);
                         },
                       ),
                     ],
@@ -339,7 +344,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                       borderRadius: BorderRadius.circular(12),
                                       image: DecorationImage(
                                         image: NetworkImage(additionalImages[index]),
-                                        fit: BoxFit.fill,
+                                        fit: BoxFit.contain,
                                       )
                                 
                                     ),
