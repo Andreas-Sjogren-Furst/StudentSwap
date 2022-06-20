@@ -19,13 +19,14 @@ class StartScreen3 extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Color.fromARGB(255, 32, 40, 35),
+            Color.fromARGB(255, 23, 43, 65),
             Color.fromARGB(255, 26, 51, 76)
           ],
         ),
       ),
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(
+          iconTheme: const IconThemeData(
             color: Colors.white,
           ),
           backgroundColor: Colors.transparent,
@@ -34,33 +35,37 @@ class StartScreen3 extends StatelessWidget {
         backgroundColor: Colors.transparent,
         body: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                "Save time & hazzle",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold),
+              Column(
+                children: const [
+                  Text(
+                    "Save time & hazzle",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: "Poppins"
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    "Worry less about your accommodation, \nand focus on your studies",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: "Poppins"
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(
-                height: 20,
-              ),
-              Text(
-                "Worry less about your accomendation,",
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                "and focus on your studies",
-                style: TextStyle(color: Colors.white, fontSize: 15),
-              ),
-              SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 1,),
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
@@ -81,7 +86,7 @@ class StartScreen3 extends StatelessWidget {
                       ),
                       TextButton(
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.all(30.0),
+                          padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 40.0),
                           primary: Colors.white,
                           textStyle: const TextStyle(fontSize: 20),
                         ),
@@ -100,6 +105,7 @@ class StartScreen3 extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 1,)
             ],
           ),
         ),
