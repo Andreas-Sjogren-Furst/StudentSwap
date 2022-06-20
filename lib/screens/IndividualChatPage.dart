@@ -122,6 +122,12 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
                   .doc(widget.shaKey)
                   .snapshots(),
               builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
                 List<ChatMessage> messages = [];
                 Object? chatDocument = snapshot.data!.data();
                 chatDocument = chatDocument as Map<dynamic, dynamic>;
