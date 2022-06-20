@@ -34,26 +34,12 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future nextPage() async {
-<<<<<<< Updated upstream
-    Navigator.pushNamed(context, RegisterPage2.routeName);
-  }
-
-  bool passwordConfirmed() {
-    if (_passwordController.text.trim() ==
-        _confirmPasswordController.text.trim()) {
-      return true;
-=======
     if (passwordController.text.trim() ==
         confirmPasswordController.text.trim()) {
       Navigator.pushNamed(context, RegisterPage2.routeName);
->>>>>>> Stashed changes
     } else {
       return false;
     }
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
   }
 
   @override
