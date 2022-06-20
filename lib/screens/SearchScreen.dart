@@ -12,7 +12,6 @@ import 'package:login_page/widgets/Apartment.dart';
 
 class SearchScreen extends StatefulWidget {
   static const routeName = "/search-screen";
-  
 
   const SearchScreen({Key? key}) : super(key: key);
 
@@ -21,7 +20,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
   late var currentUserName = 'Johnson';
   String userName = "loading...";
   String searchKey = ""; // En by i search.
@@ -35,12 +34,11 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   Stream streamQuery =
-       FirebaseFirestore.instance.collection("users").snapshots();
+      FirebaseFirestore.instance.collection("users").snapshots();
 
   getCurrentUser() {
     return currentUserName;
   }
-    
 
   getData(String uid) async {
     final FirestoreUserReference =
@@ -84,7 +82,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
               var currentUserFavorties = [];
               List<Apartment> apartmentsLists = [];
-               currentUserName = "loading";
+              currentUserName = "loading";
               String currentUserProfilePicture = "";
 
               for (var doc in snapshot.data!.docs) {
@@ -94,7 +92,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
 
-                if (userMap["userID"] == FirebaseMethods.userId) {
+                if (userMap["userID"] == currentUserId) {
                   currentUserFavorties =
                       userMap["favorites"] ?? []; // Hent favoritter
                   currentUserName = userMap["firstName"] ?? "lolcat";
@@ -110,25 +108,24 @@ class _SearchScreenState extends State<SearchScreen> {
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
 
-                if (userMap["userID"] != FirebaseMethods.userId ||
+                if (userMap["userID"] != currentUserId ||
                     userMap["apartmentImage"] != null) {
                   apartmentsLists.add(Apartment(
-                      city: userMap['myCountry'] ?? "not available",
-                      address: userMap['myAddress'] ?? "not available",
-                      apartmentImage:
-                          userMap['apartmentImage'] ?? "not available",
-                      profileImage: userMap['profileImage'] ?? "not available",
-                      savedFavorite:
-                          (currentUserFavorties.contains(userMap["userID"]))
-                              ? true
-                              : false, // check om bruger har gemt denne bruger.
-                      goingTo: userMap["goingTo"] ?? ["test1", "test2"],
-                      userID: userMap['userID'] ?? "not available",
-                      semester: userMap['semester'] ?? "not available",
-                      appartmentType:
-                          userMap['appartmentType'] ?? "not available",
-                          currentUser: getCurrentUser(),
-                          ));
+                    city: userMap['myCountry'] ?? "not available",
+                    address: userMap['myAddress'] ?? "not available",
+                    apartmentImage:
+                        userMap['apartmentImage'] ?? "not available",
+                    profileImage: userMap['profileImage'] ?? "not available",
+                    savedFavorite:
+                        (currentUserFavorties.contains(userMap["userID"]))
+                            ? true
+                            : false, // check om bruger har gemt denne bruger.
+                    goingTo: userMap["goingTo"] ?? ["test1", "test2"],
+                    userID: userMap['userID'] ?? "not available",
+                    semester: userMap['semester'] ?? "not available",
+                    appartmentType: userMap['apartmentType'] ?? "not available",
+                    currentUser: getCurrentUser(),
+                  ));
                 }
               }
               // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.
@@ -155,6 +152,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           .map((apartmentType) => apartmentType.toLowerCase())
                           .toList()
                           .contains(apartment.appartmentType.toLowerCase()))
+                  .where((apartment) => apartment.userID != currentUserId)
                   .toList();
 
               // print("Apartsmentslist: ${apartmentsLists}");

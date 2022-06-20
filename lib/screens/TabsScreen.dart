@@ -3,7 +3,6 @@ import "./SearchScreen.dart";
 import 'FavoritesScreen.dart';
 import "ChatScreen.dart";
 import "ProfileScreen.dart";
-import "MatchScreen.dart";
 
 class TabScreen extends StatefulWidget {
   static const routeName = "/tabs-screen";
@@ -18,7 +17,6 @@ class _TabScreenState extends State<TabScreen> {
     {"page": FavoritesScreen(), "title": "Favorites"},
     {"page": ChatScreen(), "title": "Chat"},
     {"page": ProfileScreen(), "title": "Profile"},
-    {"page": MatchScreen(), "title": "Matches"},
   ];
 
   int _selectedPageIndex = 0;
@@ -51,8 +49,6 @@ class _TabScreenState extends State<TabScreen> {
               icon: Icon(Icons.favorite), label: "Favorites"),
           BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chat"),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.military_tech), label: "matches")
         ],
       ),
     );
