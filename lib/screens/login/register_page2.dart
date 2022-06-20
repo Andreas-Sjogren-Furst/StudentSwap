@@ -155,14 +155,6 @@ class _RegisterPageState2 extends State<RegisterPage2> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //Icon her sæt vores eget ind:
-                  // ImageIcon(
-                  //   AssetImage(
-                  //       "C:/Users/gusta/Documents/statistik/StudentSwap/assets/studentSwapLogo.png"),
-                  //   color: Colors.white,
-                  //   size: 190,
-                  // ),
-
                   Text("Join the StudentSwap family",
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -368,8 +360,9 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                             enabled: false,
                             child: StatefulBuilder(
                               builder: (context, menuSetState) {
-                                final _isSelected = goingTo.contains(item);
+                                var _isSelected = goingTo.contains(item);
                                 return InkWell(
+                                  //Check buttons to select destination
                                   onTap: () {
                                     _isSelected
                                         ? goingTo.remove(
@@ -406,9 +399,10 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                             ),
                           );
                         }).toList(),
-
                         value: goingTo.isEmpty ? null : goingTo.last,
-                        onChanged: (value) {},
+                        onChanged: (value) {
+                          setState(() {});
+                        },
                         buttonHeight: 62,
                         buttonWidth: 370,
                         itemHeight: 62,
