@@ -38,7 +38,11 @@ class RegisterPageState extends State<RegisterPage> {
         confirmPasswordController.text.trim()) {
       Navigator.pushNamed(context, RegisterPage2.routeName);
     } else {
-      return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please Enter The Password Correct'),
+        ),
+      );
     }
   }
 
