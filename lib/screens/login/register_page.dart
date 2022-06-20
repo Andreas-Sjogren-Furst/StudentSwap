@@ -21,6 +21,7 @@ class RegisterPageState extends State<RegisterPage> {
   static final passwordController = TextEditingController();
   static final confirmPasswordController = TextEditingController();
 
+
   @override
   void dispose() {
     emailController.dispose();
@@ -35,6 +36,16 @@ class RegisterPageState extends State<RegisterPage> {
 
   Future nextPage() async {
     Navigator.pushNamed(context, RegisterPage2.routeName);
+  }
+
+  bool passwordConfirmed() {
+    if (_passwordController.text.trim() ==
+        _confirmPasswordController.text.trim()) {
+      return true;
+    } else {
+      return false;
+    }
+
   }
 
   @override

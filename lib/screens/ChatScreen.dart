@@ -1,128 +1,120 @@
+import 'dart:collection';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../services/FirebaseMethods.dart';
+import "../widgets/chatwidget.dart";
+import "../widgets/chatsLine.dart";
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   static const routeName = "/chat-screen";
-  final user = FirebaseAuth.instance.currentUser;
-  final userId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
 
-  // Null check, null safety, aner ikke om det er korrekt. TODO: null check safety.
+class _ChatScreenState extends State<ChatScreen> {
+  final user = FirebaseAuth.instance.currentUser;
+  final userId = FirebaseAuth.instance.currentUser!.uid;
+  List<dynamic> currentUserChats = [];
+  late String currentUserName;
+
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-        children: [
-          // StreamBuilder(
-          //     stream: FirebaseFirestore.instance
-          //         .collection("chats/PPlVfldzdA0srBOjlgY2/messages")
-          //         .snapshots(),
-          //     builder: (context, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          //       if (streamSnapshot.connectionState == ConnectionState.waiting) {
-          //         return Center(
-          //           child: CircularProgressIndicator(),
-          //         );
-          //       }
-          //       if (streamSnapshot.hasData &&
-          //           streamSnapshot.data!.docs.length > 0) {
-          //         return ListView.builder(
-          //           itemCount: streamSnapshot.data!.docs.length,
-          //           itemBuilder: (context, index) {
-          //             return ListTile(
-          //               title: Text(streamSnapshot.data!.docs[index]["text"]),
-          //             );
-          //           },
-          //         );
-          //       } else {
-          //         return Center(child: Text("Currently no messages."));
-          //       }
-          //     }),
-          Text('Signed in as: ${user?.email}'),
-          // MaterialButton(
-          //   onPressed: () {
-          //     FirebaseAuth.instance.signOut();
-          //   },
-          //   color: Colors.deepOrange,
-          //   child: Text('Sign out'),
-          // ),
-          // MaterialButton(
-          //   onPressed: () async {
-          //     Future<Map<String, dynamic>> testmap =
-          //         await FirebaseMethods.getUserData();
-          //     print("button out: " + testmap.toString());
-          //   },
-          //   child: Text("Get current user"),
-          // ),
-          MaterialButton(
-            onPressed: () async {
-              var userDocument = await FirebaseMethods.getUserDocument(userId);
-              print(userDocument["username"]);
-            },
-            child: (Text("Get current user ")),
-          ),
-        ],
-      ),
+    return StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(FirebaseMethods.userId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.lightBlueAccent,
+              ),
+            );
+          }
 
-      // if (!streamSnapshot.hasData) {
-      //   return Center(
-      //     child: Text("Firestore Snapshot has not data"),
-      //   );
-      // }
+          // get the chatArray.
+          Object? userDocument = snapshot.data!.data();
+          userDocument = userDocument as Map<String, dynamic>;
+          List<dynamic> currentUserChats = userDocument["chats"];
+          currentUserName = userDocument["firstName"];
 
-      // if (streamSnapshot.hasError) {
-      //   return Center(
-      //     child: Text("Firestore Snapshot has an error"),
-      //   );
-      // }
+          return StreamBuilder(
+              stream:
+                  FirebaseFirestore.instance.collection("chats").snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> chatsSnapshot) {
+                if (!snapshot.hasData && chatsSnapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.lightBlueAccent,
+                    ),
+                  );
+                }
 
-      // if (streamSnapshot.data == null ||
-      //     streamSnapshot.data?.docs == null) {
-      //   return Center(
-      //     child: Text("Firestore snapshot is null"),
-      //   );
-      // } else {
-      //   return ListView.builder(
-      //     itemCount: streamSnapshot.data!.docs.length,
-      //     itemBuilder: (context, index) {
-      //       return ListTile(
-      //         title: Text(streamSnapshot.data?.docs[index]["text"]),
-      //       );
-      //     },
-      //   );
-      // }
+                List<ChatLineModel> chatUsers = [];
 
-      // if (streamSnapshot.data == null ||
-      //     streamSnapshot.data?.docs == null) {
-      //   return const Text("Snapshot.data is null..");
-      // }
+                for (var doc in chatsSnapshot.data!.docs) {
+                  Object? testmap = doc.data();
+                  LinkedHashMap<dynamic, dynamic> testlinked =
+                      testmap as LinkedHashMap<dynamic, dynamic>;
+                  Map<String, dynamic> chatMap =
+                      testlinked.map((a, b) => MapEntry(a, b));
+                  print("before if statement");
+                  if (currentUserChats.contains(chatMap["chatId"])) {
+                    if (chatMap["users"][0]["name"] == currentUserName) {
+                      print("andreas found");
+                      chatUsers.add(ChatLineModel(
+                        shaKey: chatMap["chatId"],
+                        name: chatMap["users"][1]["name"] ?? "name not found",
+                        messageText:
+                            chatMap["users"][1]["messageText"] ?? "no message",
+                        imageUrl: chatMap["users"][1]["imageUrl"] ?? "no image",
+                        time: chatMap["users"][1]["time"] ?? "unknown",
+                        currentUserName: currentUserName,
+                      ));
+                    } else {
+                      chatUsers.add(ChatLineModel(
+                        shaKey: chatMap["chatId"],
+                        name: chatMap["users"][0]["name"] ?? "name not found",
+                        messageText:
+                            chatMap["users"][0]["messageText"] ?? "no message",
+                        imageUrl: chatMap["users"][0]["imageUrl"] ?? "no image",
+                        time: chatMap["users"][0]["time"] ?? "unknown",
+                        currentUserName: currentUserName,
+                      ));
+                    }
 
-      // print("streamSnapshot.data.docs: ${streamSnapshot.data?.docs}");
-      // final documents = streamSnapshot.data?.docs;
-      // if (documents == null || documents.isEmpty) {
-      //   print("document is empty");
-      //   // return Center(
-      //   //   child: Text("No messages yet"),
-      //   // );
-      // }
-      // //else {
-      // //   return ListView.builder(
-      // //       itemCount: documents.length,
-      // //       itemBuilder: ((context, index) => Container(
-      // //           padding: EdgeInsets.all(8),
-      // //           child: Text(documents[index]["text"]))));
-      // // }
-      // return Text("lolcat returned");
+                    print("inside if statement $chatUsers");
+                  }
+                }
+                if (chatUsers.isEmpty) {
+                  return Center(
+                    child: Text(
+                        "No chats found. Go find some new friends at the Search Screen :)"),
+                  );
+                }
 
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () => (FirebaseFirestore.instance
-                  .collection("chats/PPlVfldzdA0srBOjlgY2/messages")
-                  .add({
-                "text": "Hello World",
-              }))),
-    );
+                return Column(
+                  children: [
+                    Expanded(
+                        child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: chatUsers.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return chatUsers[index].getChatsLine();
+                      },
+                    ))
+                  ],
+                );
+              });
+        });
   }
 }

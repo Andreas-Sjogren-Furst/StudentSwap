@@ -36,6 +36,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
 
   Country countries = Country();
 
+
   final List<String> gender = [
     'Male',
     'Female',
@@ -46,6 +47,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
   String? myCountry;
   List<dynamic> goingTo = [];
   String? Gender;
+
 
   // text controllers
   final _semesterController = TextEditingController();
@@ -476,7 +478,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                     ),
                   ),
 
-                  SizedBox(height: 10),
+                SizedBox(height: 10),
 
                   //Gender textfield
                   Padding(

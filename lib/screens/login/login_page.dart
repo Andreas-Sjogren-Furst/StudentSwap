@@ -3,6 +3,9 @@ import 'dart:ui';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:login_page/screens/TabsScreen.dart';
+import 'package:login_page/services/checkLogin.dart';
+import "../../services/checkLogin.dart";
 
 class LoginPage extends StatefulWidget {
   static final routeName = "/login-page";
@@ -22,6 +25,7 @@ class _LoginPageState extends State<LoginPage> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
+      Navigator.pushNamed(context, TabScreen.routeName);
     } catch (e) {
       Scaffold.of(context).showSnackBar(
         SnackBar(
