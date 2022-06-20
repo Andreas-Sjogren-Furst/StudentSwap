@@ -70,159 +70,163 @@ class _ProfileInfoState extends State<ProfileInfo> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(15),
-                child: InkWell(
-                  onTap: () {
-                    setState(() {
-                      showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return Wrap(
-                              children: [
-                                ListTile(
-                                  title: const Text("Take a photo"),
-                                  leading: Icon(
-                                    Icons.add_a_photo_rounded,
-                                    color: Theme.of(context).primaryColor,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Wrap(
+                                children: [
+                                  ListTile(
+                                    title: const Text("Take a photo"),
+                                    leading: Icon(
+                                      Icons.add_a_photo_rounded,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    onTap: () {
+                                      setState(() async {
+                                        Navigator.pop(context);
+                                        getImageFromDevice(
+                                            PhotoType.apartmentImage,
+                                            gallery: false,
+                                            mainRef: widget.mainPhotoRef);
+                                        getMainPhotoFromFirebase();
+                                      });
+                                    },
                                   ),
-                                  onTap: () {
-                                    setState(() async {
-                                      Navigator.pop(context);
-                                      getImageFromDevice(
-                                          PhotoType.apartmentImage,
-                                          gallery: false,
-                                          mainRef: widget.mainPhotoRef);
-                                      getMainPhotoFromFirebase();
-                                    });
-                                  },
-                                ),
-                                ListTile(
-                                  title: const Text("Add photo"),
-                                  leading: Icon(
-                                    Icons.folder_copy_rounded,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                  onTap: () {
-                                    setState(() async {
-                                      Navigator.pop(context);
-                                      await getImageFromDevice(
-                                          PhotoType.apartmentImage,
-                                          gallery: true,
-                                          mainRef: widget.mainPhotoRef);
-                                      getMainPhotoFromFirebase();
-                                    });
-                                  },
-                                )
-                              ],
-                            );
-                          });
-                    });
-                  },
-                  child: CircleAvatar(
-                    radius: 65,
-                    backgroundImage: NetworkImage(widget.mainPhotoPath),
+                                  ListTile(
+                                    title: const Text("Add photo"),
+                                    leading: Icon(
+                                      Icons.folder_copy_rounded,
+                                      color: Theme.of(context).primaryColor,
+                                    ),
+                                    onTap: () {
+                                      setState(() async {
+                                        Navigator.pop(context);
+                                        await getImageFromDevice(
+                                            PhotoType.apartmentImage,
+                                            gallery: true,
+                                            mainRef: widget.mainPhotoRef);
+                                        getMainPhotoFromFirebase();
+                                      });
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      });
+                    },
+                    child: CircleAvatar(
+                      radius: 65,
+                      backgroundImage: NetworkImage(widget.mainPhotoPath),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.all(15),
-              child: Text(
-                'Edit personal info',
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Poppins',
+              const Padding(
+                padding: EdgeInsets.all(15),
+                child: Text(
+                  'Edit personal info',
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Poppins',
+                  ),
                 ),
               ),
-            ),
-            Padding(
-                padding: const EdgeInsets.all(15),
-                child: TextFormField(
-                  readOnly: true,
-                  controller: firstName,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'First name',
-                  ),
-                )),
-            Padding(
-                padding: const EdgeInsets.all(15),
-                child: TextFormField(
-                  readOnly: true,
-                  controller: lastName,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Last name',
-                  ),
-                )),
-            Padding(
-                padding: const EdgeInsets.all(15),
-                child: TextFormField(
-                  controller: country,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Country',
-                  ),
-                  onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'myCountry', inputField);
-                  },
-                )),
-            Padding(
-                padding: const EdgeInsets.all(15),
-                child: TextFormField(
-                  controller: address,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Address',
-                  ),
-                  onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'myAddress', inputField);
-                  },
-                )),
-            Padding(
-                padding: const EdgeInsets.all(15),
-                child: TextFormField(
-                  controller: email,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'E-mail',
-                  ),
-                  onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'Email', inputField);
-                  },
-                )),
-            Padding(
-                padding: const EdgeInsets.all(15),
-                child: TextFormField(
-                  controller: gender,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Gender',
-                  ),
-                  onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'gender', inputField);
-                  },
-                )),
-            Padding(
-                padding: const EdgeInsets.all(15),
-                child: TextFormField(
-                  textAlignVertical: TextAlignVertical.top,
-                  maxLines: null,
-                  controller: description,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Description',
-                  ),
-                  onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'description', inputField);
-                  },
-                )),
-          ],
+              Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    readOnly: true,
+                    controller: firstName,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'First name',
+                    ),
+                  )),
+              Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    readOnly: true,
+                    controller: lastName,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Last name',
+                    ),
+                  )),
+              Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    controller: country,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Country',
+                    ),
+                    onFieldSubmitted: (String inputField) {
+                      writedata(userAuth, 'myCountry', inputField);
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    controller: address,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Address',
+                    ),
+                    onFieldSubmitted: (String inputField) {
+                      writedata(userAuth, 'myAddress', inputField);
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    controller: email,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'E-mail',
+                    ),
+                    onFieldSubmitted: (String inputField) {
+                      writedata(userAuth, 'Email', inputField);
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    controller: gender,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Gender',
+                    ),
+                    onFieldSubmitted: (String inputField) {
+                      writedata(userAuth, 'gender', inputField);
+                    },
+                  )),
+              Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: TextFormField(
+                    textAlignVertical: TextAlignVertical.top,
+                    maxLines: null,
+                    controller: description,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Description',
+                    ),
+                    onFieldSubmitted: (String inputField) {
+                      writedata(userAuth, 'description', inputField);
+                    },
+                  )),
+            ],
+          ),
         ),
       ),
     );
