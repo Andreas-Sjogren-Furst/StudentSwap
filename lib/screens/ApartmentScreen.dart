@@ -32,6 +32,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
   String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
+
+  // når man trykker på en widget (Apartment) på searchscreen, sørger nedenstående for at man kan tilgå informationen.
+
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -49,7 +52,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
     String currentUserName = args['currentUser'];
     String description = args['description'];
 
-    //String listeAfDestinationer = goingTo.map((g) => g.toString()).toString();
+    
+
+    // sletter det firkantede parenteser og sætter komma mellem elementer i listen
 
     String listeAfDestinationer(List<dynamic> value) {
       String output = '';
@@ -58,12 +63,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
       return output;
     }
 
-    // apartmentImage's kan hentes fra firebase?
-    // hvis ja kan man lave et array med alle apartment billederne.
-
-    // ovenstående liste skal på en eller anden måde initialiseres fra firebase.
-
-    // vi skal også bruge info om hvor vedkommende skal hen ogh kommer fra - VIGTIGT
+    // loader det samme som ovenstående kode, dog med mere funktionalitet. Da man ikke kan hente alt med ind fra den widget man trykker på
 
     return StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
@@ -83,19 +83,16 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
           Object? userDocument = snapshot.data!.data();
           userDocument = userDocument as Map<String, dynamic>;
 
+          // nedenstående er balndt andet det som ikke kan loades ved blot at trykke på en widget
+
           String firstName = userDocument['firstName'];
           String lastName = userDocument['lastName'];
           List<dynamic> additionalImages =
               userDocument['additionalImages'] ?? [];
 
-          // print(firstName);
-          // print(lastName);
-          // print(additionalImages);
-          var additionalPhotoRef = FirebaseStorage.instance
-              .ref()
-              .child("user_images")
-              .child(FirebaseAuth.instance.currentUser!.uid)
-              .child("additional_photos");
+
+
+          // Start på ApartmentScreen
 
           return Scaffold(
             extendBodyBehindAppBar: true,
@@ -111,6 +108,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
               Center(
                 child: Container(
                   child: CircleAvatar(
+
+                    // profilbilledet displayes her
+
                     backgroundImage: NetworkImage(profileImage),
                     radius: 52,
                   ),
@@ -120,6 +120,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                 height: 15,
               ),
               Center(
+
+                // Navn og efternavn her
+
                 child: Text(
                   '$firstName $lastName',
                   style: TextStyle(
@@ -132,6 +135,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                 height: 10,
               ),
               Center(
+
+                // Her laves en knap med gradient, som bruges til chat-funktionen
+
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Stack(
@@ -164,6 +170,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                         label: Text('Chat'),
                         icon: Icon(Icons.chat),
                         onPressed: () {
+
+                          // Her bliver en ny / gammel chat åbnet 
+
                           String _shaKey = FirebaseMethods.updateUserChats(
                               currentUserId, userID);
                           print("userids: $currentUserId + $userID");
@@ -219,6 +228,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
+
+                                    // viser valget af destinationer, brugeren har valgt at ville rejse til
+
                                     listeAfDestinationer(goingTo),
                                     style: TextStyle(
                                         color: Colors.black,
@@ -240,6 +252,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ),
+
+                                // Her bliver der vist hvor man som bruger kommer fra.
+
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
@@ -276,6 +291,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
+
+                                    // Her bliver der tilføjet en description
+
                                     "Description",
                                     style: TextStyle(
                                         fontFamily: 'Poppins',
@@ -285,7 +303,8 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                 ),
                                 Align(
                                   alignment: Alignment.topLeft,
-                                  child: Text(description,
+                                  child: Text(
+                                    description,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Poppins',
@@ -315,6 +334,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                   ),
                 ),
               ),
+
+              // Her bliver billederne lavet til et listview som kan vises ved at scrolle
+
               Expanded(
                 flex: 1,
                 child: ListView.builder(
@@ -331,6 +353,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: InkWell(
+
+                            // Her laves funktionen til at trykke på billeder så de kan ses i (lidt) større størrelse 
+
                             onTap: () async {
                               await showDialog(
                                 context: context,
