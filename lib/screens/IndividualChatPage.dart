@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import "../models/ChatMessageModel.dart";
 
 class IndividualChatpage extends StatefulWidget {
@@ -124,7 +125,17 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: SpinKitSquareCircle(
+                    color: Colors.pink,
+                    size: 80,
+                  ),
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                   );
                 }
 

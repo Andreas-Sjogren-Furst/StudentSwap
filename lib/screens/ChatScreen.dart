@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/FirebaseMethods.dart';
 import "../widgets/chatwidget.dart";
 import "../widgets/chatsLine.dart";
@@ -32,9 +33,10 @@ class _ChatScreenState extends State<ChatScreen> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.lightBlueAccent,
-              ),
+              child: SpinKitSquareCircle(
+                    color: Colors.pink,
+                    size: 80,
+                  ),
             );
           }
 

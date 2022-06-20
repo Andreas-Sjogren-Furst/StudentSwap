@@ -36,7 +36,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Stream streamQuery =
        FirebaseFirestore.instance.collection("users").snapshots();
-       
+
   getCurrentUser() {
     return currentUserName;
   }
@@ -75,8 +75,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
                 return Center(
-                  child: SpinKitFadingCube(
-                    color: Colors.blue,
+                  child: SpinKitSquareCircle(
+                    color: Colors.pink,
                     size: 80,
                   ),
                 );

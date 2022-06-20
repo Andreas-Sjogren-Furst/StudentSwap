@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:login_page/screens/ChatScreen.dart';
 import 'package:login_page/services/FirebaseMethods.dart';
 import 'package:login_page/widgets/Apartment.dart';
@@ -73,7 +74,10 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return Center(
-              child: CircularProgressIndicator(),
+              child: SpinKitSquareCircle(
+                    color: Colors.pink,
+                    size: 80,
+                  ),
             );
           }
 
