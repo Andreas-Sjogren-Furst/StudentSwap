@@ -35,18 +35,21 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future nextPage() async {
-    Navigator.pushNamed(context, RegisterPage2.routeName);
-  }
-
-  bool passwordConfirmed() {
-    if (_passwordController.text.trim() ==
-        _confirmPasswordController.text.trim()) {
-      return true;
+    if(passwordController == confirmPasswordController) {
+      Navigator.pushNamed(context, RegisterPage2.routeName);
     } else {
-      return false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please Enter The Password Correct'),
+        ),
+      );
     }
 
+
+    
   }
+
+ 
 
   @override
   Widget build(BuildContext context) {
