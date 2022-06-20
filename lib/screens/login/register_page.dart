@@ -21,9 +21,9 @@ class RegisterPageState extends State<RegisterPage> {
   static final passwordController = TextEditingController();
   static final confirmPasswordController = TextEditingController();
 
-
   @override
   void dispose() {
+    //holding it all clean
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -31,11 +31,14 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future goToLoginPage() async {
+    //if u wanna go back to the login page
     Navigator.pop(context);
   }
 
   Future nextPage() async {
-    if(passwordController == confirmPasswordController) {
+    //checking if password is correct and going to next register page if this is true
+    if (passwordController.text.trim() ==
+        confirmPasswordController.text.trim()) {
       Navigator.pushNamed(context, RegisterPage2.routeName);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -44,12 +47,7 @@ class RegisterPageState extends State<RegisterPage> {
         ),
       );
     }
-
-
-    
   }
-
- 
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +70,6 @@ class RegisterPageState extends State<RegisterPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //Icon her sæt vores eget ind:
-                  // ImageIcon(
-                  //   AssetImage(
-                  //       "C:/Users/gusta/Documents/statistik/StudentSwap/assets/studentSwapLogo.png"),
-                  //   color: Colors.white,
-                  //   size: 190,
-                  // ),
-
                   Text("Join the StudentSwap family",
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -107,7 +97,7 @@ class RegisterPageState extends State<RegisterPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                          emailController, //What the user put in the textfield
+                          emailController, //What the user puts in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -173,11 +163,11 @@ class RegisterPageState extends State<RegisterPage> {
                   ),
                   SizedBox(height: 10),
 
-                  //Nextnbutton button
+                  //Next button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: GestureDetector(
-                      onTap: nextPage,
+                      onTap: nextPage, //calling the method to switch page
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(

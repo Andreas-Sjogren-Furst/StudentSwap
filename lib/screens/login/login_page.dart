@@ -15,13 +15,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // text controllers
+  // text controllers for user input
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
   Future signIn() async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
+        //Check if user and password is correct
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
@@ -29,7 +30,8 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please Enter Valid Email and Password'),
+          content: Text(
+              'Please Enter Valid Email and Password'), //else catches and prints it isn't
         ),
       );
     }
@@ -37,6 +39,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void dispose() {
+    //To clean it up
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -96,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
                       controller:
-                          _emailController, //What the use put in the textfield
+                          _emailController, //What the user puts in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -120,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextField(
                       obscureText: true,
                       controller:
-                          _passwordController, //What the use put in the textfield
+                          _passwordController, //What the user puts in the textfield
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.white),
@@ -142,7 +145,8 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: GestureDetector(
-                      onTap: signIn,
+                      onTap:
+                          signIn, //method to switch page if the user is correct
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -177,7 +181,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.pushNamed(context, '/register-page');
+                          Navigator.pushNamed(context,
+                              '/register-page'); //on tap pushing to register page, so you can make an user
                         },
                         child: Text(
                           "Register now",

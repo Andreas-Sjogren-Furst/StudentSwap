@@ -6,8 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:login_page/screens/TabsScreen.dart';
 import 'package:login_page/widgets/UserImagePicker.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-
+import 'package:dropdown_button2/dropdown_button2.dart'; //The package from pub.dev
 import 'register_page.dart';
 
 class RegisterPage2 extends StatefulWidget {
@@ -34,7 +33,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
     'Fall - 2025',
   ];
 
-  Country countries = Country();
+  Country countries =
+      Country(); //calling all the countries from the other class
 
   final List<String> gender = [
     'Male',
@@ -60,10 +60,9 @@ class _RegisterPageState2 extends State<RegisterPage2> {
   File? get get_key_UserImagePicker_pickedImage =>
       key_UserImagePicker.currentState?.pickedImage;
 
-  // final _userImagePicker = new UserImagePicker();
-
   @override
   void dispose() {
+    //used to hold it clean
     _semesterController.dispose();
     _myCountryController.dispose();
     _destinationController.dispose();
@@ -75,6 +74,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
   } // To get the user UID . TODO: null check safety.
 
   Future signUp() async {
+    //method to signup with all the informations
     if (passwordConfirmed() != null) {
       authResult = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: RegisterPageState.emailController.text.trim(),
@@ -91,7 +91,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
         return;
       }
 
-      // Tilføj bruger til user collection i Firestore.
+      // Tilføj bruger til user collection i Firestore med billedet.
       final ref = FirebaseStorage.instance
           .ref()
           .child("user_images")
@@ -104,7 +104,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
 
       final String profilePictureUrl = await ref.getDownloadURL();
 
-      await FirebaseFirestore.instance
+      await FirebaseFirestore
+          .instance //tilføjer alle vores vairable til firebasen nedenfor af det useren har valgt
           .collection("users")
           .doc(authResult!.user!.uid)
           .set({
@@ -112,7 +113,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
         "userID": FirebaseAuth.instance.currentUser!.uid,
         "chats": [],
         "favorites": [],
-        "semester": Semester,
+        "semester": Semester!.split(' ')[0],
+        "year": Semester!.split(' ')[2],
         "profileImage": profilePictureUrl,
         "myCountry": myCountry,
         "goingTo": goingTo,
@@ -120,12 +122,17 @@ class _RegisterPageState2 extends State<RegisterPage2> {
         "myAddress": _myAddressController.text.trim(),
         "firstName": _firstName.text.trim(),
         "lastName": _lastName.text.trim(),
+        "description": "",
+        "additionalImages": [],
+        "apartmentType": "Dorm",
+        "description": "",
       });
       Navigator.pushNamed(context, TabScreen.routeName);
     }
   }
 
   bool passwordConfirmed() {
+    //checker hvis passwordconfirmed passer med password
     if (RegisterPageState.passwordController.text.trim() ==
         RegisterPageState.confirmPasswordController.text.trim()) {
       return true;
@@ -155,14 +162,6 @@ class _RegisterPageState2 extends State<RegisterPage2> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  //Icon her sæt vores eget ind:
-                  // ImageIcon(
-                  //   AssetImage(
-                  //       "C:/Users/gusta/Documents/statistik/StudentSwap/assets/studentSwapLogo.png"),
-                  //   color: Colors.white,
-                  //   size: 190,
-                  // ),
-
                   Text("Join the StudentSwap family",
                       style: TextStyle(
                         fontFamily: 'Poppins',
@@ -187,7 +186,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
 
                   SizedBox(height: 20),
 
-                  //Semester textfield
+                  //Semester textfield hvor den nye package er brugt til dropdown
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: DropdownButtonHideUnderline(
@@ -200,23 +199,24 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        items: semester
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
+                        items:
+                            semester //Sørger for den tager listen ind med alle valgmulighederne
+                                .map((item) => DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
                         value: Semester,
                         onChanged: (value) {
                           setState(() {
                             Semester = value as String;
                           });
-                        },
+                        }, //Opdaterer det der står i boxen ift. hvad man har valgt og når man ændrer sig valg
                         buttonHeight: 62,
                         buttonWidth: 370,
                         itemHeight: 62,
@@ -228,7 +228,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           ),
                           color: Colors.white,
                         ),
-                        searchController: _semesterController,
+                        searchController:
+                            _semesterController, //bliver brugt til søgningen
                         searchInnerWidget: Padding(
                           padding: const EdgeInsets.only(
                             top: 8,
@@ -245,7 +246,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                                 horizontal: 10,
                                 vertical: 8,
                               ),
-                              hintText: 'Search for Semester',
+                              hintText:
+                                  'Search for Semester', //boksen der kommer ned hvor man kan søge
                               hintStyle: const TextStyle(fontSize: 12),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -256,7 +258,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         searchMatchFn: (item, searchValue) {
                           return (item.value.toString().contains(searchValue));
                         },
-                        //This to clear the search value when you close the menu
+                        //Her sørger vi for at søge boksen bliver clearet når den bliver lukket
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
                             _semesterController.clear();
@@ -280,7 +282,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        items: countries.countries
+                        items: countries.countries //Listen med alle lande
                             .map((item) => DropdownMenuItem<String>(
                                   value: item,
                                   child: Text(
@@ -293,6 +295,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                             .toList(),
                         value: myCountry,
                         onChanged: (value) {
+                          //Opdaterer det der står i boxen ift. hvad man har valgt og når man ændrer sig valg
                           setState(() {
                             myCountry = value as String;
                           });
@@ -325,7 +328,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                                 horizontal: 10,
                                 vertical: 8,
                               ),
-                              hintText: 'Search for Country',
+                              hintText:
+                                  'Search for Country', //Søge efter et land
                               hintStyle: const TextStyle(fontSize: 12),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -336,7 +340,6 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         searchMatchFn: (item, searchValue) {
                           return (item.value.toString().contains(searchValue));
                         },
-                        //This to clear the search value when you close the menu
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
                             _myCountryController.clear();
@@ -364,19 +367,23 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         items: countries.countries.map((item) {
                           return DropdownMenuItem<String>(
                             value: item,
-                            //disable default onTap to avoid closing menu when selecting an item
+                            //Gør at man kan vælge flere items uden menuen lukker.
                             enabled: false,
                             child: StatefulBuilder(
                               builder: (context, menuSetState) {
-                                final _isSelected = goingTo.contains(item);
+                                var _isSelected = goingTo.contains(item);
                                 return InkWell(
+                                  //krydser af i knapperne InkWell laver knapperne
                                   onTap: () {
                                     _isSelected
-                                        ? goingTo.remove(item)
-                                        : goingTo.add(item);
-                                    //This rebuilds the StatefulWidget to update the button's text
-                                    setState(() {});
-                                    //This rebuilds the dropdownMenu Widget to update the check mark
+                                        ? goingTo.remove(
+                                            item) //Fjerner item fra liste
+                                        : goingTo
+                                            .add(item); //Tilføj item til list
+                                    //Opdaterer knappens text
+                                    setState(
+                                        () {}); //Problemer her hvis man ikke vælger i logisk rækkefølge kommer der fejl og den gider ikke vise
+                                    //Opdatere menuen der kommer ned
                                     menuSetState(() {});
                                   },
                                   child: Container(
@@ -404,8 +411,10 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                             ),
                           );
                         }).toList(),
-
-                        value: goingTo.isEmpty ? null : goingTo.last,
+                        value: goingTo.isEmpty
+                            ? null
+                            : goingTo
+                                .last, //Adder elementet tilsidst i listen, hvis listen er tom
                         onChanged: (value) {},
                         buttonHeight: 62,
                         buttonWidth: 370,
@@ -420,7 +429,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 16.0),
                                 child: Text(
-                                  goingTo.join(', '),
+                                  goingTo.join(
+                                      ', '), //laver komma mellem hvert element
                                   style: const TextStyle(
                                     fontSize: 14,
                                     overflow: TextOverflow.ellipsis,
@@ -455,7 +465,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                                 horizontal: 10,
                                 vertical: 8,
                               ),
-                              hintText: 'Search for Country',
+                              hintText:
+                                  'Search for Country', //Laver min søgefunktion igen
                               hintStyle: const TextStyle(fontSize: 12),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
@@ -466,7 +477,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                         searchMatchFn: (item, searchValue) {
                           return (item.value.toString().contains(searchValue));
                         },
-                        //This to clear the search value when you close the menu
+                        //Rydder menuen hvis man lukker den
                         onMenuStateChange: (isOpen) {
                           if (!isOpen) {
                             _myCountryController.clear();
@@ -491,19 +502,21 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                             color: Colors.grey[700],
                           ),
                         ),
-                        items: gender
-                            .map((item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
+                        items:
+                            gender //Valgmulighederne ligger i listen "gender"
+                                .map((item) => DropdownMenuItem<String>(
+                                      value: item,
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ))
+                                .toList(),
                         value: Gender,
                         onChanged: (value) {
+                          //Sørger for den bliver opdateret ud fra hvad useren vælger
                           setState(() {
                             Gender = value as String;
                           });
@@ -528,6 +541,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                             left: 8,
                           ),
                           child: TextFormField(
+                            //Søgningen i genders bliver lavet her
                             textCapitalization: TextCapitalization.sentences,
                             controller: _gender,
                             decoration: InputDecoration(
@@ -545,6 +559,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           ),
                         ),
                         searchMatchFn: (item, searchValue) {
+                          //til at rydde søgemenuen
                           return (item.value.toString().contains(searchValue));
                         },
                         onMenuStateChange: (isOpen) {
@@ -557,7 +572,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                   ),
                   SizedBox(height: 10),
 
-                  //FirstName
+                  //FirstName standard
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: TextField(
