@@ -82,7 +82,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
 
       if (get_key_UserImagePicker_pickedImage == null) {
         print('No image picked');
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('No image picked'),
           ),
@@ -112,7 +112,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
         "userID": FirebaseAuth.instance.currentUser!.uid,
         "chats": [],
         "favorites": [],
-        "semester": Semester,
+        "semester": Semester!.split(' ')[0],
+        "year": Semester!.split(' ')[2],
         "profileImage": profilePictureUrl,
         "myCountry": myCountry,
         "goingTo": goingTo,
@@ -121,6 +122,8 @@ class _RegisterPageState2 extends State<RegisterPage2> {
         "firstName": _firstName.text.trim(),
         "lastName": _lastName.text.trim(),
         "description": "",
+        "additionalImages": [],
+        "apartmentType": "Dorm",
       });
     }
   }
@@ -400,9 +403,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
                           );
                         }).toList(),
                         value: goingTo.isEmpty ? null : goingTo.last,
-                        onChanged: (value) {
-                          setState(() {});
-                        },
+                        onChanged: (value) {},
                         buttonHeight: 62,
                         buttonWidth: 370,
                         itemHeight: 62,

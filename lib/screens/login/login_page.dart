@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // text controllers
+  // text controllers for user input
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
