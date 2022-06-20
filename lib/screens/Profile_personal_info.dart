@@ -1,6 +1,11 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 Future<Map<String, dynamic>?> getdata(String documentId) async {
   var users = FirebaseFirestore.instance.collection('users');
@@ -14,12 +19,24 @@ void writedata(String documentId, String changeVar, String toVar) async {
 }
 
 class ProfileInfo extends StatefulWidget {
-  const ProfileInfo({Key? key}) : super(key: key);
+  String mainPhotoPath;
+  ProfileInfo({Key? key, this.mainPhotoPath = ""}) : super(key: key);
   @override
   State<ProfileInfo> createState() => _ProfileInfoState();
+  final mainPhotoRef = FirebaseStorage.instance
+      .ref()
+      .child("user_images")
+      .child(FirebaseAuth.instance.currentUser!.uid)
+      .child("profileImage.jpg");
 }
 
 class _ProfileInfoState extends State<ProfileInfo> {
+  getMainPhotoFromFirebase() {
+    getData(userAuth).then((userData) => setState(() {
+          widget.mainPhotoPath = userData?['profileImage'];
+        }));
+  }
+
   TextEditingController firstName = TextEditingController();
   TextEditingController lastName = TextEditingController();
   TextEditingController country = TextEditingController();
@@ -27,6 +44,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
   TextEditingController email = TextEditingController();
   TextEditingController gender = TextEditingController();
   TextEditingController profilePicture = TextEditingController();
+  TextEditingController description = TextEditingController();
   String profileImage =
       'https://firebasestorage.googleapis.com/v0/b/studentswap-fbf76.appspot.com/o/Blank_image.jpeg?alt=media&token=005320db-a0b7-48c8-b653-44285e7c079a';
   var userAuth = FirebaseAuth.instance.currentUser!.uid;
@@ -40,7 +58,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
           email.text = userData?['Email'];
           gender.text = userData?['gender'];
           profileImage = userData?['profileImage'];
-
+          description.text = userData?['description'];
         }));
   }
 
@@ -59,10 +77,57 @@ class _ProfileInfoState extends State<ProfileInfo> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(15),
-                child: CircleAvatar(
-                  radius: 65,
-                  backgroundImage: NetworkImage(profileImage),
-
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      showModalBottomSheet(
+                          context: context,
+                          builder: (context) {
+                            return Wrap(
+                              children: [
+                                ListTile(
+                                  title: const Text("Take a photo"),
+                                  leading: Icon(
+                                    Icons.add_a_photo_rounded,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  onTap: () {
+                                    setState(() async {
+                                      Navigator.pop(context);
+                                      getImageFromDevice(
+                                          PhotoType.apartmentImage,
+                                          gallery: false,
+                                          mainRef: widget.mainPhotoRef);
+                                      getMainPhotoFromFirebase();
+                                    });
+                                  },
+                                ),
+                                ListTile(
+                                  title: const Text("Add photo"),
+                                  leading: Icon(
+                                    Icons.folder_copy_rounded,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  onTap: () {
+                                    setState(() async {
+                                      Navigator.pop(context);
+                                      await getImageFromDevice(
+                                          PhotoType.apartmentImage,
+                                          gallery: true,
+                                          mainRef: widget.mainPhotoRef);
+                                      getMainPhotoFromFirebase();
+                                    });
+                                  },
+                                )
+                              ],
+                            );
+                          });
+                    });
+                  },
+                  child: CircleAvatar(
+                    radius: 65,
+                    backgroundImage: NetworkImage(profileImage),
+                  ),
                 ),
               ),
             ),
@@ -80,26 +145,22 @@ class _ProfileInfoState extends State<ProfileInfo> {
             Padding(
                 padding: const EdgeInsets.all(15),
                 child: TextFormField(
+                  readOnly: true,
                   controller: firstName,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'First name',
                   ),
-                  onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'firstName', inputField);
-                  },
                 )),
             Padding(
                 padding: const EdgeInsets.all(15),
                 child: TextFormField(
+                  readOnly: true,
                   controller: lastName,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Last name',
                   ),
-                  onFieldSubmitted: (String inputField) {
-                    writedata(userAuth, 'lastName', inputField);
-                  },
                 )),
             Padding(
                 padding: const EdgeInsets.all(15),
@@ -149,9 +210,111 @@ class _ProfileInfoState extends State<ProfileInfo> {
                     writedata(userAuth, 'gender', inputField);
                   },
                 )),
+            Padding(
+                padding: const EdgeInsets.all(15),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.top,
+                  maxLines: null,
+                  controller: description,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Description',
+                  ),
+                  onFieldSubmitted: (String inputField) {
+                    writedata(userAuth, 'description', inputField);
+                  },
+                )),
           ],
         ),
       ),
     );
   }
 }
+
+getImageFromDevice(PhotoType pt,
+    {required bool gallery,
+    Reference? mainRef,
+    Reference? additionalRef}) async {
+  var uuid = const Uuid();
+
+  XFile? pickedFile = await ImagePicker().pickImage(
+    source: gallery ? ImageSource.gallery : ImageSource.camera,
+    maxWidth: 1800,
+    maxHeight: 1800,
+  );
+  if (pickedFile != null) {
+    File imageFile = File(pickedFile.path);
+
+    if (pt.name.toString() == "apartmentImage") {
+      await mainRef!.putFile(imageFile).whenComplete(() => null);
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({"apartmentImage": await mainRef.getDownloadURL()});
+    } else {
+      String id = uuid.v1();
+      await additionalRef!
+          .child(id)
+          .putFile(imageFile)
+          .whenComplete(() => null);
+
+      await FirebaseFirestore.instance
+          .collection("users")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
+        "additionalImages": FieldValue.arrayUnion(
+            [await additionalRef.child(id).getDownloadURL()])
+      });
+    }
+  }
+}
+
+// Removes photo from Firebase Storage and Firestore
+removePhoto(String urlPath, Reference ref, PhotoType pt) async {
+  var temp = urlPath.split("%2F");
+  var pathStrings = temp[3].split("?");
+  var path = pathStrings[0];
+
+  final docRef = FirebaseFirestore.instance
+      .collection("users")
+      .doc(FirebaseAuth.instance.currentUser!.uid);
+  Map<String, dynamic> updates = {};
+
+  switch (pt) {
+    case PhotoType.apartmentImage:
+    // Doesn't work.
+    /*updates = <String, dynamic>{
+        "apartmentImage": FieldValue.delete(),
+      };
+      await ref.delete();
+      break;*/
+
+    case PhotoType.addtionalImages:
+      updates = <String, dynamic>{
+        "additionalImages": FieldValue.arrayRemove([urlPath]),
+      };
+      await ref.child(path).delete();
+      break;
+  }
+
+  docRef.update(updates);
+}
+
+// Function to get the user's photos
+Future<Map<String, dynamic>?> getData(String documentId) async {
+  var users = FirebaseFirestore.instance.collection('users');
+  var userId = await users.doc(documentId).get();
+  return userId.data();
+}
+
+/* Enums */
+
+// Identifies which photo type to use
+enum PhotoType {
+  apartmentImage,
+  addtionalImages,
+}
+
+// Identifies which input to use
+enum PhotoInput { camera, gallery }

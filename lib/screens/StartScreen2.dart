@@ -12,16 +12,16 @@ class StartScreen2 extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     // TODO: implement build
     return Container(
-       decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Color.fromARGB(255, 32, 40, 35),
-              Color.fromARGB(255, 26, 51, 76)
-            ],
-          ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(255, 32, 40, 35),
+            Color.fromARGB(255, 26, 51, 76)
+          ],
         ),
+      ),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
@@ -37,7 +37,15 @@ class StartScreen2 extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Swap your home with",
+                "Swap your home",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 1),
+              Text(
+                "with",
                 style: TextStyle(
                     color: Colors.white,
                     fontSize: 40,
