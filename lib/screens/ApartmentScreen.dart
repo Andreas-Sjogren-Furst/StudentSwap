@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:login_page/screens/ChatScreen.dart';
 import 'package:login_page/services/FirebaseMethods.dart';
 import 'package:login_page/widgets/Apartment.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'IndividualChatPage.dart';
 import 'ProfileApartment.dart';
 import 'dart:convert';
 
@@ -24,6 +26,8 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
   String oneOrMore(List<dynamic> destinationer) {
     return destinationer.length > 1 ? 'Destinations' : 'Destination';
   }
+
+  String currentUserId = FirebaseAuth.instance.currentUser!.uid;
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +156,17 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                         label: Text('Chat'),
                         icon: Icon(Icons.chat),
                         onPressed: () {
-                          FirebaseMethods.updateUserChats(
-                              FirebaseMethods.userId, userID);
+                          String _shaKey = FirebaseMethods.updateUserChats(
+                              currentUserId, userID);
+                          print("userids: $currentUserId + $userID");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => (IndividualChatpage(
+                                        shaKey: _shaKey,
+                                        counterUserName: firstName,
+                                        currentUserName: "currentUserName",
+                                      ))));
                         },
                       ),
                     ],
@@ -330,35 +343,25 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                 context: context,
                                 builder: (_) => Dialog(
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12)
-                                  ),
+                                      borderRadius: BorderRadius.circular(12)),
                                   child: Container(
-                                    height: screenHeight*0.7,
-                                    width: screenWidth*0.7,
+                                    height: screenHeight * 0.7,
+                                    width: screenWidth * 0.7,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(12),
-                                      image: DecorationImage(
-                                        image: NetworkImage(additionalImages[index]),
-                                        fit: BoxFit.fill,
-                                      )
-                                
-                                    ),
-                                    
+                                        borderRadius: BorderRadius.circular(12),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              additionalImages[index]),
+                                          fit: BoxFit.fill,
+                                        )),
                                   ),
-                                ),   
+                                ),
                               );
-                            
-                                
-                                
 
-                               
-                                
-                              
                               setState(() {
                                 // Used for updating user-actions
                               });
                             },
-                          
                             child: Image(
                               image: NetworkImage(additionalImages[index]),
                               fit: BoxFit.contain,
