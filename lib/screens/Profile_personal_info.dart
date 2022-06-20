@@ -45,8 +45,6 @@ class _ProfileInfoState extends State<ProfileInfo> {
   TextEditingController gender = TextEditingController();
   TextEditingController profilePicture = TextEditingController();
   TextEditingController description = TextEditingController();
-  String profileImage =
-      'https://firebasestorage.googleapis.com/v0/b/studentswap-fbf76.appspot.com/o/Blank_image.jpeg?alt=media&token=005320db-a0b7-48c8-b653-44285e7c079a';
   var userAuth = FirebaseAuth.instance.currentUser!.uid;
 
   _ProfileInfoState() {
@@ -57,9 +55,16 @@ class _ProfileInfoState extends State<ProfileInfo> {
           address.text = userData?['myAddress'];
           email.text = userData?['Email'];
           gender.text = userData?['gender'];
-          profileImage = userData?['profileImage'];
+          widget.mainPhotoPath = userData?['profileImage'];
           description.text = userData?['description'];
         }));
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getMainPhotoFromFirebase();
   }
 
   @override
@@ -126,7 +131,7 @@ class _ProfileInfoState extends State<ProfileInfo> {
                   },
                   child: CircleAvatar(
                     radius: 65,
-                    backgroundImage: NetworkImage(profileImage),
+                    backgroundImage: NetworkImage(widget.mainPhotoPath),
                   ),
                 ),
               ),
@@ -251,7 +256,7 @@ getImageFromDevice(PhotoType pt,
       await FirebaseFirestore.instance
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({"apartmentImage": await mainRef.getDownloadURL()});
+          .update({"profileImage": await mainRef.getDownloadURL()});
     } else {
       String id = uuid.v1();
       await additionalRef!
