@@ -111,6 +111,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 if (userMap["userID"] != currentUserId ||
                     userMap["apartmentImage"] != null) {
                   apartmentsLists.add(Apartment(
+                    description: userMap['description'],
                     city: userMap['myCountry'] ?? "not available",
                     address: userMap['myAddress'] ?? "not available",
                     apartmentImage:
@@ -123,7 +124,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     goingTo: userMap["goingTo"] ?? ["test1", "test2"],
                     userID: userMap['userID'] ?? "not available",
                     semester: userMap['semester'] ?? "not available",
-                    appartmentType: userMap['apartmentType'] ?? "not available",
+                    appartmentType:
+                        userMap['appartmentType'] ?? "not available",
                     currentUser: getCurrentUser(),
                   ));
                 }
