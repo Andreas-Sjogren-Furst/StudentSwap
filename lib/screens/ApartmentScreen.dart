@@ -85,6 +85,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
           String firstName = userDocument['firstName'];
           String lastName = userDocument['lastName'];
           List<dynamic> additionalImages = userDocument['additionalImages'];
+          String description = userDocument['description'];
 
           // print(firstName);
           // print(lastName);
@@ -284,8 +285,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                 ),
                                 Align(
                                   alignment: Alignment.topLeft,
-                                  child: Text(
-                                    "Jeg hedder johnson og er fra nor available, jeg er sød og imødekommende og lugter en smule af ost. Jeg træner meget og holder meget af fodbold samt cykling",
+                                  child: Text(description,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontFamily: 'Poppins',

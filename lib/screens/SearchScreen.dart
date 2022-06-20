@@ -113,6 +113,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 if (userMap["userID"] != FirebaseMethods.userId ||
                     userMap["apartmentImage"] != null) {
                   apartmentsLists.add(Apartment(
+                    description: userMap['description'],
                       city: userMap['myCountry'] ?? "not available",
                       address: userMap['myAddress'] ?? "not available",
                       apartmentImage:

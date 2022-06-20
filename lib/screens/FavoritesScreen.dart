@@ -69,6 +69,7 @@ class FavoritesScreen extends StatelessWidget {
                     testlinked.map((a, b) => MapEntry(a, b));
                 if (favoriteUser.contains(userMap['userID'])) {
                   apartmentsLists.add(Apartment(
+                    description: userMap['description'],
                       city: userMap['myCountry'] ?? "not available",
                       address: userMap['myAdress'] ?? "not available",
                       apartmentImage:
