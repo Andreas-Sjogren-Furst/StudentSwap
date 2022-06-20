@@ -57,6 +57,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   );
                 }
 
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text("No chats"),
+                  );
+                }
+
                 List<ChatLineModel> chatUsers = [];
 
                 for (var doc in chatsSnapshot.data!.docs) {
