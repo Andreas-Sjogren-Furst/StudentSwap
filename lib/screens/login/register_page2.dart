@@ -85,7 +85,7 @@ class _RegisterPageState2 extends State<RegisterPage2> {
 
       if (get_key_UserImagePicker_pickedImage == null) {
         print('No image picked');
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('No image picked'),
           ),
