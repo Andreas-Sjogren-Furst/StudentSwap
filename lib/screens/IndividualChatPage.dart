@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import "../models/ChatMessageModel.dart";
 
 class IndividualChatpage extends StatefulWidget {
@@ -122,11 +123,27 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
                   .doc(widget.shaKey)
                   .snapshots(),
               builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: SpinKitSquareCircle(
+                    color: Colors.pink,
+                    size: 80,
+                  ),
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                  );
+                }
+
                 List<ChatMessage> messages = [];
                 Object? chatDocument = snapshot.data!.data();
                 chatDocument = chatDocument as Map<dynamic, dynamic>;
                 List<dynamic> userChatMaps = chatDocument["Messages"];
-                print(userChatMaps);
+                // print(userChatMaps);
 
                 userChatMaps.forEach((chatMap) {
                   chatMap.forEach((key, value) {
@@ -226,7 +243,7 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
                           .update({
                         "Messages": FieldValue.arrayUnion([chatMessage]),
                       });
-                      print(myController.text);
+                      // print(myController.text);
                       myController.clear();
                     },
                     child: Icon(

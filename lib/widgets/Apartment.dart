@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:login_page/screens/ApartmentScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login_page/screens/SearchScreen.dart';
 
 class Apartment {
   late String city;
@@ -16,6 +17,7 @@ class Apartment {
   late String userID;
   late List<dynamic> goingTo;
   late String appartmentType;
+  late String currentUser;
 
   bool saved = false;
 
@@ -29,6 +31,7 @@ class Apartment {
     required this.userID,
     required this.semester,
     required this.appartmentType,
+    required this.currentUser
   });
 
   ApartmentCard getCard() {
@@ -42,6 +45,7 @@ class Apartment {
       goingTo: goingTo,
       semester: semester,
       appartmentType: appartmentType,
+      currentUser: currentUser,
     );
   }
 }
@@ -72,7 +76,8 @@ class ApartmentCard extends StatefulWidget {
       required this.savedFavorite,
       required this.goingTo,
       required this.semester,
-      required this.appartmentType})
+      required this.appartmentType,
+      required this.currentUser})
       : super(key: key);
 
   final String apartmentImage;
@@ -84,6 +89,7 @@ class ApartmentCard extends StatefulWidget {
   final bool savedFavorite;
   final List<dynamic> goingTo;
   final String appartmentType;
+  final String currentUser;
 
   @override
   State<ApartmentCard> createState() => _ApartmentCardState();
@@ -114,6 +120,7 @@ class _ApartmentCardState extends State<ApartmentCard> {
               'savedFavorite': widget.savedFavorite,
               'goingTo': widget.goingTo,
               "semester": widget.semester,
+              'currentUser': widget.currentUser
             });
       },
       child: Card(

@@ -44,6 +44,7 @@ dependencies:
   flutter_spinkit: ^5.1.0
   dropdown_search: ^5.0.2
   uuid: ^3.0.6
+  dcdg: ^4.0.1
 
 dev_dependencies:
   flutter_test:

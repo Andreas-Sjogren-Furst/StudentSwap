@@ -1,11 +1,18 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:login_page/screens/ChatScreen.dart';
 import 'package:login_page/services/FirebaseMethods.dart';
 import 'package:login_page/widgets/Apartment.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'IndividualChatPage.dart';
+import 'ProfileApartment.dart';
+import 'SearchScreen.dart';
 import 'dart:convert';
 
 class ApartmentScreen extends StatefulWidget {
@@ -22,6 +29,8 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
     return destinationer.length > 1 ? 'Destinations' : 'Destination';
   }
 
+  String currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -37,6 +46,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
     String userID = args['userID'] ?? 'not available';
     bool savedFavorite = args['savedFavorite'] != null;
     List<dynamic> goingTo = args['goingTo'];
+    String currentUserName = args['currentUser'];
 
     //String listeAfDestinationer = goingTo.map((g) => g.toString()).toString();
 
@@ -50,366 +60,314 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
     // apartmentImage's kan hentes fra firebase?
     // hvis ja kan man lave et array med alle apartment billederne.
 
-    var lejlighedsPics = [
-      'assets/sample/apartment1.jpg',
-      'assets/sample/apartment2.jpg',
-      'assets/sample/apartment1.jpg',
-      'assets/sample/apartment2.jpg'
-    ];
-
     // ovenstående liste skal på en eller anden måde initialiseres fra firebase.
 
     // vi skal også bruge info om hvor vedkommende skal hen ogh kommer fra - VIGTIGT
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        elevation: 0,
-      ),
-      body: Column(children: [
-        SizedBox(
-          height: 45,
-        ),
-        Center(
-          child: Container(
-            child: CircleAvatar(
-              backgroundImage: AssetImage('assets/sample/$profileImage.jpg'),
-              radius: 52,
+    return StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(userID)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(
+              child: SpinKitSquareCircle(
+                    color: Colors.pink,
+                    size: 80,
+                  ),
+            );
+          }
+
+          Object? userDocument = snapshot.data!.data();
+          userDocument = userDocument as Map<String, dynamic>;
+
+          String firstName = userDocument['firstName'];
+          String lastName = userDocument['lastName'];
+          List<dynamic> additionalImages = userDocument['additionalImages'];
+
+          // print(firstName);
+          // print(lastName);
+          // print(additionalImages);
+          var additionalPhotoRef = FirebaseStorage.instance
+              .ref()
+              .child("user_images")
+              .child(FirebaseAuth.instance.currentUser!.uid)
+              .child("additional_photos");
+
+          return Scaffold(
+            extendBodyBehindAppBar: true,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.black,
+              elevation: 0,
             ),
-          ),
-        ),
-        SizedBox(
-          height: 15,
-        ),
-        Center(
-          child: Text(
-            "$userID",
-            style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 20,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Center(
-          child: Text(
-            "$address, $city",
-            style: TextStyle(
-                fontFamily: 'Poppins', fontSize: 12, color: Colors.grey),
-          ),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            MaterialButton(
-              shape: const CircleBorder(),
-              color: Colors.blue,
-              padding: const EdgeInsets.all(20),
-              onPressed: () {
-                FirebaseMethods.updateUserChats(FirebaseMethods.userId, userID);
-              },
-              child: const Icon(
-                Icons.email,
-                size: 30,
-                color: Colors.white,
+            body: Column(children: [
+              SizedBox(
+                height: 45,
               ),
-            ),
-            MaterialButton(
-              shape: const CircleBorder(),
-              color: Colors.blue,
-              padding: const EdgeInsets.all(20),
-              onPressed: () {},
-              child: const Icon(
-                Icons.favorite,
-                size: 30,
-                color: Colors.white,
+              Center(
+                child: Container(
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(profileImage),
+                    radius: 52,
+                  ),
+                ),
               ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(19, 8, 8, 8),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Text(
-              "Information",
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
+              SizedBox(
+                height: 15,
               ),
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-              width: screenWidth - 38,
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.all(Radius.circular(10))),
-              child: Container(
-                  child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(children: [
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      alignment: Alignment.topLeft,
-                      height: screenHeight / 5,
-                      width: 20,
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "From",
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
+              Center(
+                child: Text(
+                  '$firstName $lastName',
+                  style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned.fill(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: <Color>[
+                                Color(0xFF0D47A1),
+                                Color(0xFF1976D2),
+                                Color(0xFF42A5F5),
+                              ],
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              '$city blabla blabla bla bla',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12),
-                            ),
-                          )
-                        ],
+                        ),
                       ),
-                    ),
+                      TextButton.icon(
+                        style: TextButton.styleFrom(
+                            padding: EdgeInsets.fromLTRB(
+                                screenWidth / 30,
+                                screenHeight / 40,
+                                screenWidth / 30,
+                                screenHeight / 40),
+                            primary: Colors.white,
+                            textStyle: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold)),
+                        label: Text('Chat'),
+                        icon: Icon(Icons.chat),
+                        onPressed: () {
+                          String _shaKey = FirebaseMethods.updateUserChats(
+                              currentUserId, userID);
+                          print("userids: $currentUserId + $userID");
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => (IndividualChatpage(
+                                        shaKey: _shaKey,
+                                        counterUserName: firstName,
+                                        currentUserName: currentUserName,
+                                      ))));
+                        },
+                      ),
+                    ],
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      height: screenHeight / 5,
-                      width: 20,
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Description",
-                              style: TextStyle(
-                                  fontFamily: 'Poppins',
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              
+              Expanded(
+                flex: 1,
+                child: Container(
+                    child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                  child: Row(children: [
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 244, 244, 244),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          alignment: Alignment.topLeft,
+                          height: screenHeight / 5,
+                          width: 20,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    oneOrMore(goingTo),
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    listeAfDestinationer(goingTo),
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Poppins',
+                                        fontSize: 12),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    'From',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Poppins',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    '$city',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'Poppins',
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Jeg hedder johnson og er fra nor available, jeg er sød og imødekommende og lugter en smule af ost. Jeg træner meget og holder meget af fodbold samt cykling",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'Poppins',
-                                  fontSize: 12),
-                            ),
-                          )
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ]),
-              ))),
-        ),
-        Align(
-          alignment: Alignment.topLeft,
-          child: Padding(
-            padding: EdgeInsets.fromLTRB(19, 8, 8, 8),
-            child: Text(
-              "Pictures",
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-        Expanded(
-          flex: 1,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const ClampingScrollPhysics(),
-            itemCount: lejlighedsPics.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
-                child: Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: InkWell(
-                      child: Image(
-                        image: AssetImage(lejlighedsPics[index]),
-                        fit: BoxFit.contain,
+                    Expanded(
+                      flex: 2,
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 244, 244, 244),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10))),
+                          alignment: Alignment.topCenter,
+                          height: screenHeight / 5,
+                          width: 20,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Description",
+                                    style: TextStyle(
+                                        fontFamily: 'Poppins',
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Jeg hedder johnson og er fra nor available, jeg er sød og imødekommende og lugter en smule af ost. Jeg træner meget og holder meget af fodbold samt cykling",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'Poppins',
+                                        fontSize: 12),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
+                    ),
+                  ]),
+                )),
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(19, 0, 8, 8),
+                  child: Text(
+                    "Pictures",
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
                     ),
                   ),
                 ),
-              );
-            },
-          ),
-        )
-      ]),
-    );
+              ),
+              Expanded(
+                flex: 1,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: additionalImages.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: InkWell(
+                            onTap: () async {
+                              await showDialog(
+                                context: context,
+                                builder: (_) => Dialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12)),
+                                  child: Container(
+                                    height: screenHeight * 0.7,
+                                    width: screenWidth * 0.7,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              additionalImages[index]),
+                                          fit: BoxFit.fill,
+                                        )),
+                                  ),
+                                ),
+                              );
 
-    // Scaffold(
-    //   appBar: AppBar(
-    //     title: Text('$address, $city'),
-    //   ),
-    //   body: Container(
-    //       child: Column(
-    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: [
-    //       Row(
-    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //         children: [
-    //           MaterialButton(
-    //             shape: const CircleBorder(),
-    //             color: Colors.blue,
-    //             padding: const EdgeInsets.all(20),
-    //             onPressed: () {},
-    //             child: const Icon(
-    //               Icons.email,
-    //               size: 50,
-    //               color: Colors.white,
-    //             ),
-    //           ),
-    //           Padding(
-    //             padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-    //             child: Align(
-    //               alignment: Alignment.topCenter,
-    //               child: CircleAvatar(
-    //                 backgroundImage:
-    //                     AssetImage('assets/sample/$profileImage.jpg'),
-    //                 radius: 100,
-    //               ),
-    //             ),
-    //           ),
-    //           MaterialButton(
-    //             shape: const CircleBorder(),
-    //             color: Colors.blue,
-    //             padding: const EdgeInsets.all(20),
-    //             onPressed: () {},
-    //             child: const Icon(
-    //               Icons.favorite,
-    //               size: 50,
-    //               color: Colors.white,
-    //             ),
-    //           ),
-    //         ],
-    //       ),
-    //       SizedBox(
-    //         height: 10,
-    //       ),
-    //       // ignore: prefer_const_constructors
-    //       Text(
-    //         "$userID", // tilføj et brugernavn/rigtigt navn/userID?
-    //         style: TextStyle(
-    //             color: Colors.black, fontSize: 30.0, fontFamily: "Poppins"),
-    //       ),
-
-    //       Container(
-    //         width: 300,
-    //         height: 50,
-    //        child: Text("aaaaaaaaaadlæk apfnvouhnrpcuhgpoi wuåotignqpexirmghpehqpsiuh,dcfoxisaheiruzg,vmpixueqrhmgxpis,uhepogicfhmaepmxohrbpiuhergpcohmxaprieughmzp,aehrxvpiuqehr,iuqhe,"
-
-    //        )
-
-    //       ),
-
-    //       Divider(
-    //         indent: 30,
-    //         endIndent: 30,
-    //         color: Colors.grey,
-    //         thickness: 2,
-    //       ),
-
-    //       Padding(
-    //         padding: const EdgeInsets.fromLTRB(30, 20, 30, 20),
-    //         child: Container(
-    //           child: Align(
-    //             alignment: Alignment.topLeft,
-    //             child: Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //               children: [
-    //                 Column(
-    //                   children: [
-    //                     Text(
-    //                       "From",
-    //                       style: TextStyle(
-    //                         fontSize: 30,
-    //                         fontFamily: 'Poppins',
-    //                       ),
-    //                     ),
-    //                     Text(city)
-    //                   ],
-    //                 ),
-    //                 Column(
-    //                   children: [
-    //                     Text(
-    //                       oneOrMore(goingTo),
-    //                       style: TextStyle(
-    //                         fontSize: 30,
-    //                         fontFamily: 'Poppins',
-    //                       ),
-    //                     ),
-    //                     Text(listeAfDestinationer(goingTo))
-    //                   ],
-    //                 )
-    //               ],
-    //             ),
-    //           ),
-    //         ),
-    //       ),
-    //       Expanded(
-    //           child: ListView.builder(
-    //         scrollDirection: Axis.horizontal,
-    //         physics: const ClampingScrollPhysics(),
-    //         itemCount: lejlighedsPics.length,
-    //         itemBuilder: (context, index) {
-    //           return Padding(
-    //             padding: const EdgeInsets.all(12),
-    //             child: Card(
-    //               shape: RoundedRectangleBorder(
-    //                 borderRadius: BorderRadius.circular(12.0),
-    //               ),
-    //               child: ClipRRect(
-    //                 borderRadius: BorderRadius.circular(10),
-    //                 child: InkWell(
-    //                   child: Image(
-    //                     image: AssetImage(lejlighedsPics[index]),
-    //                     fit: BoxFit.contain,
-    //                   ),
-    //                 ),
-    //               ),
-    //             ),
-    //           );
-    //         },
-    //       )),
-    //     ],
-    //   )),
-    // );
+                              setState(() {
+                                // Used for updating user-actions
+                              });
+                            },
+                            child: Image(
+                              image: NetworkImage(additionalImages[index]),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              )
+            ]),
+          );
+        });
   }
 }
