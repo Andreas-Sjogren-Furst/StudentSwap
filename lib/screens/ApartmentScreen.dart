@@ -73,9 +73,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
           if (!snapshot.hasData) {
             return Center(
               child: SpinKitSquareCircle(
-                    color: Colors.pink,
-                    size: 80,
-                  ),
+                color: Colors.pink,
+                size: 80,
+              ),
             );
           }
 
@@ -84,7 +84,8 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
 
           String firstName = userDocument['firstName'];
           String lastName = userDocument['lastName'];
-          List<dynamic> additionalImages = userDocument['additionalImages'];
+          List<dynamic> additionalImages =
+              userDocument['additionalImages'] ?? [];
 
           // print(firstName);
           // print(lastName);
@@ -182,7 +183,6 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
               SizedBox(
                 height: 10,
               ),
-              
               Expanded(
                 flex: 1,
                 child: Container(
