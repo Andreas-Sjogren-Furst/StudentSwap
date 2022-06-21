@@ -47,7 +47,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   // Sample data
-  List<String> apartmentTypeWishes = [];
+  String apartmentTypeWishes = "Any";
 
   final user = FirebaseAuth.instance.currentUser;
   final db = FirebaseFirestore.instance;
@@ -124,12 +124,10 @@ class _SearchScreenState extends State<SearchScreen> {
                   ));
                 }
               }
-              // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens ejen by.
+              // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens egen by.
               apartmentsLists = apartmentsLists
                   .where((apartment) =>
-                      apartment.city
-                          .toLowerCase()
-                          .contains(searchKey.toLowerCase()) &&
+                      apartment.city.toLowerCase().contains(searchKey.toLowerCase()) &&
                       apartment.city != "not available")
                   .where((apartment) =>
                       apartment.apartmentImage != "not available")
@@ -139,19 +137,18 @@ class _SearchScreenState extends State<SearchScreen> {
                       GoingToKey.map((goingToKeyString) => goingToKeyString.toLowerCase())
                           .toList()
                           .contains(apartment.city.toLowerCase()))
-                  .where((apartment) => apartment.semester
-                      .toLowerCase()
-                      .contains(Semesterkey.toLowerCase()))
                   .where((apartment) =>
-                      apartmentTypeWishes.isEmpty ||
-                      apartmentTypeWishes
-                          .map((apartmentType) => apartmentType.toLowerCase())
-                          .toList()
-                          .contains(apartment.appartmentType.toLowerCase()))
+                      Semesterkey.toLowerCase().contains("any") ||
+                      apartment.semester
+                          .toLowerCase()
+                          .contains(Semesterkey.toLowerCase()))
+                  .where((apartment) =>
+                      apartmentTypeWishes.toLowerCase().contains("any") ||
+                      apartment.appartmentType
+                          .toLowerCase()
+                          .contains(apartmentTypeWishes.toLowerCase()))
                   .where((appartment) => years.isEmpty || years.map((year) => year.toLowerCase()).toList().contains(appartment.year.toLowerCase()))
                   .toList();
-
-              // print("Apartsmentslist: ${apartmentsLists}");
 
               return Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0.0),
@@ -227,7 +224,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 ),
                                 filled: true,
                                 fillColor: const Color(0xFFEEEEEE),
-                                labelText: 'Search for a city',
+                                labelText: 'Search for a country',
                                 labelStyle: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 16.0,
@@ -432,7 +429,6 @@ class _FilterSheetState extends State<FilterSheet> {
                           selectedYears.add(int.parse(_years[i]));
                         }
                       }
-                      print(selectedYears);
 
                       // Values to be returned
                       var values = {
@@ -468,11 +464,7 @@ class _FilterSheetState extends State<FilterSheet> {
                     ),
                     TextField(
                       controller: _searchController,
-                      onChanged: (value) {
-                        //setState(() {
-                        // searchKey = value;
-                        //});
-                      },
+                      onChanged: (value) {},
                       onSubmitted: (value) {
                         setState(() {
                           _cityChips.add(value);
@@ -489,7 +481,7 @@ class _FilterSheetState extends State<FilterSheet> {
                         ),
                         filled: true,
                         fillColor: const Color(0xFFEEEEEE),
-                        labelText: 'Search for a city',
+                        labelText: 'Search for a country',
                         prefixIcon: const Icon(Icons.search),
                       ),
                     ),
