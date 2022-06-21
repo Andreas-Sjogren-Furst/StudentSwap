@@ -112,8 +112,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 if (userMap["userID"] != currentUserId ||
                     userMap["apartmentImage"] != null) {
                   apartmentsLists.add(Apartment(
-
-                    description: userMap['description'],
+                    description: userMap['description'] ?? "not available",
                     city: userMap['myCountry'] ?? "not available",
                     address: userMap['myAddress'] ?? "not available",
                     apartmentImage:
@@ -132,7 +131,7 @@ class _SearchScreenState extends State<SearchScreen> {
                     currentUser: getCurrentUser(),
                   ));
                 }
-              }              // opdaterer apartmentlist med searchKey.
+              } // opdaterer apartmentlist med searchKey.
 
               apartmentsLists = apartmentsLists
                   .where((apartment) =>
