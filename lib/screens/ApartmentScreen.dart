@@ -376,9 +376,9 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                                 ),
                               );
 
-                              setState(() {
-                                // Used for updating user-actions
-                              });
+                              // setState(() {
+                              //   // Used for updating user-actions
+                              // });
                             },
                             child: Image(
                               image: NetworkImage(additionalImages[index]),
