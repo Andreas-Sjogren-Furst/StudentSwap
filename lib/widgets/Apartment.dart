@@ -21,24 +21,21 @@ class Apartment {
   late String currentUser;
   late String description;
 
-
   bool saved = false;
 
-  Apartment({
-    required this.city,
-    required this.address,
-    required this.apartmentImage,
-    required this.profileImage,
-    required this.savedFavorite,
-    required this.goingTo,
-    required this.userID,
-    required this.semester,
-    required this.appartmentType,
-    required this.year,
-    required this.currentUser,
-    required this.description
-
-  });
+  Apartment(
+      {required this.city,
+      required this.address,
+      required this.apartmentImage,
+      required this.profileImage,
+      required this.savedFavorite,
+      required this.goingTo,
+      required this.userID,
+      required this.semester,
+      required this.appartmentType,
+      required this.year,
+      required this.currentUser,
+      required this.description});
 
   ApartmentCard getCard() {
     return ApartmentCard(
@@ -54,7 +51,6 @@ class Apartment {
       year: year,
       currentUser: currentUser,
       description: description,
-
     );
   }
 }
@@ -86,7 +82,7 @@ class ApartmentCard extends StatefulWidget {
       required this.goingTo,
       required this.semester,
       required this.appartmentType,
-      required this.year})
+      required this.year,
       required this.currentUser,
       required this.description})
       : super(key: key);
