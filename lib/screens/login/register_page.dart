@@ -36,6 +36,7 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future nextPage() async {
+
     //checking if password is correct and going to next register page if this is true
     if (passwordController.text.trim() ==
         confirmPasswordController.text.trim()) {
