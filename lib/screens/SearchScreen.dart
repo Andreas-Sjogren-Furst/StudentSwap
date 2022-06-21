@@ -20,6 +20,8 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+  late var currentUserName = 'Johnson';
   String userName = "loading...";
   String searchKey = ""; // En by i search.
   List<String> GoingToKey = []; // ønsker af byer man vil til.
@@ -34,6 +36,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Stream streamQuery =
       FirebaseFirestore.instance.collection("users").snapshots();
+
+  getCurrentUser() {
+    return currentUserName;
+  }
 
   getData(String uid) async {
     final FirestoreUserReference =
@@ -68,8 +74,8 @@ class _SearchScreenState extends State<SearchScreen> {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
                 return Center(
-                  child: SpinKitFadingCube(
-                    color: Colors.blue,
+                  child: SpinKitSquareCircle(
+                    color: Colors.pink,
                     size: 80,
                   ),
                 );
@@ -77,7 +83,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
               var currentUserFavorties = [];
               List<Apartment> apartmentsLists = [];
-              String currentUserName = "lolcat";
+              currentUserName = "loading";
               String currentUserProfilePicture = "";
 
               for (var doc in snapshot.data!.docs) {
@@ -87,7 +93,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
 
-                if (userMap["userID"] == FirebaseMethods.userId) {
+                if (userMap["userID"] == currentUserId) {
                   currentUserFavorties =
                       userMap["favorites"] ?? []; // Hent favoritter
                   currentUserName = userMap["firstName"] ?? "lolcat";
@@ -103,9 +109,11 @@ class _SearchScreenState extends State<SearchScreen> {
                 Map<String, dynamic> userMap =
                     testlinked.map((a, b) => MapEntry(a, b));
 
-                if (userMap["userID"] != FirebaseMethods.userId ||
+                if (userMap["userID"] != currentUserId ||
                     userMap["apartmentImage"] != null) {
                   apartmentsLists.add(Apartment(
+
+                    description: userMap['description'],
                     city: userMap['myCountry'] ?? "not available",
                     address: userMap['myAddress'] ?? "not available",
                     apartmentImage:
@@ -121,10 +129,11 @@ class _SearchScreenState extends State<SearchScreen> {
                     appartmentType:
                         userMap['appartmentType'] ?? "not available",
                     year: userMap['year'] ?? "not available",
+                    currentUser: getCurrentUser(),
                   ));
                 }
-              }
-              // opdaterer apartmentlist med searchKey.TODO: Mangler at sortere efter lejligheder som kun vil til brugerens egen by.
+              }              // opdaterer apartmentlist med searchKey.
+
               apartmentsLists = apartmentsLists
                   .where((apartment) =>
                       apartment.city.toLowerCase().contains(searchKey.toLowerCase()) &&

@@ -1,5 +1,6 @@
 class Country {
-  late List<dynamic> countries = [];
+  late List<dynamic> countries =
+      []; //all lande i en liste, late bliver brugt for at sørge for den stadig virker selvom det starter med at være null
   Country() {
     countries = [
       'Afghanistan',

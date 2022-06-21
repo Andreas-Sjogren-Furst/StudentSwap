@@ -32,75 +32,78 @@ class _StartScreenState extends State<StartScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: const [
-                    Text(
-                      "StudentSwap",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 45,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: "Poppins"
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: const [
+                      Text(
+                        "StudentSwap",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 45,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: "Poppins"
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      "Worry less on accommodation, \nand focus more on study",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: "Poppins"
+                      SizedBox(
+                        height: 5,
                       ),
-                    ),
-                  ],
-                ),
-                Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Stack(
-                      children: <Widget>[
-                        Positioned.fill(
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: <Color>[
-                                  Color(0xFF0D47A1),
-                                  Color(0xFF1976D2),
-                                  Color(0xFF42A5F5),
-                                ],
+                      Text(
+                        "Worry less on accommodation, \nand focus more on study",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: "Poppins"
+                        ),
+                      ),
+                    ],
+                  ),
+                  Center(
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Stack(
+                        children: <Widget>[
+                          Positioned.fill(
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: <Color>[
+                                    Color(0xFF0D47A1),
+                                    Color(0xFF1976D2),
+                                    Color(0xFF42A5F5),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 40.0),
-                            primary: Colors.white,
-                            textStyle: const TextStyle(fontSize: 20),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 40.0),
+                              primary: Colors.white,
+                              textStyle: const TextStyle(fontSize: 20),
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, StartScreen2.routeName);
+                            },
+                            child: const Text(
+                              'EXPLORE',
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold),
+                            ),
                           ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, StartScreen2.routeName);
-                          },
-                          child: const Text(
-                            'EXPLORE',
-                            style: TextStyle(
-                                fontFamily: 'Poppins',
-                                fontSize: 15,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ));

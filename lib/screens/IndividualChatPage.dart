@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import "../models/ChatMessageModel.dart";
 
 class IndividualChatpage extends StatefulWidget {
@@ -115,18 +116,26 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
       ),
       body: Stack(
         children: <Widget>[
-          Text(widget.shaKey),
           StreamBuilder<DocumentSnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("chats")
                   .doc(widget.shaKey)
                   .snapshots(),
               builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: SpinKitSquareCircle(
+                      color: Colors.pink,
+                      size: 80,
+                    ),
+                  );
+                }
+
                 List<ChatMessage> messages = [];
                 Object? chatDocument = snapshot.data!.data();
                 chatDocument = chatDocument as Map<dynamic, dynamic>;
                 List<dynamic> userChatMaps = chatDocument["Messages"];
-                print(userChatMaps);
+                // print(userChatMaps);
 
                 userChatMaps.forEach((chatMap) {
                   chatMap.forEach((key, value) {
@@ -135,43 +144,48 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
                   });
                 });
 
-                return SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        reverse: false,
-                        itemCount: messages.length,
-                        shrinkWrap: true,
-                        padding: EdgeInsets.only(top: 10, bottom: 10),
-                        physics: NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            padding: EdgeInsets.only(
-                                left: 14, right: 14, top: 10, bottom: 10),
-                            child: Align(
-                              alignment: (messages[index].messageType ==
-                                      _counterUserName // sortere besked hhv. venstre eller højre.
-                                  ? Alignment.topLeft
-                                  : Alignment.topRight),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: (messages[index].messageType ==
-                                          _counterUserName // giver beskeder farver.
-                                      ? Colors.grey.shade200
-                                      : Colors.blue[200]),
+                return SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 50),
+                          child: ListView.builder(
+                            reverse: false,
+                            itemCount: messages.length,
+                            shrinkWrap: true,
+                            padding: EdgeInsets.only(top: 10, bottom: 10),
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              return Container(
+                                padding: EdgeInsets.only(
+                                    left: 14, right: 14, top: 10, bottom: 10),
+                                child: Align(
+                                  alignment: (messages[index].messageType ==
+                                          _counterUserName // sortere besked hhv. venstre eller højre.
+                                      ? Alignment.topLeft
+                                      : Alignment.topRight),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: (messages[index].messageType ==
+                                              _counterUserName // giver beskeder farver.
+                                          ? Colors.grey.shade200
+                                          : Colors.blue[200]),
+                                    ),
+                                    padding: EdgeInsets.all(16),
+                                    child: Text(
+                                      messages[index].messageContent,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
                                 ),
-                                padding: EdgeInsets.all(16),
-                                child: Text(
-                                  messages[index].messageContent,
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }),
@@ -226,7 +240,7 @@ class _IndividualChatpageState extends State<IndividualChatpage> {
                           .update({
                         "Messages": FieldValue.arrayUnion([chatMessage]),
                       });
-                      print(myController.text);
+                      // print(myController.text);
                       myController.clear();
                     },
                     child: Icon(
