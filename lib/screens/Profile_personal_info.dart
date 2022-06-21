@@ -75,6 +75,11 @@ class _ProfileInfoState extends State<ProfileInfo> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              IconButton(
+                  icon: const Icon(Icons.keyboard_arrow_left_sharp),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  }),
               Center(
                 child: Padding(
                   padding: const EdgeInsets.all(15),
@@ -214,8 +219,6 @@ class _ProfileInfoState extends State<ProfileInfo> {
               Padding(
                   padding: const EdgeInsets.all(15),
                   child: TextFormField(
-                    textAlignVertical: TextAlignVertical.top,
-                    maxLines: null,
                     controller: description,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
