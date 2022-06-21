@@ -78,7 +78,7 @@ class __ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
                     Text(
-                      'Apartment images',
+                      'Apartment Photos',
                       style: TextStyle(
                         fontSize: 18,
                         fontFamily: 'Poppins',

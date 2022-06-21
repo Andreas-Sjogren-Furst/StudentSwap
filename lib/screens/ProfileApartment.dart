@@ -275,14 +275,15 @@ class _PhotoGridState extends State<PhotoGrid> {
         }
 
         if (snapshot.hasData && !snapshot.data!.exists) {
-          return const Text("Document does not exist");
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = {};
+          widget.additionalPhotosPath = data['additionalImages'] != null ? List.from(data['additionalImages']) : [];
+        } else if (snapshot.connectionState == ConnectionState.done) {
           Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
 
           widget.additionalPhotosPath = data['additionalImages'] != null ? List.from(data['additionalImages']) : [];
         }
+
+
 
         return Padding(
           padding: const EdgeInsets.all(16.0),
