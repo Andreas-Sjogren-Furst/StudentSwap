@@ -70,7 +70,7 @@ class FavoritesScreen extends StatelessWidget {
                   apartmentsLists.add(Apartment(
                       description: userMap['description'] ?? "not available",
                       city: userMap['myCountry'] ?? "not available",
-                      address: userMap['myAdress'] ?? "not available",
+                      address: userMap['myAddress'] ?? "not available",
                       apartmentImage:
                           userMap['apartmentImage'] ?? "no available",
                       profileImage: userMap['profileImage'] ?? "not available",
