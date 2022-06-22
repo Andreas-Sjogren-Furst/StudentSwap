@@ -203,7 +203,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Expanded(
-                      flex: 1,
+                      flex: 2,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
@@ -276,7 +276,7 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
                       ),
                     ),
                         Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: Container(
