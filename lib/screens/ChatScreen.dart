@@ -102,9 +102,15 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
                 }
                 if (chatUsers.isEmpty) {
-                  return Center(
+                  return const Center(
                     child: Text(
-                        "No chats found. Go find some new friends at the Search Screen :)"),
+                      "No chats found... \nGo find some new friends at the Search Screen :)",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: "Poppins",
+                        fontSize: 12.0,
+                      ),
+                    ),
                   );
                 }
 
