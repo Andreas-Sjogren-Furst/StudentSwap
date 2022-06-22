@@ -467,7 +467,7 @@ class _ImageDialogState extends State<ImageDialog> {
                           ));
 
                           if (result) {
-                            await removePhoto(widget.ni.url, widget.ref, PhotoType.addtionalImages);
+                            await removePhoto(widget.ni.url, widget.ref);
                             setState(() {
                               Navigator.pop(context);
                             });
@@ -514,9 +514,11 @@ getImageFromDevice(PhotoType pt,  {required bool gallery ,Reference? mainRef, Re
     maxWidth: 1800,
     maxHeight: 1800,
   );
+
   if (pickedFile != null) {
     File imageFile = File(pickedFile.path);
 
+    // Main photo (First photo other users see)
     if (pt.name.toString() == "apartmentImage") {
       await mainRef!.putFile(imageFile)
           .whenComplete(() => null);
@@ -528,11 +530,16 @@ getImageFromDevice(PhotoType pt,  {required bool gallery ,Reference? mainRef, Re
         "apartmentImage" : await mainRef.getDownloadURL()
       });
 
-    } else {
+    } else { // Additional photos
+
+      // Get an unique (time-based) ID
       String id = uuid.v1();
+
+      // Upload file to Firebase Storage
       await additionalRef!.child(id).putFile(imageFile)
           .whenComplete(() => null);
 
+      // Upload reference to Firestore
       await FirebaseFirestore.instance
           .collection("users")
           .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -544,25 +551,22 @@ getImageFromDevice(PhotoType pt,  {required bool gallery ,Reference? mainRef, Re
 }
 
 // Removes photo from Firebase Storage and Firestore
-removePhoto(String urlPath, Reference ref, PhotoType pt) async {
+removePhoto(String urlPath, Reference ref) async {
 
+  // Get filename from URL
   var temp = urlPath.split("%2F");
   var pathStrings = temp[3].split("?");
   var path = pathStrings[0];
 
   final docRef = FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid);
-  Map<String, dynamic> updates = {};
 
-  switch (pt) {
-    case PhotoType.apartmentImage:
-
-    case PhotoType.addtionalImages:
-      updates = <String, dynamic>{
+  // Remove reference to photo
+  Map<String, dynamic> updates = <String, dynamic>{
         "additionalImages": FieldValue.arrayRemove([urlPath]),
-      };
-      await ref.child(path).delete();
-      break;
-  }
+  };
+
+  // Delete photo from Firebase Storage
+  await ref.child(path).delete();
 
   docRef.update(updates);
 }

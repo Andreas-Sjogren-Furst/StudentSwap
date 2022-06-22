@@ -89,7 +89,10 @@ class _ApartmentScreenState extends State<ApartmentScreen> {
           String lastName = userDocument['lastName'];
           List<dynamic> additionalImages =
               userDocument['additionalImages'] ?? [];
-          additionalImages.insert(0, userDocument['apartmentImage']);
+          if(userDocument['apartmentImage'] != null) {
+            additionalImages.insert(0, userDocument['apartmentImage']);
+          }
+
 
 
 
