@@ -284,7 +284,6 @@ class _PhotoGridState extends State<PhotoGrid> {
         }
 
 
-
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -556,12 +555,6 @@ removePhoto(String urlPath, Reference ref, PhotoType pt) async {
 
   switch (pt) {
     case PhotoType.apartmentImage:
-      // Doesn't work.
-      /*updates = <String, dynamic>{
-        "apartmentImage": FieldValue.delete(),
-      };
-      await ref.delete();
-      break;*/
 
     case PhotoType.addtionalImages:
       updates = <String, dynamic>{
