@@ -381,8 +381,8 @@ class _FilterSheetState extends State<FilterSheet> {
       _yearChips.setAll(0, [false, false, false, false, false]);
 
       // Get the selected years
-      for (int i = 0; i < widget.year.length; i++) {
-        if (_years[i] == widget.year[i]) {
+      for (int i = 0; i < _years.length; i++) {
+        if (widget.year.contains(_years[i])) {
           _yearChips[i] = true;
         }
       }
